@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Rethink</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="/css/style.css" media="screen" charset="utf-8">
+
+  </head>
+  <body>
+
+    <div class="identification">
+      <label>Identification:</label>
+      <label class="hash"></label>
+    </div>
+
+    <div class="room">
+      <label for="room">room</label>
+      <input id="room" name="room-id" class="room-id" value="" />
+
+      <button class="btn waves-effect waves-light call" type="submit" name="action">Call</button>
+      <button class="btn waves-effect waves-light cancel" type="submit" name="action">Cancel</button>
+      <!-- <button class="btn waves-effect waves-light answer" type="submit" name="action" disabled>Answer</button> -->
+    </div>
+
+    <div class="holders">
+      <div class="main-video">
+
+      </div>
+      <ul class="others">
+        <li class="me"><video autoplay class="local-video" width="240" height="160"></video></li>
+      </ul>
+    </div>
+
+    <!-- Modal Structure -->
+    <div id="modal1" class="modal">
+      <div class="modal-content">
+        <h4>Your friend <span class="name"></span> is calling</h4>
+        <p>A bunch of text</p>
+      </div>
+      <div class="modal-footer">
+        <button name="answer" class="modal-action waves-effect green waves-green btn-flat ">Answer</button>
+        <button name="cancel" class="modal-action waves-effect waves-red btn-flat ">Cancel</button>
+      </div>
+    </div>
+
+    <script src="dist/main.js" charset="utf-8"></script>
+
+  </body>
+</html>
