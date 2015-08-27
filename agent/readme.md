@@ -6,5 +6,5 @@
 
 ## Status
 
-[![Build Status](http://185.17.229.168:8080/job/TestProject/9//badge/icon)](http://185.17.229.168:8080/job/TestProject/target='__new'])
+[![Build Status](http://185.17.229.168:8080/job/TestProject/check-manifest//badge/icon)](http://185.17.229.168:8080/job/TestProject/check-manifest)
 
