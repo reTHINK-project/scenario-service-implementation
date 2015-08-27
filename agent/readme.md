@@ -6,5 +6,4 @@
 
 ## Status
 
-[![Build Status](http://185.17.229.168:8080/job/TestProject/badge/icon)](http://185.17.229.168:8080/job/TestProject/)
-
+[![Build Status](http://185.17.229.168:8080/buildStatus/icon?job=TestProject)](http://185.17.229.168:8080/job/TestProject/)
