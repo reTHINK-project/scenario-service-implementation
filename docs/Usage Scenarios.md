@@ -4,6 +4,24 @@ This document collects the preferences of WP5 partners for scenarios they prefer
 
 # APIZEE
 
+H2H Multiparty Conversations
+https://github.com/reTHINK-project/use-cases/issues/86
+H2H inter-domain Conversation with different CSPs and external IdPs
+https://github.com/reTHINK-project/use-cases/issues/95
+
++ Enterprise use case from WP5
+
+Scenario to be implemented :
+
+User A from Entreprise 1 calls user B from Entreprise 2
+Peer-toPeer call is established between A and B
+B wants to add C from entreprise 2 in the conversation
+Calls between A and B is transferred to the MCU in order to add C in the conference
+
+1 - User A and B are on same CSP 
+2 - User A and B are on different CSP
+
+
 # FOKUS
 
 # TUB
