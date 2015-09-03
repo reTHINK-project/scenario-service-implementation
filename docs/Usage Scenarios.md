@@ -12,11 +12,11 @@ https://github.com/reTHINK-project/use-cases/issues/86
 H2H inter-domain Conversation with different CSPs and external IdPs
 https://github.com/reTHINK-project/use-cases/issues/95
 
-FROM WP5 : 
+From WP5 : 
 
 Enterprise use case
 
-Scenario to be implemented :
+*Scenario to be implemented :*
 
 User A from Entreprise 1 calls user B from Entreprise 2
 Peer-toPeer call is established between A and B
