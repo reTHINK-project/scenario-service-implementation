@@ -6,6 +6,7 @@ This document collects the preferences of WP5 partners for scenarios they prefer
 
 H2H Multiparty Conversations
 https://github.com/reTHINK-project/use-cases/issues/86
+
 H2H inter-domain Conversation with different CSPs and external IdPs
 https://github.com/reTHINK-project/use-cases/issues/95
 
