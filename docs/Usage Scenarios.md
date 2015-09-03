@@ -4,13 +4,17 @@ This document collects the preferences of WP5 partners for scenarios they prefer
 
 # APIZEE
 
+From WP1 :
+
 H2H Multiparty Conversations
 https://github.com/reTHINK-project/use-cases/issues/86
 
 H2H inter-domain Conversation with different CSPs and external IdPs
 https://github.com/reTHINK-project/use-cases/issues/95
 
-+ Enterprise use case from WP5
+FROM WP5 : 
+
+Enterprise use case
 
 Scenario to be implemented :
 
