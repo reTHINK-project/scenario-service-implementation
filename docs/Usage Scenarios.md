@@ -16,15 +16,15 @@ From WP5 :
 
 Enterprise use case
 
-*Scenario to be implemented :*
+**Scenario to be implemented :**
 
 User A from Entreprise 1 calls user B from Entreprise 2
 Peer-toPeer call is established between A and B
 B wants to add C from entreprise 2 in the conversation
 Calls between A and B is transferred to the MCU in order to add C in the conference
 
-1 - User A and B are on same CSP 
-2 - User A and B are on different CSP
+Step 1 - User A and B are on same CSP 
+Step 2 - User A and B are on different CSP
 
 
 # FOKUS
