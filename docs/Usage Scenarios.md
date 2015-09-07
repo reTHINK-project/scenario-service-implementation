@@ -31,6 +31,7 @@ Step 2 - User A and B are on different CSP
 
 
 # FOKUS
+Smart Economy -- User Scenario 1: Hotel Guest Application (see D1.1 Cls. 3.4.5.1)
 
 # TUB
 Smart People - User Scenario 1: Daily life in a smart city
