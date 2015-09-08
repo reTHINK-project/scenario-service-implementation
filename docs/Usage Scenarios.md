@@ -36,11 +36,11 @@ Smart Economy -- User Scenario 1: Hotel Guest Application (see D1.1 Cls. 3.4.5.1
 # TUB
 Smart People - User Scenario 1: Daily life in a smart city
 Associated Use Cases:
-#80 Ad-hoc community
-#14 Ad-hoc group messaging
-#15 Retrieving public information from nearby people
-#72 Recommendation by service provider based on context and preference
-#71 Recommendation by friend
+- 80 Ad-hoc community
+- 14 Ad-hoc group messaging
+- 15 Retrieving public information from nearby people
+- 72 Recommendation by service provider based on context and preference
+- 71 Recommendation by friend
 
 # QUOBIS
 Daily life in a smart city – Individual contextual services
