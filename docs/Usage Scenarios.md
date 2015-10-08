@@ -6,9 +6,11 @@ PT
 -	[Contextual Enriched Communication in Smart Enterprises ](https://github.com/reTHINK-project/use-cases/wiki/Contextual-Enriched-Communication-in-Smart-Enterprises): to be focused on:
 	-	[Interdomain Conversation](https://github.com/reTHINK-project/use-cases/issues/95)
 	-	[Trustful Contextual Web Contact center](https://github.com/reTHINK-project/use-cases/issues/94)
-	-	[Group Communication](https://github.com/reTHINK-project/use-cases/issues/86) with [Contextual Coollaboration](https://github.com/reTHINK-project/use-cases/issues/97)
--	[Smart Living](https://github.com/reTHINK-project/use-cases/wiki/Contextual-Enriched-Communication-in-Smart-Cities#smart-living)
-	-	*to be further focused*
+	-	[Group Communication](https://github.com/reTHINK-project/use-cases/issues/86) with [Contextual Collaboration](https://github.com/reTHINK-project/use-cases/issues/97)
+-	[Smart Economy/Smart Living](https://github.com/reTHINK-project/use-cases/wiki/Contextual-Enriched-Communication-in-Smart-Cities#smart-living)
+	-	Smart Phone H2M Control App similar to [Hotel Guest Application](https://github.com/reTHINK-project/use-cases/wiki/Contextual-Enriched-Communication-in-Smart-Cities#user-scenario-1-hotel-guest-web-application) but interoperable with multiple environments and devices eg home, office, vacation (hotel)
+	-	[M2M Always Connected of new devices in Trustful domain](https://github.com/reTHINK-project/use-cases/issues/5)
+	-	[M2M Always Connected of new devices in Trustful domain](https://github.com/reTHINK-project/use-cases/issues/6)
 
 APIZEE
 ======
