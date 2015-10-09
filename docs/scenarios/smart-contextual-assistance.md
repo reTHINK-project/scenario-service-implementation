@@ -1,4 +1,4 @@
-*under construction*
+*in progress*
 
 Smart Contextual Assistance
 ---------------------------
