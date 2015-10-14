@@ -12,7 +12,7 @@ Hotel Guest Application Scenario
 
 ###Scenario Environment
 
-The _Hotel Guest Application User Scenario_ is situated wihtin a smart economy environment in a smart city, named Bersabon.  
+The _Hotel Guest Application User Scenario_ is situated wihtin a smart economy environment in a smart city, named Bersabon.
 Deliverable D1.1 describes the scenario as follows:
 
 > The dedicated meeting place of a conference is the Old Inn Smart Boutique Hotel. 
@@ -42,7 +42,9 @@ him with identity management services.  _DT_ hosts a _Registry_ that implements 
 As _Bob_ attends the conference at the _Old Inn_, he uses his smart phone to book a room at the hotel, select his room preferences, and
 control the room appliances after check-in.
 
-*Note:  need to add devices / smart appliances in the room, e.g. control of light etc*
+**Note:  need to add devices / smart appliances in the room, e.g. control of light etc**
+
+
 
 ###User perspective
 
