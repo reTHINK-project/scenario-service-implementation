@@ -35,6 +35,8 @@ the experience of staying at Bersabon.  The hosting service is provided free of 
 that the service stipulates additional overnight stays of guests in the city which in turn increases revenues from city taxes.
 _Alice_ takes advantage of the free service and put The _Old Inn Hotel Guest Application_ in that _Cataloge_.
 
+NOTE -- we need to add a paragraph here about the registry; i.e. who deploys it etc.
+
 _Bob_ is a frequent traveller who stayed at the _Old Inn_ several times before.  The availability of individualized booking and futuristic
 room control made _Bob_ a returning customer whenever staying at Bersabon.  _Bob_ has signed up with German Telecom, _DT_, to provide
 him with identity management services.  _DT_ hosts a _Registry_ that implements this service.
