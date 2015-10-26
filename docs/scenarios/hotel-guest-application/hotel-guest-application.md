@@ -42,8 +42,8 @@ As _Bob_ attends the conference at the _Old Inn_, he calls the _Old Inn's Recept
 
 Therefore, _Bob_ uses his smart phone to book a room at the hotel, and select his room preferences. 
 
-, and
-control the room appliances after check-in.
+When _Bob_ arrives at the hotel, he uses the _Old Inn Hotel Guest Application_ to check-in his room.  During the check-in process, _Bob_ receives credentials to access the hotel's WiFi network.  As part of the check-in process, _Bob_ downloads to his smart phone a _Room Control Hyperty_ to open the door of his room and to control light within his room.  Once the room is ready, _Bob_ may open the door to his room and control the light within it.
+
 
 **Note:  need to add devices / smart appliances in the room, e.g. control of light etc**
 
