@@ -33,15 +33,12 @@ allowing them to directly book rooms at the hotel, to make individual booking re
 the room.  The city of Bersabon hosts a _Cataloge_ that stores and provides as a download various applications to enhance
 the experience of staying at Bersabon.  The hosting service is provided free of charge for all local businesses as Bersabon expects
 that the service stipulates additional overnight stays of guests in the city which in turn increases revenues from city taxes.
-_Alice_ takes advantage of the free service and put The _Old Inn Hotel Guest Application_ in that _Cataloge_.
+_Alice_ takes advantage of the free service and put The _Old Inn Hotel Guest Application_ in that _Cataloge_.  Also, to stipulate local business, the city of Bersabon hosts free of charge a _Registry_ service, such that all local businesses and "citizens of Bersabon" can obtain a Bersabon-related identity, e.g. an e-mail address in the bersabon.city.com domain.
 
-NOTE -- we need to add a paragraph here about the registry; i.e. who deploys it etc.  If the city of Bersabon hosts the Catalogue, can DT provide the IDM service?
 
-_Bob_ is a frequent traveller who stayed at the _Old Inn_ several times before.  The availability of individualized booking and futuristic
-room control made _Bob_ a returning customer whenever staying at Bersabon.  _Bob_ has signed up with German Telecom, _DT_, to provide
-him with identity management services.  _DT_ hosts a _Registry_ that implements this service.
+_Bob_ is a frequent traveller who stayed at the _Old Inn_ several times before.  The availability of individualized booking and futuristic room control made _Bob_ a returning customer whenever staying at Bersabon.  _Bob_ has signed up with German Telecom, _DT_, to provide him with identity management services.  _DT_ hosts a _Registry_ that implements this service.
 
-As _Bob_ attends the conference at the _Old Inn_, he calls the _Old Inn's Reception_ to ask if the hotel offers any special rates for conference attendees.  The _Old Inn Hotel Guest Application_ informs _Bob_ that the hotel owner _Alice_ is on duty as a receptionist.  So _Bob_ initiates a voice call with _Alice_. _Alice_ tells _Bob_ that best rates are always available via the hotel's booking portal.
+As _Bob_ attends the conference at the _Old Inn_, he calls the _Old Inn's Reception_ to ask if the hotel offers any special rates for conference attendees.  The _Old Inn Hotel Guest Application_ informs _Bob_ that the hotel owner, _Alice_, is on duty as a receptionist.  So _Bob_ initiates a voice call with _Alice_. _Alice_ tells _Bob_ that best rates are always available via the hotel's booking portal.
 
 Therefore, _Bob_ uses his smart phone to book a room at the hotel, and select his room preferences. 
 
