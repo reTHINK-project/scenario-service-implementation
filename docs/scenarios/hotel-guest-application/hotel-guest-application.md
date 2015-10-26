@@ -47,6 +47,8 @@ When _Bob_ arrives at the hotel, he uses the _Old Inn Hotel Guest Application_ t
 
 **Note:  need to add devices / smart appliances in the room, e.g. control of light etc**
 
+A detailed breakdown of the hotel guest application use case is given in this [UML diagram](reThink_hotel_guest_app_user_scenario.png).
+
 
 
 ###User perspective
