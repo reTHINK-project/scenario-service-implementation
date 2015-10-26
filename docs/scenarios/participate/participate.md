@@ -13,6 +13,9 @@ Scenario_Name_1_Include_Title_here
 
 *Describe Actors involved in the scenario using Business Roles defined in D1.1 and D2.1, Business relationships and Business models/ecosystems defined in D1.1. Define Devices to be used including end-user devices like browser and smartphone as well as M2M/IoT devices like sensors and atuators. Provide a picture to illustrate the scenario environment*
 
+
+This [figure](reThink_participate_use_case.png) provides a UML Use Case view of the participate umbrella use case.
+
 ###User perspective
 
 
