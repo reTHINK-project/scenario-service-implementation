@@ -35,13 +35,15 @@ the experience of staying at Bersabon.  The hosting service is provided free of 
 that the service stipulates additional overnight stays of guests in the city which in turn increases revenues from city taxes.
 _Alice_ takes advantage of the free service and put The _Old Inn Hotel Guest Application_ in that _Cataloge_.
 
-NOTE -- we need to add a paragraph here about the registry; i.e. who deploys it etc.
+NOTE -- we need to add a paragraph here about the registry; i.e. who deploys it etc.  If the city of Bersabon hosts the Catalogue, can DT provide the IDM service?
 
 _Bob_ is a frequent traveller who stayed at the _Old Inn_ several times before.  The availability of individualized booking and futuristic
 room control made _Bob_ a returning customer whenever staying at Bersabon.  _Bob_ has signed up with German Telecom, _DT_, to provide
 him with identity management services.  _DT_ hosts a _Registry_ that implements this service.
 
-As _Bob_ attends the conference at the _Old Inn_, he uses his smart phone to book a room at the hotel, select his room preferences, and
+As _Bob_ attends the conference at the _Old Inn_, he calls the _Old Inn's Reception_ to ask if the hotel offers any special rates for conference attendees.  As the _Receptionist_ tells _Bob_ that best rates are always available via the hotel's booking portal, _Bob_ uses his smart phone to book a room at the hotel, and select his room preferences. 
+
+, and
 control the room appliances after check-in.
 
 **Note:  need to add devices / smart appliances in the room, e.g. control of light etc**
