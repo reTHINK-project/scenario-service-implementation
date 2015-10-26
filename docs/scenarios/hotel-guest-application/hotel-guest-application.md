@@ -41,7 +41,9 @@ _Bob_ is a frequent traveller who stayed at the _Old Inn_ several times before. 
 room control made _Bob_ a returning customer whenever staying at Bersabon.  _Bob_ has signed up with German Telecom, _DT_, to provide
 him with identity management services.  _DT_ hosts a _Registry_ that implements this service.
 
-As _Bob_ attends the conference at the _Old Inn_, he calls the _Old Inn's Reception_ to ask if the hotel offers any special rates for conference attendees.  As the _Receptionist_ tells _Bob_ that best rates are always available via the hotel's booking portal, _Bob_ uses his smart phone to book a room at the hotel, and select his room preferences. 
+As _Bob_ attends the conference at the _Old Inn_, he calls the _Old Inn's Reception_ to ask if the hotel offers any special rates for conference attendees.  The _Old Inn Hotel Guest Application_ informs _Bob_ that the hotel owner _Alice_ is on duty as a receptionist.  So _Bob_ initiates a voice call with _Alice_. _Alice_ tells _Bob_ that best rates are always available via the hotel's booking portal.
+
+Therefore, _Bob_ uses his smart phone to book a room at the hotel, and select his room preferences. 
 
 , and
 control the room appliances after check-in.
