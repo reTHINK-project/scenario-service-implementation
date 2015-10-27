@@ -4,7 +4,7 @@ Dummy Header for Section 1 per ToC
 Usage Scenarios Description
 ===========================
 
-Scenario_My City_
+Scenario My City
 ----------------------------------
 
 ###Scenario Environment
