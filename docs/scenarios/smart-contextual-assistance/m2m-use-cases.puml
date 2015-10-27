@@ -1,0 +1,9 @@
+@startuml
+
+usecase (Video Monitoring) as videoMonitorUC
+usecase (Heart Pressure Monitoring) as heartMonitorUC
+usecase (Temperature Monitoring) as temperatureUC
+usecase (Light Monitoring) as lightUC
+usecase (Power Monitoring) as powerUC
+
+@enduml

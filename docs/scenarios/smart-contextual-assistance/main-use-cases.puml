@@ -1,0 +1,42 @@
+@startuml
+
+actor Alice as aA
+actor Bob as bA
+actor Carol as cA
+
+actor ObjectA as objaA
+actor ObjectB as objbA
+actor ObjectC as objcA
+
+usecase (Support Use Cases) as ssUC
+usecase (H2H Communication) as h2hUC
+usecase (H2M Communication) as h2mUC
+usecase (M2M Communication) as m2mUC
+usecase (Group H2H Communication) as grouph2hUC
+usecase (Group M2M Communication) as groupm2mUC
+
+h2hUC .up.> ssUC : <<includes>>
+h2mUC .down.> ssUC : <<includes>>
+m2mUC -up-|> ssUC : <<includes>>
+
+h2hUC <.. grouph2hUC : <<extends>>
+m2mUC <.. groupm2mUC : <<extends>>
+
+aA --> h2hUC : communicate
+bA -up-> h2hUC : communicate
+
+aA --> grouph2hUC : communicate
+bA --> grouph2hUC : communicate
+cA -up-> grouph2hUC : communicate
+
+objaA --> h2mUC : communicate
+aA --> h2mUC : communicate
+
+objaA --> m2mUC : communicate
+objbA -up-> m2mUC : communicate
+
+objaA --> groupm2mUC : communicate
+objbA --> groupm2mUC : communicate
+objcA -up-> groupm2mUC : communicate
+
+@enduml

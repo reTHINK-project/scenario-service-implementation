@@ -1,0 +1,12 @@
+@startuml
+
+usecase (Chat) as chatUC
+usecase (Voice Call) as callUC
+usecase (Video Call) as videoUC
+usecase (Screen Sharing) as screenUC
+usecase (File Sharing) as fileUC
+usecase (Human Presence) as presenceUC
+
+
+
+@enduml

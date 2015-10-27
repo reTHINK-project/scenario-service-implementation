@@ -1,0 +1,23 @@
+@startuml
+!include m2m-use-cases.puml
+
+actor "Human Being" as human
+actor "Room" as room
+
+usecase (M2M Communication) as m2mUC
+
+m2mUC <|-- videoMonitorUC
+m2mUC <|-- heartMonitorUC
+m2mUC <|-- temperatureUC
+m2mUC <|-- lightUC
+m2mUC <|-- powerUC
+
+human <-up- videoMonitorUC : monitor
+human <-up- heartMonitorUC : monitor
+
+room <-up- videoMonitorUC : monitor
+room <-up- temperatureUC : monitor
+room <-up- lightUC : monitor
+room <-up- powerUC : monitor
+
+@enduml

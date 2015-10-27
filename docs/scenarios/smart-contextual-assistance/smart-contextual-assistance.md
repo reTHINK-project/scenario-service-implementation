@@ -7,9 +7,9 @@ Scenario Environment
 --------------------
 
 -	Alice is an individual end-user (service consumer) that works for Old Inn hotel (organisation consumer), which provided her a Smart Work Assistance App to support her in the Job.
--	Smart Assistance App is delivered by HyDev which is a small Software Development composed by several Hyperties delivered by PT and others.
--	Smart Assistance enables Alice to collaborate with co-workers, external partners using other similar applications, as well as with customers.
--	Smart Assistance enables Alice to control some office devices including ...
+-	Smart Business Assistance App is delivered by HyDev which is a small Software Development composed by several Hyperties delivered by PT and others.
+-	Smart Business Assistance enables Alice to collaborate with co-workers, external partners using other similar applications, as well as with customers.
+-	Smart Business Assistance enables Alice to control some office devices including ...
 -	Alice has subscribed additional Smart Contextual Assistance features, with a special discount, to be used in a personal context ie acting as a Smart Personal Assistance App, enabling Alice to manage personal communications and to control her smart home devices.
 -	PT is a Business Broker managing an ecosystem of different partners including HyDev and Device Hyperty providers -
 
@@ -24,17 +24,25 @@ User perspective
 
 *Textual description of the scenario including the main use cases to be supported. Refer as much as possible to use cases defined in D1.1.*
 
+![Main Use Cases](smart-contextual-assistance-use-cases.png)
+
+### Work Context
+
+#### Office Automation
+
+![Office Automation Use Cases](smart-contextual-office-automation-use-cases.png)
+
+#### Business Communication
+
+![Business Communication Use Cases](smart-contextual-business-communication-use-cases.png)
+
 **co-worker context**
 
 **partner context**
 
 **Customer Context**
 
-**(personal) Home Context**
-
-**(personal) Vacation Context**
-
-**(personal) Sick Context**
+### Personal Context
 
 ### Identity Management and Trust from user perspective
 
