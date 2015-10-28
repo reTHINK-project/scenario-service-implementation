@@ -60,22 +60,64 @@ The picture below depicts the different Customer Communication Use Cases.
 
 **co-worker context**
 
+*to be done*
+
 **partner context**
 
+*to be done*
+
 ### Personal Context
+
+*to be done*
 
 ### Identity Management and Trust from user perspective
 
 *Textual description of Identity Management and Trust aspects from User Perspective*
 
+As mentioned below, Alice identity selection will depend on her context. For example, Enterprise Identity will be used for anonymous customers while a personal (pseudonym ?) Identity will be used for loyal Customers. Trust will also be set according to selected identities.
+
 ### Interoperability from user perspective
 
 *Textual description of interoperability involving the usage of Apps delivered from different Testbed e.g. Audio Call between a Conversation App from DT and a Conversation App from PT*
 
+Customers and Partners can use any application from other testbeds to communicate with Smart Contextual Assistance App. *to be identified the ones to interoperate with, later*
+
+Smart Contextual Assistance App office and home automation features should be able to be used in the Hotel Guest scenario when appropriately authorised by the Hotel management. The other way around should also be possible.
+
 Required reTHINK Framework Functionalities
 ------------------------------------------
 
-*Detailed analysis of required funcionalities, interfaces and data schemas as specified in D2.2, D3.1 and D4.1. Highlight missing functionalities*
+*Detailed analysis of required functionalities, interfaces and data schemas as specified in D2.2, D3.1 and D4.1. Highlight missing functionalities*
+
+The Smart Contextual Assistance requires the following major reTHINK functionalities:
+
+-	Hyperty Runtime in Browser
+-	Hyperty Runtime in Smartphone
+-	Hyperty Runtime in Raspberry PI
+-	Hyperty Runtime in Kurento Media Server to support Group Communication
+-	Vertx Message Node and its associated Protostub
+-	*partner1* Message Node and its associated Protostub to test cross domain H2H Communication interoperability
+-	*partner2* Message Node and its associated Protostub to test cross domain M2M Communication interoperability
+-	*partner3* Message Node and its associated Protostub to test cross domain H2M Communication interoperability
+-	Catalogue server as specified in D2.2 supporting protostub descriptors, Hyperty descriptors, Data Object Schema.
+-	Domain Registry as specified in D2.2 supporting Hyperty Instance registration, Hyperty Data Object Instance
+-	At least two different IdP servers and its associated IdP (Proxy) protostub
+-	Discovery service
+
+The following APIs and Procedures are required and not yet specified:
+
+-	Identity login
+-	Identity association to Hyperty
+-	Identity assertion
+-	Human Discovery
+-	Machine / Object Discovery
+-	Trust calculation
+-	Chat and Group Chat
+-	Human Presence
+-	File Sharing
+-	Screen Sharing
+-	Device Control / Actuation
+-	...
 
 Required Testbed features
 -------------------------
