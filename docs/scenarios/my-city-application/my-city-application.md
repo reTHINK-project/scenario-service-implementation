@@ -18,6 +18,14 @@ Deliverable D1.1 describes the scenario as follows:
 
 >Going through her daily life, Alice is collecting data on her smartphone, e.g. by locally storing locations she frequently visits, from sensors she retrieves information from or including news websites which inform her about the latest movies with her favorite actor. Her service provider makes suggestions on the basis of these collected data, e.g. she is recommended a cinema she hasn’t been before, that plays a movie with her favorite. Before going to the movies, Alice is also recommended a new restaurant that offers a special opening promotion. A week later, she is going downtown, and runs into a large crowd that seems to be looking at something. Her smartphone vibrates and notifies her about a new message by someone in the vicinity. She opens the group chat that automatically formed and sees a picture someone has taken and posted to the group: It seems to be from the center of the crowd, there is a street performer. Alice takes part in the conversation pseudonymously. On her way back home, she sees a note on the highest tree of her neighborhood. On it, there is a QR-code. She scans it with her smartphone and enters a group discussion about the removal of the tree.
 
+In this smart city ecosystem, the city of Bersabon hosts a Cataloge that stores and provides applications to enhance the experience of staying at Bersabon. One of these applications is _Participate_, an application to exchange ideas, suggestions, etc with all the citizens and visitors. Here the local government provides information on the city, request feedback from citizens and allow citizens to discuss (in a group chat) about general problems or topics of the city.
+
+Alice is a citizen of Bersabon that uses a number of applications from Bersabon Cataloge like Participate, and for the registry in these applications she is using the Registry service included in this Cataloge. As one of the citizen registered in Participate, she receives an invitation to join a group chat to propose and discuss the activities to be held during the Women's Equality Week in Bersabon. She acepts the invitation and proposes a workshop where... 
+
+Bob belongs to the Bersabon local police department designed to help local citizens and visitor in different areas (traffic, etc). Bob can send notifications to users of Participate based on location, i.e. drivers closed to a traffic jam or participants in a public demonstration. He also have rights to retrieve public information of users in case of emergency, including the possibility to have a p2p conversation.
+
+Users of Participate can join ad-hoc group chats to discuss hot topics (local exhibitions, discussion groups, events, etc). Some groups will be only available for users connected from a specific location, others will be accesible in an anonymous way. 
+
 
 ###User perspective
 

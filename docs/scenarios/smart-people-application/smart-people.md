@@ -20,7 +20,7 @@ Going through her daily life, Alice is collecting data on her smartphone, e.g. b
  
 Alice moves to a new city and queries her service provider for a recommendation on what to do in the new city, see the next figure. Based on her profile data, she is recommended a social event that takes place in the evening. (Associated use case: #72 Recommendation by service provider based on context and preference)
 
-![RecommendationServiceProvider](02-RecServiceProvder.png)
+![RecommendationServiceProvider](02-RecServiceProvider.png)
  
 At the event, the smartphones of the attending users are used to transmit some of their profile information to a server or service that is connected to a large display at the event. On this display, the profile pictures of the attending guests are shown (see following figure). (Associated use case: #80 Ad-hoc community)
  
