@@ -1,0 +1,48 @@
+@startuml
+
+actor Alice
+actor Customer
+
+rectangle "Customer Communication" {
+  usecase (Smart Contextual Customer Communication) as bizzClientCommUC
+
+  usecase contextualRouting2AgentUC as "Contextual routing\n
+  of Customer Assistance Request\n
+  to the most appropriate\n
+  collaborator"
+
+  usecase contextualAgentAvailabilityUC as "Contextual Management\n
+  of Agent availability"
+
+  contextualRouting2AgentUC -[hidden]up- contextualAgentAvailabilityUC
+
+  usecase showProductUC as "Show Product\nduring Customer Communication"
+
+  contextualRouting2AgentUC -[hidden]down- showProductUC
+
+  usecase salesUC as "Support Product Sales\nduring Customer Communication"
+
+  salesUC -[hidden]up- showProductUC
+
+  usecase evaluationUC as "Custumer Evaluates\nAssistance"
+
+  salesUC -[hidden]down- evaluationUC
+
+  usecase awardAgentUC as "collaborator is awarded\naccording to Customer\nAssistance outcome"
+
+  awardAgentUC -[hidden]up- evaluationUC
+}
+
+
+bizzClientCommUC ..> contextualAgentAvailabilityUC : <<includes>>
+bizzClientCommUC ..> contextualRouting2AgentUC : <<includes>>
+bizzClientCommUC ..> showProductUC : <<includes>>
+bizzClientCommUC ..> salesUC : <<includes>>
+bizzClientCommUC ..> evaluationUC : <<includes>>
+bizzClientCommUC ..> awardAgentUC : <<includes>>
+
+Alice -left-> bizzClientCommUC : assists
+
+Customer -right-> bizzClientCommUC : is assisted
+
+@enduml

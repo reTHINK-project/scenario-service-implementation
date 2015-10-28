@@ -28,19 +28,39 @@ User perspective
 
 ### Work Context
 
+Alice context is mainly derived from two of Context sources: location and communication parties.
+
 #### Office Automation
+
+When Alice context is "located in the Office" a few office automation features (see picture below) her available from the Smart Business Assistance app.
 
 ![Office Automation Use Cases](smart-contextual-office-automation-use-cases.png)
 
 #### Business Communication
 
+Alice context can also be set according to the communication party (see figure below), namely:
+
+-	Customer Context: Alice is in a communication session with a Customer
+-	co-worker Context: Alice is in a communication session with a co-worker
+-	Partner Context: Alice is in a communication session with a Partner
+
 ![Business Communication Use Cases](smart-contextual-business-communication-use-cases.png)
+
+Alice calendar and opened Web Documents is another source of information to be taken into account to infer Alice Context.
+
+*to be done: provide use cases diagram for work context inference*
+
+According to the context status, the communication experience is adapted in order to make it as effective as possible, e.g. Alice Identity selection and associated user profile data, availability of communication features like video, etc.
+
+**Customer Context**
+
+The picture below depicts the different Customer Communication Use Cases.
+
+![Customer Communication Use Cases](smart-contextual-customer-communication-use-cases.png)
 
 **co-worker context**
 
 **partner context**
-
-**Customer Context**
 
 ### Personal Context
 
