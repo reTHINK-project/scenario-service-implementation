@@ -40,7 +40,7 @@ Scenario can be decomposed in several phase :
 
 *Textual description of the scenario including the main use cases to be supported. Refer as much as possible to use cases defined in D1.1.*
 
-Phase 1 :
+<b>Phase 1 :</b>
 User A and B and C are on same CSP 
 User A on Entreprise 1 webSite calls user B from Entreprise 1
 Multi party call is established between A and the MCU
@@ -50,14 +50,15 @@ B wants to add C from entreprise 1 in the conversation
 B send a notification to C
 Multi party call is established between C and the MCU (A, B and C are in conversation)
 
-Phase 2 :
+<b>Phase 2 :</b>
 User A and B and C are on same CSP 
 User A on Entreprise 1 webSite calls user B from Entreprise 1
 Peer-toPeer call is established between A and B
 B wants to add C from entreprise 1 in the conversation
 Calls between A and B is transferred to the MCU in order to add C in the conference
 
-Phase 3 : User A is on a different CSP than B and C
+<b>Phase 3 :</b>
+User A is on a different CSP than B and C
 User A is on is Entreprise 2 application calls user B from Entreprise 1
 Peer-toPeer call is established between A and B
 B wants to add C from entreprise 1 in the conversation
@@ -97,6 +98,6 @@ Note that so far only one test bed operator has specified available components [
 *identify required Hyperties, its main functionalities and associated data schemas. Use a graphical language to describe hyperties composition and relationships (to be defined)*
 
 
-Hyperty on client side
-Hyperty on messaging Node NodeJs for interconnection with different CSP
+Hyperty on client side</br>
+Hyperty on messaging Node NodeJs for interconnection with different CSP</br>
 Hyperty on server side for Kurento MCU
