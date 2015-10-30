@@ -1,0 +1,86 @@
+@startuml
+skinparam handwritten true
+
+skinparam usecase {
+	BackgroundColor DarkSalmon
+	BorderColor Black
+
+	BackgroundColor<< Context >> DarkRed
+	BorderColor<< Context >> DarkRed
+
+	ActorBackgroundColor<< Human >> Green
+  ActorBackgroundColor<< Object >> Silver
+}
+
+skinparam component {
+	BackgroundColor DarkSeaGreen
+	BorderColor Black
+}
+
+actor Alice << Human >>
+actor Customer <<Human>>
+actor Coworkers <<Human>>
+actor Office <<Object>> as "Office Room"
+actor "Home" <<Object>>
+
+rectangle "Smart Contextual Assistance App" {
+  usecase voiceH <<Hyperty Communicator>> as "**SmartVoice**
+  --
+  Hyperty to Handle Audio
+  and Video Communications"
+
+	component Communication <<Communication Object>> as comObj
+
+	component "Communication Context" <<Context Object>> as ctxtObj
+
+	voiceH -down-> comObj
+
+	voiceH -down-> ctxtObj
+
+  usecase contactsH <<Hyperty Context>> as "**SmartContacts**
+  --
+  Hyperty to Handle
+  a presence enriched
+  Contact List"
+
+	component UserProfile <<Identity Object>> as idObj
+
+	component "Presence" <<Context Object>> as presObj
+
+	contactsH -down-> idObj
+
+	contactsH -down-> presObj
+
+	contactsH -[hidden]up- comObj
+
+	usecase myCtxtH <<Hyperty Context>> as "**MyContext**
+  --
+  Hyperty to Handle
+  an Human individual
+	context"
+
+	component "individual Context" <<Context Object>> as myCtxtObj
+
+	myCtxtH -down-> myCtxtObj
+
+	myCtxtH -[hidden]up- presObj
+
+	usecase roomH <<Hyperty Context>> as "**Room**
+  --
+  Hyperty to Handle
+  a Room context"
+
+	component "Room Context" <<Context Object>> as roomCtxtObj
+
+	roomH -down-> roomCtxtObj
+
+	roomH -[hidden]up- myCtxtObj
+
+}
+
+Alice .left- voiceH
+Alice .left- contactsH
+Alice .left- myCtxtH
+Office .left- roomH
+
+@enduml

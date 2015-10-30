@@ -24,11 +24,20 @@ User perspective
 
 *Textual description of the scenario including the main use cases to be supported. Refer as much as possible to use cases defined in D1.1.*
 
+The Smart Contextual Assistance Apps automaticaly adapts its behavior according to Alice's context and a Physical Space's (office room or home room) context. Two main Alice's context's are considered: Work context and Personal context.
+
 ![Main Use Cases](smart-contextual-assistance-use-cases.png)
 
 ### Work Context
 
-Alice context is mainly derived from two of Context sources: location and communication parties.
+Alice context is mainly derived from the following Context sources:
+
+-	location
+-	calendar
+-	communication parties
+-	opened web documents
+-	sensors in Alice's mobile
+-	sensors in physical places where Alice is located
 
 #### Office Automation
 
@@ -106,18 +115,11 @@ The Smart Contextual Assistance requires the following major reTHINK functionali
 
 The following APIs and Procedures are required and not yet specified:
 
--	Identity login
--	Identity association to Hyperty
--	Identity assertion
--	Human Discovery
--	Machine / Object Discovery
--	Trust calculation
--	Chat and Group Chat
--	Human Presence
--	File Sharing
--	Screen Sharing
--	Device Control / Actuation
--	...
+WP4 - Identity login - Identity association to Hyperty - Identity assertion - Human Discovery - Machine / Object Discovery - Trust calculation
+
+WP3 - Chat and Group Chat - Human Presence - File Sharing - Screen Sharing - Device Control / Actuation
+
+*to be completed*
 
 Required Testbed features
 -------------------------
@@ -128,6 +130,8 @@ Required Hyperties
 ------------------
 
 *identify required Hyperties, its main functionalities and associated data schemas. Use a graphical language to describe hyperties composition and relationships (to be defined)*
+
+![Smart Assistance Hyperties](smart-contextual-assistance-hyperties.png)
 
 **references**
 
