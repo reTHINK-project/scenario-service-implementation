@@ -32,6 +32,25 @@ Users of Participate can join ad-hoc group chats to discuss hot topics (local ex
 
 *Textual description of the scenario including the main use cases to be supported. Refer as much as possible to use cases defined in D1.1.*
 
+#28 Being at a validated area
+
+#35 Messaging
+
+#63 H2H Anonymous Conversation
+
+#64 Human Context Presence Management
+
+#72 Recommendation by service provider based on context and preference
+
+#77 Unknown identities
+
+#80 Ad Hoc community
+
+#85 H2H Partial Anonymous Conversation
+
+#86 H2H Multiparty communication
+
+
 #### Identity Management and Trust from user perspective
 
 *Textual description of Identity Management and Trust aspects from User Perspective*
