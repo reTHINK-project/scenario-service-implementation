@@ -27,9 +27,9 @@ Enterprise use case
 **Scenario to be implemented :**
 
 
-Scenario can be decomposed in several phase :
-1 - establishement of a multy party calls with users from the same CSP
-2 - establishment of a 1 to 1 conversation and then adding a new participant by tranferring the call to the MCU
+Scenario can be decomposed in several phase :</br>
+1 - establishement of a multy party calls with users from the same CSP</br>
+2 - establishment of a 1 to 1 conversation and then adding a new participant by tranferring the call to the MCU</br>
 3 - connexion of an external CSP client to the conference
 
 
