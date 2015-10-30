@@ -74,13 +74,14 @@ Calls between A and B is transferred to the MCU in order to add C in the confere
 
 *Textual description of interoperability involving the usage of Apps delivered from different Testbed e.g. Audio Call between a Conversation App from DT and a Conversation App from PT*
 
+
 ###Required reTHINK Framework Functionalities
 
 *Detailed analysis of required funcionalities, interfaces and data schemas as specified in D2.2, D3.1 and D4.1. Highlight missing functionalities*
 
-1 to 1 communication
-send Data : Notification
-Multi party calls
+1 to 1 communication</br>
+send Data : Notification</br>
+Multi party calls</br>
 inter-domain calls 
 
 ###Required Testbed features
