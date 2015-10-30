@@ -20,7 +20,7 @@ Deliverable D1.1 describes the scenario as follows:
 
 In this smart city ecosystem, the city of Bersabon hosts a Cataloge that stores and provides applications to enhance the experience of staying at Bersabon. One of these applications is _Participate_, an application to exchange ideas, suggestions, etc with all the citizens and visitors. Here the local government provides information on the city, request feedback from citizens and allow citizens to discuss (in a group chat) about general problems or topics of the city.
 
-Alice is a citizen of Bersabon that uses a number of applications from Bersabon Cataloge like Participate, and for the registry in these applications she is using the Registry service included in this Cataloge. As one of the citizen registered in Participate, she receives an invitation to join a group chat to propose and discuss the activities to be held during the Women's Equality Week in Bersabon. She acepts the invitation and proposes a workshop where... 
+Alice is a citizen of Bersabon that uses a number of applications from Bersabon Cataloge like Participate, and for the registry in these applications she is using the Registry service included in this Cataloge. As one of the citizen registered in Participate, she receives an invitation to join a group chat to propose and discuss the activities to be held during the Women's Equality Week in Bersabon. She acepts the invitation and proposes a workshop where a group of women of different profiles can tell her story, the obstacles they found along the way and the challenges ahead.
 
 Bob belongs to the Bersabon local police department designed to help local citizens and visitor in different areas (traffic, etc). Bob can send notifications to users of Participate based on location, i.e. drivers closed to a traffic jam or participants in a public demonstration. He also have rights to retrieve public information of users in case of emergency, including the possibility to have a p2p conversation.
 
@@ -31,6 +31,17 @@ Users of Participate can join ad-hoc group chats to discuss hot topics (local ex
 
 
 *Textual description of the scenario including the main use cases to be supported. Refer as much as possible to use cases defined in D1.1.*
+
+- #28 Being at a validated area
+- #35 Messaging
+- #63 H2H Anonymous Conversation
+- #64 Human Context Presence Management
+- #72 Recommendation by service provider based on context and preference
+- #77 Unknown identities
+- #80 Ad Hoc community
+- #85 H2H Partial Anonymous Conversation
+- #86 H2H Multiparty communication
+
 
 #### Identity Management and Trust from user perspective
 
