@@ -5,7 +5,7 @@ Dummy Header for Section 1 per ToC
 Usage Scenarios Description
 ===========================
 
-Tourism a Smart City
+Tourism in a Smart City
 ----------------------------------
 
 ###Scenario Environment (User Scenario #3)
@@ -16,7 +16,7 @@ The Smart Tourist Application User Scenario is situated wihtin a smart economy e
 
 ###User perspective
 
-Going through her daily life, Alice is collecting data on her smartphone, e.g. by  locally storing locations she frequently visits, from sensors she retrieves information from or including news websites which inform her about the latest movies with her favorite actor. The process of acquiring data from sensors and webservices is visualized in the following figure.
+Going through hisr daily life, Frank is collecting data on his smartphone, e.g. by  locally storing locations he frequently visits, from sensors he retrieves information from or including news websites which inform him about the latest movies starring his favorite actor. The process of acquiring data from sensors and webservices is visualized in the following figure.
 
 ![ContextData](01-ContextData.png)
  
