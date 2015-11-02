@@ -27,7 +27,7 @@ Alice's app uses information about his hobbies, preferences, and other interests
 
 ![PartyScreen](03-PartyScreen.png)
 
-Alice looks through the list of attendees. Bob strikes her interest: Alice is interested to meet someone who knows the restaurant scene. In Bob’s profile, Alice can see that he is a chef. Additionally, the music taste is indicated as similar to that of Alice. Bob decided to share his birthday only with his friends, so Alice cannot see it yet. Alice agrees and connects to Bob's social profile. (Associated use case: #15 Retrieving public information from nearby people)
+Alice looks through the list of recommended users. Bob strikes her interest: Alice is interested to meet someone who knows the restaurant scene. In Bob’s profile, Alice can see that he is a chef. Additionally, the music taste is indicated as similar to that of Alice. Bob decided to share his birthday only with his friends, so Alice cannot see it yet. Alice agrees and connects to Bob's social profile. (Associated use case: #15 Retrieving public information from nearby people)
 
 ![RetrievePublicInformation](05-RetrievePublicInformation.png)
 
