@@ -25,30 +25,19 @@ As she is travelling alone, Alice does not know anyone in the city. Hence, she u
 
 Alice's app uses information about his hobbies, preferences, and other interests to search for people in the vicinity. Bob, who also arrived in Bersabon earlier the same day also uses the app and both Alice and Bob share the same hobbies. Both are shown a list of other tourists in the same city which whom they might want to meet in order to discover the city together. (Associated use case: #72 Recommendation by service provider based on context and preference)
 
-Alice looks through the list of attendees. Bob strikes her interest: Alice is interested to meet someone who knows the city’s restaurant scene. In Bob’s profile, Alice can see that he is a chef. Additionally, the music taste is indicated as similar to that of Alice. Bob decided to share his birthday only with his friends, so Alice cannot see it yet. Alice to go find Bob at the party. (Associated use case: #15 Retrieving public information from nearby people)
-
 ![PartyScreen](03-PartyScreen.png)
 
-Both accept and agree to meet in the hotel lobby where Lisa is staying. He reaches Lisa's hotel shortly after and 
-
-###User perspective
- 
-At the event, the smartphones of the attending users are used to transmit some of their profile information to a server or service that is connected to a large display at the event. On this display, the profile pictures of the attending guests are shown (see following figure). (Associated use case: #80 Ad-hoc community)
- 
-
- 
-The event host is broadcasting announcements to the attending event guests, for example information about the buffet or vouchers for drinks at the bar at bigger events. (Associated use case: #14 Ad-hoc group massaging)
-
-![GroupMessage](04-GroupMessage.png)
- 
-On her smartphone, Alice looks through the list of attendees. Bob strikes her interest: Alice is interested to meet someone who knows the city’s restaurant scene. In Bob’s profile, Alice can see that he is a chef. Additionally, the music taste is indicated as similar to that of Alice. Bob decided to share his birthday only with his friends, so Alice cannot see it yet. Alice to go find Bob at the party. (Associated use case: #15 Retrieving public information from nearby people)
+Alice looks through the list of attendees. Bob strikes her interest: Alice is interested to meet someone who knows the restaurant scene. In Bob’s profile, Alice can see that he is a chef. Additionally, the music taste is indicated as similar to that of Alice. Bob decided to share his birthday only with his friends, so Alice cannot see it yet. Alice agrees and connects to Bob's social profile. (Associated use case: #15 Retrieving public information from nearby people)
 
 ![RetrievePublicInformation](05-RetrievePublicInformation.png)
- 
-Alice starts a conversation with Bob. After becoming friends, Alice can see his whole profile. They talk about the music they like and the restaurant scene in the city. Bob knows the restaurants in the city and can recommend one to Alice. For other things like sports, Alice and Bob are not that similar, but Alice can query Bob in order to use his connections to other people to retrieve further recommendations. (Associated use case: #71 Recommendation by friend)
+
+Bob accepts and they agree to meet in the hotel lobby where Bob is staying. Alice reaches Bob's hotel shortly after. Here, they use the app to get recommendations of places to visit in the city.
+Alice adds Bob in the application as a friend and Bob accepts the friend request. Now, Alice can see his whole profile. They talk about the music they like. For other things like sports, Alice and Bob are not that similar, but Alice can query Bob in order to use his connections to other people to retrieve further recommendations. (Associated use case: #71 Recommendation by friend)
 
 ![RecommendationFriend](06-RecFriend.png)
 
+###User perspective
+ 
 
 #### Identity Management and Trust from user perspective
 
@@ -67,7 +56,7 @@ Alice starts a conversation with Bob. After becoming friends, Alice can see his 
 
 *Identify features required from Testbed operators including Public IPs, number of Docker images/Servers and its characteristics, ports to be opened, .. Use a Network diagram.*
 
-Note that so far only one test bed operator has specified available components [see issues](https://github.com/reTHINK-project/testbeds/issues?utf8=✓&q=is%3Aissue+Constraints+of+Test+Bed+Operators+).  If you sepcify any requirements in access of the specified available components, you might face the situation that the use case might not be run on a available testbed.
+
 
 ###Required Hyperties
 
