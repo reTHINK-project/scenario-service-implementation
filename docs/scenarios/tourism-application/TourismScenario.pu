@@ -1,0 +1,50 @@
+@startuml
+
+left to right direction
+skinparam packageStyle rect
+
+actor Tourist
+actor TourismAppDeveloper
+actor CatalogServiceProvider
+actor RecommendationServiceProvider
+actor EventHost
+
+
+rectangle TouristApplicationScenario {
+
+
+
+TourismAppDeveloper -- (develop tourism application)
+CatalogServiceProvider -- (offer tourism application)
+(offer tourism application) .> (develop tourism application) : <<uses>>
+(install tourism application) .> (offer tourism application) : <<uses>>
+
+
+Tourist -- (install tourism application)
+Tourist -- (collect context data)
+RecommendationServiceProvider -- (give recommendation to tourist)
+(give recommendation to tourist) .> (upload profile data) : <<uses>>
+(upload profile data) .> (collect context data) : <<uses>>
+Tourist -- (upload profile data)
+
+
+Tourist -- (publish profile data to event host's server)
+
+EventHost -- (show pulic profiles of ad-hoc community)
+(show pulic profiles of ad-hoc community) .> (publish profile data to event host's server) : <<uses>>
+
+
+EventHost -- (group message to ad-hoc community)
+
+Tourist -- (retrieve public information from person)
+Tourist -- (forward message on graph edges)
+
+note right of (forward message on graph edges)
+<<invariant>>
+{graph data is loaded}
+end note
+
+
+}
+
+@enduml
