@@ -6,16 +6,26 @@ Smart Contextual Assistance
 Scenario Environment
 --------------------
 
+-	PT is a Business Broker managing an ecosystem of different partners including HySmart which is an expert on IoT Hyperties
+-	PT delivers Smart Business Assistance App in a partnership with HySmart
+-	PT also delivers communication (ie plays the CSP role) and Identity Hyperties (ie plays the IdP role)
+-	PT provides a Global Registry
 -	Alice is an individual end-user (service consumer) that works for Old Inn hotel (organisation consumer), which provided her a Smart Work Assistance App to support her in the Job.
--	Smart Business Assistance App is delivered by HyDev which is a small Software Development composed by several Hyperties delivered by PT and others.
+-	Alice is free to use an Identity provided by PT or by others trustful IdPs like the iHackker IdP
 -	Smart Business Assistance enables Alice to collaborate with co-workers, external partners using other similar applications, as well as with customers.
 -	Smart Business Assistance enables Alice to control some office devices including ...
 -	Alice has subscribed additional Smart Contextual Assistance features, with a special discount, to be used in a personal context ie acting as a Smart Personal Assistance App, enabling Alice to manage personal communications and to control her smart home devices.
--	PT is a Business Broker managing an ecosystem of different partners including HyDev and Device Hyperty providers -
 
-Devices (*still under research*\)
+![Main Use Cases](smart-contextual-assistance-business-view.png)
 
--	2 Web Cameras eg [Raspberry PI Camera Module](https://www.raspberrypi.org/products/camera-module/)
+At Old Inn hotel, the following devices are available:
+
+-	1 Web Cameras eg [Raspberry PI Camera Module](https://www.raspberrypi.org/products/camera-module/)
+-	[Power Control ](https://energenie4u.co.uk/catalogue/category/Raspberry-Pi-Accessories)
+
+At Alice's home, the following devices are available:
+
+-	1 Web Cameras eg [Raspberry PI Camera Module](https://www.raspberrypi.org/products/camera-module/)
 -	[Power Control ](https://energenie4u.co.uk/catalogue/category/Raspberry-Pi-Accessories)
 -	Heart Rate Sensor eg [pulse sensor amped](http://www.adafruit.com/products/1093) or [wireless](http://www.adafruit.com/products/1077)
 
@@ -123,6 +133,26 @@ WP3 - Chat and Group Chat - Human Presence - File Sharing - Screen Sharing - Dev
 
 Required Testbed features
 -------------------------
+
+The following domains should be provided:
+
+-	broker.rethink.ptinovacao.pt
+-	hysmart.rethink.ptinovacao.pt
+-	iHackker.rethink.ptinovacao.pt
+
+PT Broker should provide the following servers (and associated sub-domains):
+
+-	Vertx Messaging Node (node.broker.rethink.ptinovacao.pt)
+-	Domain Registry (registry.broker.rethink.ptinovacao.pt)
+-	Catalogue server (catalogue.broker.rethink.ptinovacao.pt)
+-	IdM Server (?) (idm.broker.rethink.ptinovacao.pt)
+-	Global Registry
+-	TURN/STUN server
+
+HySmart should provide the following servers (and associated sub-domains):
+
+-	Domain Registry (registry.hysmart.rethink.ptinovacao.pt)
+-	Catalogue server (catalogue.hysmart.rethink.ptinovacao.pt)
 
 *Identify features required from Testbed operators including Public IPs, number of Docker images/Servers and its characteristics, ports to be opened, .. Use a Network diagram.*
 
