@@ -55,6 +55,13 @@ When Alice context is "located in the Office" a few office automation features (
 
 ![Office Automation Use Cases](smart-contextual-office-automation-use-cases.png)
 
+The following WP1 Use Cases are required:
+
+-	[Registering Devices](https://github.com/reTHINK-project/use-cases/issues/66)
+-	[M2M Always Connected in Trustful Domains for Multi vendor devices](https://github.com/reTHINK-project/use-cases/issues/5)
+-	[Information reception from a sensor](https://github.com/reTHINK-project/use-cases/issues/70)
+-	Device Control (*no use case defined in WP1*\)
+
 #### Business Communication
 
 Alice context can also be set according to the communication party (see figure below), namely:
@@ -64,6 +71,14 @@ Alice context can also be set according to the communication party (see figure b
 -	Partner Context: Alice is in a communication session with a Partner
 
 ![Business Communication Use Cases](smart-contextual-business-communication-use-cases.png)
+
+The following WP1 Use Cases are required:
+
+-	[H2H Conversation with single CSP](https://github.com/reTHINK-project/use-cases/issues/1)
+-	[Messaging / Chat](https://github.com/reTHINK-project/use-cases/issues/35)
+-	[H2H inter-domain Conversation with different CSPs and external IdPs](https://github.com/reTHINK-project/use-cases/issues/95)
+-	[H2H Multiparty Conversations](https://github.com/reTHINK-project/use-cases/issues/86)
+-	[Human presence](https://github.com/reTHINK-project/use-cases/issues/47)
 
 Alice calendar and opened Web Documents is another source of information to be taken into account to infer Alice Context.
 
@@ -77,6 +92,11 @@ The picture below depicts the different Customer Communication Use Cases.
 
 ![Customer Communication Use Cases](smart-contextual-customer-communication-use-cases.png)
 
+The following WP1 Use Cases are required:
+
+-	[Context Aware Contact Center](https://github.com/reTHINK-project/use-cases/issues/94)
+-	[Business Identity in H2H Communication](https://github.com/reTHINK-project/use-cases/issues/93)
+
 **co-worker context**
 
 *to be done*
@@ -87,7 +107,19 @@ The picture below depicts the different Customer Communication Use Cases.
 
 ### Personal Context
 
-*to be done*
+![Home Context Use Cases](smart-contextual-home-use-cases.png)
+
+#### Home Automation
+
+When Alice context is "located in her home" a few Home automation features (see picture below) her available from the Smart Personal Assistance app.
+
+#### Health Monitoring
+
+Alice health is continuously monitored when she is at home and she follows a strict training program to keep her in a good shape.
+
+#### Personal Communication
+
+Alice context can also be set according to the communication party including friends and relatives.
 
 ### Identity Management and Trust from user perspective
 
@@ -119,15 +151,30 @@ The Smart Contextual Assistance requires the following major reTHINK functionali
 -	*partner2* Message Node and its associated Protostub to test cross domain M2M Communication interoperability
 -	*partner3* Message Node and its associated Protostub to test cross domain H2M Communication interoperability
 -	Catalogue server as specified in D2.2 supporting protostub descriptors, Hyperty descriptors, Data Object Schema.
--	Domain Registry as specified in D2.2 supporting Hyperty Instance registration, Hyperty Data Object Instance
+-	Domain Registry as specified in D2.2 supporting Hyperty Instance registration, Hyperty Data Object Instance registration
 -	At least two different IdP servers and its associated IdP (Proxy) protostub
--	Discovery service
+-	Discovery service (to be confirmed)
 
 The following APIs and Procedures are required and not yet specified:
 
-WP4 - Identity login - Identity association to Hyperty - Identity assertion - Human Discovery - Machine / Object Discovery - Trust calculation
+WP4
 
-WP3 - Chat and Group Chat - Human Presence - File Sharing - Screen Sharing - Device Control / Actuation
+-	Account registration
+-	Identity login
+-	Authorisation
+-	Identity association to Hyperty
+-	Identity assertion
+-	Human Discovery
+-	Machine / Object Discovery
+-	Trust calculation / evaluation
+
+WP3
+
+-	Chat and Group Chat
+-	Human Presence
+-	File Sharing
+-	Screen Sharing
+-	Device Control / Actuation
 
 *to be completed*
 
