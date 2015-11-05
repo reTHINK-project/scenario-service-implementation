@@ -24,6 +24,8 @@ Alice is a citizen of Bersabon that uses a number of applications from Bersabon 
 
 Bob belongs to the Bersabon local police department designed to help local citizens and visitor in different areas (traffic, etc). Bob can send notifications to users of Participate based on location, i.e. drivers closed to a traffic jam or participants in a public demonstration. He also have rights to retrieve public information of users in case of emergency, including the possibility to have a p2p conversation.
 
+Some weeks later, when Alice goes to the place where the workshop is held, she receibes a notification that the main avenue to get the venue of the workshop is collapsed due to a broken down truck. 
+
 Users of Participate can join ad-hoc group chats to discuss hot topics (local exhibitions, discussion groups, events, etc). Some groups will be only available for users connected from a specific location, others will be accesible in an anonymous way. 
 
 
