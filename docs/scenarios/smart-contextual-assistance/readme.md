@@ -6,16 +6,26 @@ Smart Contextual Assistance
 Scenario Environment
 --------------------
 
+-	PT is a Business Broker managing an ecosystem of different partners including HySmart which is an expert on IoT Hyperties
+-	PT delivers Smart Business Assistance App in a partnership with HySmart
+-	PT also delivers communication (ie plays the CSP role) and Identity Hyperties (ie plays the IdP role)
+-	PT provides a Global Registry
 -	Alice is an individual end-user (service consumer) that works for Old Inn hotel (organisation consumer), which provided her a Smart Work Assistance App to support her in the Job.
--	Smart Business Assistance App is delivered by HyDev which is a small Software Development composed by several Hyperties delivered by PT and others.
+-	Alice is free to use an Identity provided by PT or by others trustful IdPs like the iHackker IdP
 -	Smart Business Assistance enables Alice to collaborate with co-workers, external partners using other similar applications, as well as with customers.
 -	Smart Business Assistance enables Alice to control some office devices including ...
 -	Alice has subscribed additional Smart Contextual Assistance features, with a special discount, to be used in a personal context ie acting as a Smart Personal Assistance App, enabling Alice to manage personal communications and to control her smart home devices.
--	PT is a Business Broker managing an ecosystem of different partners including HyDev and Device Hyperty providers -
 
-Devices (*still under research*\)
+![Main Use Cases](smart-contextual-assistance-business-view.png)
 
--	2 Web Cameras eg [Raspberry PI Camera Module](https://www.raspberrypi.org/products/camera-module/)
+At Old Inn hotel, the following devices are available:
+
+-	1 Web Cameras eg [Raspberry PI Camera Module](https://www.raspberrypi.org/products/camera-module/)
+-	[Power Control ](https://energenie4u.co.uk/catalogue/category/Raspberry-Pi-Accessories)
+
+At Alice's home, the following devices are available:
+
+-	1 Web Cameras eg [Raspberry PI Camera Module](https://www.raspberrypi.org/products/camera-module/)
 -	[Power Control ](https://energenie4u.co.uk/catalogue/category/Raspberry-Pi-Accessories)
 -	Heart Rate Sensor eg [pulse sensor amped](http://www.adafruit.com/products/1093) or [wireless](http://www.adafruit.com/products/1077)
 
@@ -45,6 +55,13 @@ When Alice context is "located in the Office" a few office automation features (
 
 ![Office Automation Use Cases](smart-contextual-office-automation-use-cases.png)
 
+The following WP1 Use Cases are required:
+
+-	[Registering Devices](https://github.com/reTHINK-project/use-cases/issues/66)
+-	[M2M Always Connected in Trustful Domains for Multi vendor devices](https://github.com/reTHINK-project/use-cases/issues/5)
+-	[Information reception from a sensor](https://github.com/reTHINK-project/use-cases/issues/70)
+-	Device Control (*no use case defined in WP1*\)
+
 #### Business Communication
 
 Alice context can also be set according to the communication party (see figure below), namely:
@@ -54,6 +71,14 @@ Alice context can also be set according to the communication party (see figure b
 -	Partner Context: Alice is in a communication session with a Partner
 
 ![Business Communication Use Cases](smart-contextual-business-communication-use-cases.png)
+
+The following WP1 Use Cases are required:
+
+-	[H2H Conversation with single CSP](https://github.com/reTHINK-project/use-cases/issues/1)
+-	[Messaging / Chat](https://github.com/reTHINK-project/use-cases/issues/35)
+-	[H2H inter-domain Conversation with different CSPs and external IdPs](https://github.com/reTHINK-project/use-cases/issues/95)
+-	[H2H Multiparty Conversations](https://github.com/reTHINK-project/use-cases/issues/86)
+-	[Human presence](https://github.com/reTHINK-project/use-cases/issues/47)
 
 Alice calendar and opened Web Documents is another source of information to be taken into account to infer Alice Context.
 
@@ -67,6 +92,11 @@ The picture below depicts the different Customer Communication Use Cases.
 
 ![Customer Communication Use Cases](smart-contextual-customer-communication-use-cases.png)
 
+The following WP1 Use Cases are required:
+
+-	[Context Aware Contact Center](https://github.com/reTHINK-project/use-cases/issues/94)
+-	[Business Identity in H2H Communication](https://github.com/reTHINK-project/use-cases/issues/93)
+
 **co-worker context**
 
 *to be done*
@@ -77,7 +107,19 @@ The picture below depicts the different Customer Communication Use Cases.
 
 ### Personal Context
 
-*to be done*
+![Home Context Use Cases](smart-contextual-home-use-cases.png)
+
+#### Home Automation
+
+When Alice context is "located in her home" a few Home automation features (see picture below) her available from the Smart Personal Assistance app.
+
+#### Health Monitoring
+
+Alice health is continuously monitored when she is at home and she follows a strict training program to keep her in a good shape.
+
+#### Personal Communication
+
+Alice context can also be set according to the communication party including friends and relatives.
 
 ### Identity Management and Trust from user perspective
 
@@ -109,20 +151,55 @@ The Smart Contextual Assistance requires the following major reTHINK functionali
 -	*partner2* Message Node and its associated Protostub to test cross domain M2M Communication interoperability
 -	*partner3* Message Node and its associated Protostub to test cross domain H2M Communication interoperability
 -	Catalogue server as specified in D2.2 supporting protostub descriptors, Hyperty descriptors, Data Object Schema.
--	Domain Registry as specified in D2.2 supporting Hyperty Instance registration, Hyperty Data Object Instance
+-	Domain Registry as specified in D2.2 supporting Hyperty Instance registration, Hyperty Data Object Instance registration
 -	At least two different IdP servers and its associated IdP (Proxy) protostub
--	Discovery service
+-	Discovery service (to be confirmed)
 
 The following APIs and Procedures are required and not yet specified:
 
-WP4 - Identity login - Identity association to Hyperty - Identity assertion - Human Discovery - Machine / Object Discovery - Trust calculation
+WP4
 
-WP3 - Chat and Group Chat - Human Presence - File Sharing - Screen Sharing - Device Control / Actuation
+-	Account registration
+-	Identity login
+-	Authorisation
+-	Identity association to Hyperty
+-	Identity assertion
+-	Human Discovery
+-	Machine / Object Discovery
+-	Trust calculation / evaluation
+
+WP3
+
+-	Chat and Group Chat
+-	Human Presence
+-	File Sharing
+-	Screen Sharing
+-	Device Control / Actuation
 
 *to be completed*
 
 Required Testbed features
 -------------------------
+
+The following domains should be provided:
+
+-	broker.rethink.ptinovacao.pt
+-	hysmart.rethink.ptinovacao.pt
+-	iHackker.rethink.ptinovacao.pt
+
+PT Broker should provide the following servers (and associated sub-domains):
+
+-	Vertx Messaging Node (node.broker.rethink.ptinovacao.pt)
+-	Domain Registry (registry.broker.rethink.ptinovacao.pt)
+-	Catalogue server (catalogue.broker.rethink.ptinovacao.pt)
+-	IdM Server (?) (idm.broker.rethink.ptinovacao.pt)
+-	Global Registry
+-	TURN/STUN server
+
+HySmart should provide the following servers (and associated sub-domains):
+
+-	Domain Registry (registry.hysmart.rethink.ptinovacao.pt)
+-	Catalogue server (catalogue.hysmart.rethink.ptinovacao.pt)
 
 *Identify features required from Testbed operators including Public IPs, number of Docker images/Servers and its characteristics, ports to be opened, .. Use a Network diagram.*
 

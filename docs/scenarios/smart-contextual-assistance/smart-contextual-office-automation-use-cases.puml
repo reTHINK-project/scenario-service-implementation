@@ -15,7 +15,6 @@ bizzAssistUC <|-right-- officeAutoUC
 lightCtrlUC <.up.. officeAutoUC : <<includes>>
 temperatureCtrlUC <.up.. officeAutoUC : <<includes>>
 videoMonitorUC <.up.. officeAutoUC : <<includes>>
-heartMonitorUC <.up.. officeAutoUC : <<includes>>
 temperatureUC <.up. officeAutoUC : <<includes>>
 lightUC <.up. officeAutoUC : <<includes>>
 powerUC <.up. officeAutoUC : <<includes>>

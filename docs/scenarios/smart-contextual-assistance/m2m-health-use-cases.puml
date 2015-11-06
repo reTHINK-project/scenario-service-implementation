@@ -1,0 +1,8 @@
+@startuml
+
+usecase (Heart Pressure Monitoring) as heartMonitorUC
+usecase (Body Temperature Monitoring) as bodyTemperatureUC
+usecase (Electrocardiogram) as ecgUC
+
+
+@enduml

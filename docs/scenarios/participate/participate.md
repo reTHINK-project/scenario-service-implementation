@@ -20,6 +20,8 @@ This [figure](reThink_participate_use_case.png) provides a UML Use Case view of 
 
 
 *Textual description of the scenario including the main use cases to be supported. Refer as much as possible to use cases defined in D1.1.*
+Imagine the reThink app “Participate” to be our cooperate unique framework for the realization off various different use cases. The basic structure is as simple as possible. An input field provides the possibility to enter natural speech based search items for the search of conversational partners in the internet, when no address book entry is available. Most of the rest of space is occupied by tabs, each of them representing a specific context.  A context, represented by a tab, might be just a traditional address book but also the football group as example for a neighborhood scenario, a smart controller for your hotel room or a eGovernment environment. Tabs can be created, downloaded or deleted. They might be deleted, they might be temporary or persistent or might be activated or deactivated. 
+
 
 #### Identity Management and Trust from user perspective
 
