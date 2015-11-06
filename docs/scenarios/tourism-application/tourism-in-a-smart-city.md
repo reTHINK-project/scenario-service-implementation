@@ -23,7 +23,7 @@ As she is travelling alone, Alice does not know anyone in the city. Hence, she u
 
 ![RecommendationServiceProvider](02-RecServiceProvider.png)
 
-Alice's app uses information about his hobbies, preferences, and other interests to search for people in the vicinity. Bob, who also arrived in Bersabon earlier the same day also uses the app and both Alice and Bob share the same hobbies. Both are shown a list of other tourists in the same city which whom they might want to meet in order to discover the city together. (Associated use case: #72 Recommendation by service provider based on context and preference)
+Alice's app uses information about her hobbies, preferences, and other interests to search for people in the vicinity. Bob, who also arrived in Bersabon earlier the same day also uses the app and both Alice and Bob share the same hobbies. Both are shown a list of other tourists in the same city which whom they might want to meet in order to discover the city together. (Associated use case: #72 Recommendation by service provider based on context and preference)
 
 ![PartyScreen](03-PartyScreen.png)
 
@@ -32,9 +32,9 @@ Alice looks through the list of recommended users. Bob strikes her interest: Ali
 ![RetrievePublicInformation](05-RetrievePublicInformation.png)
 
 Bob accepts and they agree to meet in the hotel lobby where Bob is staying. Alice reaches Bob's hotel shortly after. Here, they use the app to get recommendations of places to visit in the city.
-Alice adds Bob in the application as a friend and Bob accepts the friend request. Now, Alice can see his whole profile. They talk about the music they like. For other things like sports, Alice and Bob are not that similar, but Alice can query Bob in order to use his connections to other people to retrieve further recommendations. (Associated use case: #71 Recommendation by friend)
+Alice adds Bob in the application as a friend and Bob accepts the friend request. Now, Alice can see his whole profile. They talk about the music they like. For other things like sports, Alice and Bob are not that similar. Alice is really interested in playing tennis during her vacation, but Bob is not very sporty. A few days later, Alice gets a call from a unknown number. On her display it is indicated that Bob is a mutual friend with the caller. She picks up, on the phone is Charlie, a friend of Bob's who is interested in playing tennis with her!
 
-![RecommendationFriend](06-RecFriend.png)
+![RecommendationFriend](06-UnknownCaller.png)
 
 ###User perspective
  
