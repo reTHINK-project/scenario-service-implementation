@@ -7,8 +7,6 @@ AlicesDevice <-- CSP: Hyperties
 
 == Load Graph Data ==
 
-
-
 AlicesDevice -> Host: download Graph Data
 note right
 If Alice is using a mobile device, loading
@@ -16,6 +14,14 @@ locally stored graph data could be automatized.
 end note
 AlicesDevice <-- Host: Graph Data
 AlicesDevice <- AlicesDevice: load Graph Data
+
+== Add Contact ==
+
+AlicesDevice -> CharliesDevice: send GUID, name, and information about contacts
+AlicesDevice -> AlicesDevice: store received data in GraphConnector
+CharliesDevice -> AlicesDevice: send GUID, name, and information about contacts
+CharliesDevice -> CharliesDevice: store received data in GraphConnector
+
 
 == Look up Bob and call him ==
 
