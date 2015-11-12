@@ -1,0 +1,48 @@
+@startuml
+
+== App Development and Publishing ==
+
+TourismAppDeveloper -> TourismAppDeveloper: develop app (or plugin for Participate app)
+
+TourismAppDeveloper -> CatalogServiceProvider: publish app to Catalog
+
+Alice -> CatalogServiceProvider: Download app
+
+Alice -> Alice: install app
+
+== Profile and Hotel Lobby Screen ==
+
+Alice -> Alice: create profile
+Hotel -> QRCode: generate
+Alice -> QRCode: scan
+Alice -> Hotel: publish profile
+
+== Group Message ==
+
+Hotel -> Alice: group message
+Hotel -> Bob: group message
+
+== Contact Exchange ==
+
+Alice -> Bob: send GUID, name, and information about contacts
+Bob -> Alice: send GUID, name, and information about contacts
+
+== H2H Call ==
+
+Bob -> Charlie: give Alice's GUID
+
+Charlie -> GlobalRegistry: lookup Alice
+
+Charlie -> AlicesDomainRegistry: lookup Alice's live Hyperties
+
+Charlie -> AlicesMessagingNode: initiate call to Alice
+
+AlicesMessagingNode -> Alice: Establish connection between Alice and Bob
+
+AlicesMessagingNode -> Bob: Establish connection between Alice and Bob
+
+Bob -> Alice: Calling
+
+Alice -> Alice: display trust level for unknown contact Charlie
+
+@enduml

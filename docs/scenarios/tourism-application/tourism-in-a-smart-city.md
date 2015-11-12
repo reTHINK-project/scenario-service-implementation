@@ -10,7 +10,7 @@ Tourism in a Smart City
 
 ###Scenario Environment (User Scenario #3)
 
-The Smart Tourist Application User Scenario is situated wihtin a smart economy environment in a smart city, named Bersabon. Deliverable D1.1 describes the scenario as follows:
+The Smart Tourist Application User Scenario is situated within a smart economy environment in a smart city, named Bersabon. Deliverable D1.1 describes the scenario as follows:
 
 > Frank arrived in Bersabon on Friday morning. In the terminal building of the airport he sees an advertisement of the city app “Participate” and a QR code next to it. He downloads the app and reads through the welcome page and enters a Nickname. In the next step he is asked some questions about himself, utilizing some information from a social network about his preferences and manually the Hotel name he is staying in to enhance his stay. Perfect! The hotel his envisaged on a map and he can ask for the best route. The application provides him with the quickest public transportation route and best ticket options. Sitting in the underground he looks through some recommendations provided via the application, based on his preferences. He reads about a pub crawl tonight. After he read some comments from other participants he decides to participate since he has no appointment for tonight. After the Hotel check in, he starts his sightseeing tour. He searches for the location of the film museum and receives additionally the information, that there is long waiting queue currently. A blinking button saying “Guided Tour in Esperanto” catches his eyeball. He presses the button and a smile runs over his face. Since he has provided his mother tongue during the welcome process he is informed that already 7 other group members from his country have joined the group. The information on the page tells him, that in case more than 7 people request for a conducted tour in Esperanto there will be a tour in 3 hours. He quickly checks in for the group and is informed that for reservation and payment purposes he needs to provide his name and the hotel where he stays for verification purposes. Once the hotel content management system approves his name, the reservation is confirmed. At the museum he quickly finds his group on the map. The tour is perfect and he tells his new party about the pub crawl and gets some other ideas for the next day from them.
 
@@ -24,7 +24,7 @@ Arriving at her hotel, Alice notices a screen that display short profiles about 
 
 ![Screen](Screen.png)
 
-First, checking into her room, Alice and the other tourists in the hotel receive a notifcation. The hotel offers a pub crawl at night. Alice sees that Bob is participating and decides to join.
+First, checking into her room, Alice and the other tourists in the hotel receive a notification. The hotel offers a pub crawl at night. Alice sees that Bob is participating and decides to join.
 
 ![GroupMessage](GroupMessage.png)
 
@@ -35,9 +35,11 @@ They talk about their common interest music. During her vacation, Alice is also 
 ![UnknownCaller](UnknownCaller.png)
 
 
-In order to summarize the contained use cases in this scneario, we give the following use case UML diagramm:
+In order to summarize the contained use cases in this scenario, we give the following UML diagrams:
 
 ![TourismScenario](TourismScenario.png)
+
+![TourismScenario](TourismSequence.png)
 
 
 ###User perspective
@@ -58,7 +60,7 @@ to be done
 
 ###Required reTHINK Framework Functionalities
 
-*Detailed analysis of required funcionalities, interfaces and data schemas as specified in D2.2, D3.1 and D4.1. Highlight missing functionalities*
+*Detailed analysis of required functionalities, interfaces and data schemas as specified in D2.2, D3.1 and D4.1. Highlight missing functionalities*
 
 * Hyperty Runtime in Smartphone
 * GUIDs (for users to be identified)
@@ -91,4 +93,4 @@ to be done
 
 to be completed
 
-TOOD: graphical representation
+TODO: graphical representation
