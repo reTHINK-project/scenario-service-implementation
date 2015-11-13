@@ -6,8 +6,7 @@ skinparam packageStyle rect
 actor Tourist
 actor TourismAppDeveloper
 actor CatalogServiceProvider
-actor RecommendationServiceProvider
-actor EventHost
+actor Hotel
 
 
 rectangle TouristApplicationScenario {
@@ -22,27 +21,31 @@ CatalogServiceProvider -- (offer tourism application)
 
 Tourist -- (install tourism application)
 Tourist -- (collect context data)
-RecommendationServiceProvider -- (give recommendation to tourist)
-(give recommendation to tourist) .> (upload profile data) : <<uses>>
-(upload profile data) .> (collect context data) : <<uses>>
+Tourist -- (create profile)
 Tourist -- (upload profile data)
+(create profile) .> (upload profile data) : <<uses>>
+(collect context data) .> (upload profile data) : <<uses>>
 
 
-Tourist -- (publish profile data to event host's server)
+Tourist -- (publish profile)
 
-EventHost -- (show pulic profiles of ad-hoc community)
-(show pulic profiles of ad-hoc community) .> (publish profile data to event host's server) : <<uses>>
+Tourist -- (H2H call)
+(display trust level) .> (H2H call) : <<extends>>
+
+Hotel -- (show pulic profiles of ad-hoc community)
+(show pulic profiles of ad-hoc community) .> (publish profile) : <<uses>>
 
 
-EventHost -- (group message to ad-hoc community)
+Hotel -- (group message to ad-hoc community)
 
-Tourist -- (retrieve public information from person)
-Tourist -- (forward message on graph edges)
+Tourist -- (add contact to graph connector)
+Tourist -- (add information of contact's contacts into graph connector)
+(add information of contact's contacts into graph connector) .> (add contact to graph connector) : extends
 
-note right of (forward message on graph edges)
-<<invariant>>
-{graph data is loaded}
-end note
+'note right of (forward message on graph edges)
+'<<invariant>>
+'{graph data is loaded}
+'end note
 
 
 }

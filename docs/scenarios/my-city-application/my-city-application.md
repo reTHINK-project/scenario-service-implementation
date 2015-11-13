@@ -24,11 +24,11 @@ Alice is a citizen of Bersabon that uses a number of applications from Bersabon 
 
 Bob belongs to the Bersabon local police department designed to help local citizens and visitor in different areas (traffic, etc). Bob can send notifications to users of Participate based on location, i.e. drivers closed to a traffic jam or participants in a public demonstration. He also have rights to retrieve public information of users in case of emergency, including the possibility to have a p2p conversation.
 
-Some weeks later, when Alice goes to the place where the workshop is held, she receibes a notification that the main avenue to get the venue of the workshop is collapsed due to a broken down truck. She chooses another route but she still arrives ten minutes late.
+Some weeks later, when Alice goes to the place where the workshop is held, she receibes a notification that the main avenue to get the venue of the workshop is collapsed due to a broken down truck. She chooses another route but she still arrives twenty minutes late.
 
-Carol is another citizen of Bersabon and she is taking part in the workshop of Women's Equality Week as speaker. She is also a Participate user, and for the registry in these applications she is using the Registry service included in this Cataloge. After her presentation she creates a group chat with the Participate users that are located at the workshop area.
+Carol is another citizen of Bersabon and she is taking part in the workshop of Women's Equality Week as speaker. She is also a Participate user, and for the registry in these applications she is using the Registry service included in this Cataloge. After her presentation she creates a survey for the Participate users that are located at the workshop area in order to vote for the most popular lesson learned discussed during the workshop.
 
-Whe Alice is arriving at the workshop she receives the invitation to join the group chat proposed by Carol.
+When Alice is arriving at the workshop she receives the invitation to join the survey proposed by Carol.
 
 
 ###User perspective
@@ -36,6 +36,19 @@ Whe Alice is arriving at the workshop she receives the invitation to join the gr
 
 *Textual description of the scenario including the main use cases to be supported. Refer as much as possible to use cases defined in D1.1.*
 
+The _Participate_ App is based in three main functionalities:
+- Notifications
+- Group chat
+- Survey participation
+
+These functionalities can take location into account as a context filter. In this scenario the considered cases are:
+- To send an invitation to participate in a Group Chat to all the registered users of 'Participate'
+- To take part in group chat
+- To send a message with info to all the users in a geographic area registered in 'Participate'
+- To send a message to particpate in a survey to all the users in a geographic area registered in 'Participate'
+- To fill a survey
+
+The following WP1 Use Cases are required:
 - #28 Being at a validated area
 - #35 Messaging
 - #63 H2H Anonymous Conversation
