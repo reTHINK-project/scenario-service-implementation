@@ -53,17 +53,29 @@ rectangle "Smart Contextual Assistance App" {
 
 	contactsH -[hidden]up- comObj
 
-	usecase myCtxtH <<Hyperty Context>> as "**MyContext**
+	usecase myCtxtH <<Hyperty Context>> as "**MyHealthContext**
   --
   Hyperty to Handle
   an Human individual
-	context"
+	Health context"
 
 	component "individual Context" <<Context Object>> as myCtxtObj
 
 	myCtxtH -down-> myCtxtObj
 
 	myCtxtH -[hidden]up- presObj
+
+	usecase myBraH <<Hyperty Context>> as "**MyBracelet**
+  --
+  Hyperty to Collect
+	and publish data
+	from a Bracelet"
+
+	component "Bracelet Data" <<Context Object>> as myBraObj
+
+	myBraH -down-> myBraObj
+
+	myBraH -[hidden]up- myCtxtObj
 
 	usecase roomH <<Hyperty Context>> as "**Room**
   --
@@ -74,13 +86,14 @@ rectangle "Smart Contextual Assistance App" {
 
 	roomH -down-> roomCtxtObj
 
-	roomH -[hidden]up- myCtxtObj
+	roomH -[hidden]up- myBraObj
 
 }
 
 Alice .left- voiceH
 Alice .left- contactsH
 Alice .left- myCtxtH
+Alice .left- myBraH
 Office .left- roomH
 
 @enduml
