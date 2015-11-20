@@ -1,3 +1,5 @@
+- _Hyperty name (Scenarios involved) -> **Partner that describe this hyperty**_
+
 Communication Hyperties:
 - H2H call (Tourism)
 - Group Message (Tourism, MyCity) 
