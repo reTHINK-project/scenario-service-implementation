@@ -1,0 +1,82 @@
+@startuml
+autonumber
+
+participant "Smart Contextual Assistance\nApp" as app
+
+participant "My Bracelet\nHyperty" as myBra
+
+participant "My Heart\nData Object" as myHeart
+
+participant "My Steps\nData Object" as mySteps
+
+participant "Generic Sensor\nAPI" as sensorAPI
+
+participant "Heart Rate Sensor\nAPI" as heartrateAPI
+
+participant "Pedometer Sensor\nAPI" as pedometerAPI
+
+participant "Syncher" as sync
+
+create myBra
+
+app ->  myBra : new()
+
+group discover available Context Health
+
+app ->  myBra : discoverHealthContext()
+
+myBra -> sensorAPI : discoverSensors(  )
+
+myBra <-- sensorAPI : list of Sensors
+
+alt Check HeartRate
+
+myBra -> myBra : check Heart Rate Sensor Exists
+
+else HeartRate Exists
+
+create heartrateAPI
+
+myBra -> heartrateAPI : new
+
+myBra -> sync : create(  )
+
+create myHeart
+
+sync -> myHeart : new
+
+sync -> sync : Object.observe\n( myHeart, syncCallback )
+
+myBra <-- sync : return myHeart
+
+end
+
+alt Check Pedometer
+
+myBra -> myBra : check Pedometer Sensor Exists
+
+else Pedometer Exists
+
+create pedometerAPI
+
+myBra -> pedometerAPI : new
+
+myBra -> sync : create(  )
+
+create mySteps
+
+sync -> mySteps : new
+
+sync -> sync : Object.observe\n( mySteps, syncCallback )
+
+myBra <-- sync : return mySteps
+
+end
+
+app <--  myBra : return myHeart Context,\n mySteps Context
+
+app -> app : Object.observe\n( myHeart, callback )
+
+app -> app : Object.observe\n( mySteps, callback )
+
+@enduml

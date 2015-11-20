@@ -1,0 +1,69 @@
+@startuml
+autonumber
+
+participant "Smart Contextual Assistance\nApp" as app
+
+participant "My Bracelet\nHyperty" as myBra
+
+participant "My Heart\nData Object" as myHeart
+
+participant "My Steps\nData Object" as mySteps
+
+participant "Heart Rate Sensor\nAPI" as heartrateAPI
+
+participant "Pedometer Sensor\nAPI" as pedometerAPI
+
+participant "Syncher" as sync
+
+participant "My Heart\nContextURL" as myHeartURL
+
+participant "My Steps\nContextURL" as myStepsURL
+
+app ->  myBra : startReading( options )
+
+loop
+
+myBra <- heartrateAPI : onchange( event )
+
+myBra -> myHeart : set data
+
+  group MyHeart changes are published in myHeartURL
+
+  myHeart -> sync : syncCallback( my heart changes )
+
+  sync -> myHeartURL : update( my heart changes )
+
+  end
+
+  group MyHeart changes are notified to app
+
+  myHeart -> app : appCallback( my heart changes )
+
+  end
+
+end
+
+loop
+
+myBra <- pedometerAPI : onchange( event )
+
+myBra -> mySteps : set data
+
+  group mySteps changes are published in myHeartURL
+
+  mySteps -> sync : syncCallback( my steps changes )
+
+  sync -> myStepsURL : update( my steps changes )
+
+  end
+
+  group mySteps changes are notified to app
+
+  mySteps -> app : appCallback( my steps changes )
+
+  end
+
+end
+
+
+@enduml
