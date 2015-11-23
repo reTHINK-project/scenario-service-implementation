@@ -1,0 +1,71 @@
+@startuml
+autonumber
+
+participant "App" as app
+
+participant "WRTC\nAPI" as wrtcAPI
+
+participant "Connector\nHyperty" as voiceH
+
+participant "Connection\nData Object" as Conn
+
+participant "Message Factory" as msgF
+
+
+participant "Syncher" as sync
+
+participant "Message BUS" as bus
+
+create voiceH
+
+app ->  voiceH : new( callback )
+
+app ->  voiceH : connect( bobIdentifier, options )
+
+group discover Bob
+
+voiceH -> msgF : createDiscoveryMessage( bobIdentifier, scope )
+
+voiceH <-- msgF : return discoveryBobMessage
+
+voiceH -> bus : postMessage( discoveryBobMessageReq )
+
+...
+
+voiceH <- bus : postMessage( discoveryBobMessageRes )
+
+voiceH -> msgF : getDiscoveryResponse( discoveryBobMessageRes )
+
+voiceH <-- msgF : bobHypertyURL
+
+end group
+
+newpage
+
+group Connection Invite Bob
+
+voiceH -> wrtcAPI : get CommRsources\n(incl SDP)
+
+voiceH <-- wrtcAPI : return CommResources\n(incl SDP)
+
+voiceH -> sync : create\n( connectionObjSchema, CommResources, bobHypertyURL )
+
+create Conn
+
+sync -> Conn : new()
+
+sync -> sync : Object.observe( connection )
+
+sync -> bus : postMessage( createConnectionObjectReqMsg )
+
+...
+
+sync <- bus : postMessage( createConnectionObjectResOkMsg )
+
+voiceH <-- sync : return connection
+
+end group
+
+app <-- voiceH :  return connection
+
+@enduml

@@ -1,0 +1,94 @@
+@startuml
+autonumber
+
+participant "App" as app
+
+participant "WRTC\nAPI" as wrtcAPI
+
+participant "Connector\nHyperty" as voiceH
+
+participant "Alice Connection\nData Object" as ConnA
+
+participant "Bob Connection\nData Object" as ConnB
+
+participant "Syncher" as sync
+
+participant "Message BUS" as bus
+
+bus ->  sync : postMessage( createConnectionObjectReq )
+
+sync -> voiceH : onNotification( notification )
+
+group Hyperty acknowledges notification received
+
+sync <- voiceH : notification.ack()
+
+sync -> bus : postMessage( createConnectionObjectRes )
+
+end group
+
+voiceH -> app : on( AliceInvitationEvt )
+
+note right
+  App is notified about invitation event.
+  Question: How to get information about Alice identity. Three options:
+  1- Hyperty resolves Alice identity from Alice HypertyURL quering the Id Module
+  2- App resolves Alice identity from Alice HypertyURL quering the Id Module
+  3- Message already contains Alice identifier resolved by the Id Module
+end note
+
+group Hyperty subscribes connection object
+
+voiceH -> sync : subscribe( connectionURL )
+
+create ConnA
+
+sync -> ConnA : new()
+
+sync -> bus : postMessage( subscribeConnectionReq )
+
+...
+
+sync <- bus : postMessage( subscribeConnectionRes )
+
+sync --> voiceH : return Connection
+
+end group
+
+newpage
+
+group Alice accepts Connection Invitation from Alice
+
+app -> voiceH : AliceInvitationEvt.accept()
+
+voiceH -> ConnA : get Alice CommResources\n(incl SDP)
+
+voiceH <-- ConnA : return Alice CommResources\n(incl SDP)
+
+voiceH -> wrtcAPI : set Alice CommResources\n(incl SDP)
+
+voiceH -> wrtcAPI : get CommResources\n(incl SDP)
+
+voiceH <-- wrtcAPI : return CommResources\n(incl SDP)
+
+voiceH -> sync : create( connectionObjSchema, CommResources, aliceHypertyURL )
+
+create ConnB
+
+sync -> ConnB : new()
+
+sync -> sync : Object.observe( connection )
+
+sync -> bus : postMessage( createBobConnectionObjectReqMsg )
+
+...
+
+sync <- bus : postMessage( createBobConnectionObjectResOkMsg )
+
+voiceH <-- sync : return Connection
+
+end group
+
+app <-- voiceH :  return Connection
+
+@enduml

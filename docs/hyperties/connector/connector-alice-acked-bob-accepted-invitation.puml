@@ -1,0 +1,58 @@
+@startuml
+autonumber
+
+participant "App" as app
+
+participant "WRTC\nAPI" as wrtcAPI
+
+participant "Connector\nHyperty" as voiceH
+
+participant "Alice Connection\nData Object" as ConnA
+
+participant "Bob Connection\nData Object" as ConnB
+
+participant "Syncher" as sync
+
+participant "Message BUS" as bus
+
+bus ->  sync : postMessage( createBobConnectionObjectReq )
+
+sync -> voiceH : onNotification( notification )
+
+group Hyperty acknowledges notification received
+
+sync <- voiceH : notification.ack()
+
+sync -> bus : postMessage( createBobConnectionObjectRes )
+
+end group
+
+voiceH -> app : on( BobInvitationAcceptedEvt )
+
+group Hyperty subscribes Bob connection object
+
+voiceH -> sync : subscribe( bobConnectionURL )
+
+create ConnB
+
+sync -> ConnB : new()
+
+sync -> bus : postMessage( subscribeBobConnectionReq )
+
+...
+
+sync <- bus : postMessage( subscribeBobConnectionRes )
+
+sync --> voiceH : return BobConnection
+
+end group
+
+group Bob SDP is set
+
+voiceH -> wrtcAPI : set BobCommResources\n(incl SDP)
+
+
+end group
+
+
+@enduml
