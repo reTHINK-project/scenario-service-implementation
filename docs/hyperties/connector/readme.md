@@ -33,7 +33,7 @@ Location Context
 
 *Identify reTHINK standardised data object schemas or Specify new Data Object schemas handled by the Hyperty*
 
-This Hyperty handles a standard [Connection Data Object](https://github.com/reTHINK-project/architecture/tree/master/docs/datamodel/context).
+This Hyperty handles a standard [Connection Data Object](https://github.com/reTHINK-project/architecture/tree/master/docs/datamodel/connection).
 
 ### Hyperty API
 
