@@ -17,7 +17,7 @@ The Connector main functionality is to handle two party audio and voice conversa
 
 *Identify reTHINK standardised data object schemas or Specify new Data Object schemas handled by the Hyperty*
 
-This Hyperty handles a standard [Connection Data Object](https://github.com/reTHINK-project/architecture/tree/master/docs/datamodel/communication#connection).
+This Hyperty handles a standard [Connection Data Object](https://github.com/reTHINK-project/architecture/tree/master/docs/datamodel/connection).
 
 ### Hyperty API
 

@@ -1,13 +1,12 @@
 - _Hyperty name (Scenarios involved) -> **Partner that describe this hyperty**_
 
 Communication Hyperties:
-- H2H call (Tourism)
 - Group Message (Tourism, MyCity) 
-- Data Transfer (Tourism)
+- Data Transfer (Tourism) -> **TUB**
 - Notification (MyCity, Neighbourhood)
 - Survey (MyCity) -> **QUOBIS**
 - Text messaging (Neighbourhood)
-- AV call (Neighbourhood)
+- AV call / H2H (Neighbourhood, Tourism)
 - SmartChat (Contextual)
 
 Context Hyperties:
