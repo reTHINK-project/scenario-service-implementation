@@ -7,9 +7,9 @@ participant "WRTC\nAPI" as wrtcAPI
 
 participant "Connector\nHyperty" as voiceH
 
-participant "Alice Connection\nData Object" as ConnA
+participant "Connection\nData Object" as ConnA
 
-participant "Bob Connection\nData Object" as ConnB
+participant "Bob Peer\nData Object" as ConnB
 
 participant "Syncher" as sync
 
@@ -79,11 +79,11 @@ sync -> ConnB : new()
 
 sync -> sync : Object.observe( connection )
 
-sync -> bus : postMessage( createBobConnectionObjectReqMsg )
+sync -> bus : postMessage( createBobPeerObjectReqMsg )
 
 ...
 
-sync <- bus : postMessage( createBobConnectionObjectResOkMsg )
+sync <- bus : postMessage( createBobPeerObjectResOkMsg )
 
 voiceH <-- sync : return Connection
 

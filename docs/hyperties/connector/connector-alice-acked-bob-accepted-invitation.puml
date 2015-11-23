@@ -7,15 +7,15 @@ participant "WRTC\nAPI" as wrtcAPI
 
 participant "Connector\nHyperty" as voiceH
 
-participant "Alice Connection\nData Object" as ConnA
+participant "Connection\nData Object" as ConnA
 
-participant "Bob Connection\nData Object" as ConnB
+participant "Bob Peer\nData Object" as ConnB
 
 participant "Syncher" as sync
 
 participant "Message BUS" as bus
 
-bus ->  sync : postMessage( createBobConnectionObjectReq )
+bus ->  sync : postMessage( createBobPeerObjectReq )
 
 sync -> voiceH : onNotification( notification )
 
@@ -23,27 +23,27 @@ group Hyperty acknowledges notification received
 
 sync <- voiceH : notification.ack()
 
-sync -> bus : postMessage( createBobConnectionObjectRes )
+sync -> bus : postMessage( createBobPeerObjectRes )
 
 end group
 
 voiceH -> app : on( BobInvitationAcceptedEvt )
 
-group Hyperty subscribes Bob connection object
+group Hyperty subscribes Bob Peer object
 
-voiceH -> sync : subscribe( bobConnectionURL )
+voiceH -> sync : subscribe( bobPeerURL )
 
 create ConnB
 
 sync -> ConnB : new()
 
-sync -> bus : postMessage( subscribeBobConnectionReq )
+sync -> bus : postMessage( subscribeBobPeerReq )
 
 ...
 
-sync <- bus : postMessage( subscribeBobConnectionRes )
+sync <- bus : postMessage( subscribeBobPeerRes )
 
-sync --> voiceH : return BobConnection
+sync --> voiceH : return BobPeer
 
 end group
 

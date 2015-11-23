@@ -13,27 +13,11 @@ Connector Hyperty
 
 The Connector main functionality is to handle two party audio and voice conversations. *the support of Multiparty calls is for further study*
 
-*the next paragraphs to be moved to smart voice Hyperty*
-
-Thus, a few actions are automatically performed according to user context (*the relationship of this automation with Hyperty Policies is for further study*). Contextual behavior is configurable by the App.
-
-#### Contextual Behavior Examples
-
-Presence Context
-
-**Busy** automatically reject or forward incoming invitation to another user or Media Hyperty if inviter is not part of my favourites group.
-
-Activity Context
-
-**Running**
-
-Location Context
-
 ### Hyperty Data Objects schemas
 
 *Identify reTHINK standardised data object schemas or Specify new Data Object schemas handled by the Hyperty*
 
-This Hyperty handles a standard [Connection Data Object](https://github.com/reTHINK-project/architecture/tree/master/docs/datamodel/context).
+This Hyperty handles a standard [Connection Data Object](https://github.com/reTHINK-project/architecture/tree/master/docs/datamodel/communication#connection).
 
 ### Hyperty API
 
