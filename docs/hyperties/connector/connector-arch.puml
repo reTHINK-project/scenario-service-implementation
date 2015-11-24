@@ -1,0 +1,69 @@
+@startuml
+
+class App
+
+
+package ConnectorHyperty <<Rect>> {
+
+	class Connector {
+	}
+
+  class ConnectionController {
+	}
+
+}
+
+package HypertyServiceFramework <<Rect>> {
+
+ class Syncher {
+ }
+
+ class MessageFactory {
+ }
+}
+
+package HypertyCoreRuntime <<Rect>> {
+
+ class MessageBUS {
+ }
+
+}
+
+
+package NativeRuntime <<Rect>> {
+
+ class WebRTCAPI {
+
+ }
+}
+
+package ConnectionDataModel <<Rect>> {
+
+ class Connection {
+ }
+
+ class Peer {
+ }
+}
+
+App -> Connector
+
+App -> ConnectionController
+
+Connector -> MessageBUS
+
+Connector -> Syncher
+
+ConnectionController -> Syncher
+
+Connector -> MessageFactory
+
+Connector - "1..*" ConnectionController
+
+ConnectionController *.. "1" Connection
+
+ConnectionController *.. "1..*" Peer
+
+ConnectionController -> WebRTCAPI
+
+@enduml
