@@ -1,0 +1,68 @@
+@startuml
+autonumber
+
+participant "App" as app
+
+participant "WRTC\nAPI" as wrtcAPI
+
+participant "Connector\nHyperty" as voiceH
+
+participant "Connection\nController" as connCtrl
+
+participant "Connection\nData Object" as ConnA
+
+participant "Bob Peer\nData Object" as ConnB
+
+participant "Syncher" as sync
+
+participant "Message BUS" as bus
+
+app ->  connCtrl : disconnect()
+
+connCtrl -> wrtcAPI : close()
+
+alt Alice disconnects
+
+connCtrl -> ConnA : delete()
+
+ConnA -> sync
+
+sync -> bus : postMessage( DeleteConnectionDataObjMessage )
+
+sync ->x ConnA
+destroy ConnA
+
+connCtrl -> ConnB : unsubscribe()
+
+ConnA -> sync
+
+sync -> bus : postMessage( UnsubscribeBobPeerDataObjMessage )
+
+sync ->x ConnB
+destroy ConnB
+
+else Bob disconnects
+
+connCtrl -> ConnB : delete()
+
+ConnB -> sync
+
+sync -> bus : postMessage( DeleteBobPeerDataObjMessage )
+
+sync ->x ConnB
+destroy ConnB
+
+connCtrl -> ConnA : unsubscribe()
+
+ConnA -> sync
+
+sync -> bus : postMessage( UnsubscribeConnectionDataObjMessage )
+
+sync ->x ConnA
+destroy ConnA
+
+end
+
+connCtrl --> app
+
+@enduml

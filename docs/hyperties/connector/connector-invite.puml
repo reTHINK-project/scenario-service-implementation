@@ -7,6 +7,8 @@ participant "WRTC\nAPI" as wrtcAPI
 
 participant "Connector\nHyperty" as voiceH
 
+participant "Connection\nController" as connCtrl
+
 participant "Connection\nData Object" as Conn
 
 participant "Message Factory" as msgF
@@ -15,9 +17,7 @@ participant "Syncher" as sync
 
 participant "Message BUS" as bus
 
-create voiceH
-
-app ->  voiceH : new( callback )
+app ->  voiceH : addListener( callback )
 
 app ->  voiceH : connect( bobIdentifier, options )
 
@@ -43,7 +43,7 @@ newpage
 
 group Connection Invite Bob
 
-voiceH -> wrtcAPI : get CommRsources\n(incl SDP)
+voiceH -> wrtcAPI : get CommResources\n(incl SDP)
 
 voiceH <-- wrtcAPI : return CommResources\n(incl SDP)
 
@@ -53,7 +53,7 @@ create Conn
 
 sync -> Conn : new()
 
-sync -> sync : Object.observe( connection )
+sync -> sync : Object.observe( Connection )
 
 sync -> bus : postMessage( createConnectionObjectReqMsg )
 
@@ -61,10 +61,14 @@ sync -> bus : postMessage( createConnectionObjectReqMsg )
 
 sync <- bus : postMessage( createConnectionObjectResOkMsg )
 
-voiceH <-- sync : return connection
+voiceH <-- sync : return ConnectionDataObject
 
 end group
 
-app <-- voiceH :  return connection
+create connCtrl
+
+voiceH -> connCtrl : new( ConnectionDataObject )
+
+app <-- voiceH :  return ConnectionController
 
 @enduml
