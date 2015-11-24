@@ -46,3 +46,8 @@ Bob accepts Connection Request:
 Alice is aknowledge that Bob accepts Connection Request:
 
 ![Alice Aked Bob accepts Invite](connector-alice-acked-bob-accepted-invitation.png)
+
+
+Connection is disconnected:
+
+![Connection is closed](connector-disconnect.png)
