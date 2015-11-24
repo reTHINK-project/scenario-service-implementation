@@ -1,0 +1,56 @@
+@startuml
+
+class App
+
+package ConnectorHyperty <<Rect>> {
+
+	class Connector {
+	}
+
+  class ConnectionController {
+	}
+}
+
+package SmartVoiceHyperty <<Rect>> {
+
+	class SmartVoice {
+	}
+
+  class SmartVoiceController {
+	}
+
+}
+
+package ConnectionDataModel <<Rect>> {
+
+ class Connection {
+ }
+
+ class Peer {
+ }
+}
+
+package ContextDataModel <<Rect>> {
+
+ class Context {
+ }
+
+}
+
+App -> SmartVoice
+
+App -> SmartVoiceController
+
+SmartVoice -left-|> Connector
+
+SmartVoiceController -right-|> ConnectionController
+
+SmartVoice - "1..*" SmartVoiceController
+
+SmartVoiceController *.. "1" Connection
+
+SmartVoiceController *.. "1..*" Peer
+
+SmartVoice *.. "1..*" Context
+
+@enduml
