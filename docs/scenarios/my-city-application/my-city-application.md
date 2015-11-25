@@ -75,6 +75,7 @@ My City users will be identified as citizens of Bersabon but their participation
 *Detailed analysis of required funcionalities, interfaces and data schemas as specified in D2.2, D3.1 and D4.1. Highlight missing functionalities*
 
 The following APIs and Procedures are required and not yet specified:
+
 WP4:
 - Account registration
 - Identity login
