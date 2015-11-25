@@ -63,6 +63,7 @@ The following WP1 Use Cases are required:
 #### Identity Management and Trust from user perspective
 
 *Textual description of Identity Management and Trust aspects from User Perspective*
+My City users will be identified as citizens of Bersabon but their participation in My City will be anonymous for the features described before. 
 
 #### Interoperability from user perspective
 
@@ -72,8 +73,18 @@ The following WP1 Use Cases are required:
 
 *Detailed analysis of required funcionalities, interfaces and data schemas as specified in D2.2, D3.1 and D4.1. Highlight missing functionalities*
 
-###Required Testbed features
+The following APIs and Procedures are required and not yet specified:
+WP4:
+- Account registration
+- Identity login
+- Authorisation
 
+WP3:
+- Chat and Group Chat
+- Messaging 
+- Geolocation filter
+
+###Required Testbed features
 
 *Identify features required from Testbed operators including Public IPs, number of Docker images/Servers and its characteristics, ports to be opened, .. Use a Network diagram.*
 
