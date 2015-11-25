@@ -63,6 +63,7 @@ The following WP1 Use Cases are required:
 #### Identity Management and Trust from user perspective
 
 *Textual description of Identity Management and Trust aspects from User Perspective*
+
 My City users will be identified as citizens of Bersabon but their participation in My City will be anonymous for the features described before. 
 
 #### Interoperability from user perspective
