@@ -17,13 +17,30 @@ This Hyperty handles a standard [Context Data Object](https://github.com/reTHINK
 
 ### Hyperty API
 
-DataTransfer hyperty provides a REST based API for data up- and download, using GET, POST, PUT, and DELETE
+DataTransfer hyperty provides a REST based API for data up- and download, using GET, POST, and DELETE
 
+**addListener**
 
+This function is used to handle incoming requests
+
+**retrieve**
+
+This function requests a data-object via HTTP GET
+
+**send**
+
+This function sends a data object via HTTP POST.
+
+**requestDelete**
+
+This function sends an HTTP DELETE for a specific object-id
+
+Performs a POST
 
 ### Main data flows
 
 [GET DataObject]()
+
 [POST DataObject]()
-[PUT DataObject]()
+
 [DELETE DataObject]()
