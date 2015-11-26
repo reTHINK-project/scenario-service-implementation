@@ -59,7 +59,7 @@ end group
 
 newpage
 
-group Alice accepts Connection Invitation from Alice
+group Bob accepts Connection Invitation from Alice
 
 app -> voiceH : AliceInvitationEvt.accept()
 

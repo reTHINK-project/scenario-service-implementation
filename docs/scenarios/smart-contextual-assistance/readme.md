@@ -18,6 +18,8 @@ Scenario Environment
 
 ![Main Use Cases](smart-contextual-assistance-business-view.png)
 
+Alice uses a bracelet to track her health status.
+
 At Old Inn hotel, the following devices are available:
 
 -	1 Web Cameras eg [Raspberry PI Camera Module](https://www.raspberrypi.org/products/camera-module/)
@@ -27,7 +29,6 @@ At Alice's home, the following devices are available:
 
 -	1 Web Cameras eg [Raspberry PI Camera Module](https://www.raspberrypi.org/products/camera-module/)
 -	[Power Control ](https://energenie4u.co.uk/catalogue/category/Raspberry-Pi-Accessories)
--	Heart Rate Sensor eg [pulse sensor amped](http://www.adafruit.com/products/1093) or [wireless](http://www.adafruit.com/products/1077)
 
 User perspective
 ----------------
@@ -113,11 +114,22 @@ The following WP1 Use Cases are required:
 
 When Alice context is "located in her home" a few Home automation features (see picture below) her available from the Smart Personal Assistance app.
 
-#### Health Monitoring
+#### Activity and Health Monitoring
 
-Alice health is continuously monitored when she is at home and she follows a strict training program to keep her in a good shape.
+Alice health is continuously monitored through her bracelet and she follows a strict workout program to keep her in a good shape. Alice workout includes sessions in her gymnasium and outside her gymnasium (e.g. biking and running). Alice activity is continuously monitored by the App who also reminds her about workout activities to be performed. Alice's personal trainer can remotely track Alice's performance, giving advices and setting up remote multimedia sessions to train her (in a group or individually, according to subscribed workout program).
+
+![Actitivy and Health Monitoring Use Cases](smart-contextual-health-monitoring-use-cases.png)
+
+Workout Assistance App also enables her to meet and join other people following similar Workout programs. For example, during workout sessions (e.g. running) the App can also recommend to setup remote sessions at the same time and performing the workout together as if they were in the same location. During these Workout Remote Session, users can share in real time workout performance indicators in order to motivate each other.
+
+Alice activity and health monitoring produces Alice Health Context and Alice Activity status inferred according to some AI algorithms.
 
 #### Personal Communication
+
+Alice's communication experience is adapted according to Alice's context, namely:
+
+-	when training, only a small group of people can reach Alice including people from Alice's personal contact list and work contact list.
+-	when training (or on the go), the focus is on voice user interface to handle communication (including ongoing communications).
 
 Alice context can also be set according to the communication party including friends and relatives.
 
