@@ -1,0 +1,16 @@
+@startsalt
+
+{+
+{ <b> <&arrow-left> | icon  }
+==
+{
+[avatarA] <b>vsilva 18:40
+bla bla bla bla
+..
+[avatarB] <b>pchainho 18:41
+bla bla bla bla
+}
+--
+"write message     "
+}
+@endsalt
