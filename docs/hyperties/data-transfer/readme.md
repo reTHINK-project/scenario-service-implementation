@@ -35,8 +35,6 @@ This function sends a data object via HTTP POST.
 
 This function sends an HTTP DELETE for a specific object-id
 
-Performs a POST
-
 ### Main data flows
 
 [GET DataObject]()
