@@ -19,19 +19,17 @@ skinparam component {
 
 actor Alice << Human >>
 actor Customer <<Human>>
-actor Coworkers <<Human>>
 actor Office <<Object>> as "Office Room"
-actor "Home" <<Object>>
 
 rectangle "Smart Contextual Assistance App" {
-  usecase voiceH <<Hyperty Communicator>> as "**SmartVoice**
+  usecase voiceH <<Hyperty Connector>> as "**SmartVoice**
   --
   Hyperty to Handle Audio
   and Video Communications"
 
-	component Communication <<Communication Object>> as comObj
+	component Connection <<Connection Object>> as comObj
 
-	component "Communication Context" <<Context Object>> as ctxtObj
+	component "Connection Context" <<Context Object>> as ctxtObj
 
 	voiceH -down-> comObj
 
@@ -53,18 +51,6 @@ rectangle "Smart Contextual Assistance App" {
 
 	contactsH -[hidden]up- comObj
 
-	usecase myCtxtH <<Hyperty Context>> as "**MyHealthContext**
-  --
-  Hyperty to Handle
-  an Human individual
-	Health context"
-
-	component "individual Context" <<Context Object>> as myCtxtObj
-
-	myCtxtH -down-> myCtxtObj
-
-	myCtxtH -[hidden]up- presObj
-
 	usecase myBraH <<Hyperty Context>> as "**MyBracelet**
   --
   Hyperty to Collect
@@ -75,7 +61,30 @@ rectangle "Smart Contextual Assistance App" {
 
 	myBraH -down-> myBraObj
 
-	myBraH -[hidden]up- myCtxtObj
+	myBraH -[hidden]up- presObj
+
+	usecase myCtxtH <<Hyperty Context>> as "**MyHealthContext**
+  --
+  Hyperty to Handle
+  an Human individual
+	Health context"
+
+	component "Individual Context" <<Context Object>> as myCtxtObj
+
+	myCtxtH -up-> myBraObj
+
+	myCtxtH -down-> myCtxtObj
+
+
+	usecase myWorkoutBuddyH <<Hyperty>> as "**Workout Buddy**
+  --
+  Hyperty to Handle
+  the match Workout Buddy
+	and the setup of
+	Workout Buddy Sessions"
+
+	myWorkoutBuddyH -up-> myCtxtObj
+
 
 	usecase roomH <<Hyperty Context>> as "**Room**
   --
@@ -86,14 +95,19 @@ rectangle "Smart Contextual Assistance App" {
 
 	roomH -down-> roomCtxtObj
 
-	roomH -[hidden]up- myBraObj
+	roomH -[hidden]up- myWorkoutBuddyH
 
 }
 
+actor Buddy <<Human>> as "Workout Buddy"
+
 Alice .left- voiceH
+Customer .right- voiceH
 Alice .left- contactsH
 Alice .left- myCtxtH
 Alice .left- myBraH
+Alice .left- myWorkoutBuddyH
+Buddy .right- myWorkoutBuddyH
 Office .left- roomH
 
 @enduml

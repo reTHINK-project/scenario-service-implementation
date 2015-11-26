@@ -221,7 +221,3 @@ Required Hyperties
 *identify required Hyperties, its main functionalities and associated data schemas. Use a graphical language to describe hyperties composition and relationships (to be defined)*
 
 ![Smart Assistance Hyperties](smart-contextual-assistance-hyperties.png)
-
-**references**
-
-[Open HOME AUTOMATION](https://www.openhomeautomation.net)
