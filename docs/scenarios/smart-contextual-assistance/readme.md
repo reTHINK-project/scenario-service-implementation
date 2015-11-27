@@ -10,7 +10,7 @@ Scenario Environment
 -	PT delivers Smart Business Assistance App in a partnership with HySmart
 -	PT also delivers communication (ie plays the CSP role) and Identity Hyperties (ie plays the IdP role)
 -	PT provides a Global Registry
--	Alice is an individual end-user (service consumer) that works for Old Inn hotel (organisation consumer), which provided her a Smart Work Assistance App to support her in the Job.
+-	Alice is an individual end-user (service consumer) that works for Old Inn hotel (organization consumer), which provided her a Smart Work Assistance App to support her in the Job.
 -	Alice is free to use an Identity provided by PT or by others trustful IdPs like the iHackker IdP
 -	Smart Business Assistance enables Alice to collaborate with co-workers, external partners using other similar applications, as well as with customers.
 -	Smart Business Assistance enables Alice to control some office devices including ...
@@ -35,7 +35,7 @@ User perspective
 
 *Textual description of the scenario including the main use cases to be supported. Refer as much as possible to use cases defined in D1.1.*
 
-The Smart Contextual Assistance Apps automaticaly adapts its behavior according to Alice's context and a Physical Space's (office room or home room) context. Two main Alice's context's are considered: Work context and Personal context.
+The Smart Contextual Assistance Apps automatically adapts its behavior according to Alice's context and a Physical Space's (office room or home room) context. Two main Alice's context's are considered: Work context and Personal context.
 
 ![Main Use Cases](smart-contextual-assistance-use-cases.png)
 
@@ -59,7 +59,7 @@ When Alice context is "located in the Office" a few office automation features (
 The following WP1 Use Cases are required:
 
 -	[Registering Devices](https://github.com/reTHINK-project/use-cases/issues/66)
--	[M2M Always Connected in Trustful Domains for Multi vendor devices](https://github.com/reTHINK-project/use-cases/issues/5)
+-	[M2M Always Connected in Trustful Domains for Multi-vendor devices](https://github.com/reTHINK-project/use-cases/issues/5)
 -	[Information reception from a sensor](https://github.com/reTHINK-project/use-cases/issues/70)
 -	Device Control (*no use case defined in WP1*\)
 
@@ -95,7 +95,7 @@ The picture below depicts the different Customer Communication Use Cases.
 
 The following WP1 Use Cases are required:
 
--	[Context Aware Contact Center](https://github.com/reTHINK-project/use-cases/issues/94)
+-	[Context-Aware Contact Center](https://github.com/reTHINK-project/use-cases/issues/94)
 -	[Business Identity in H2H Communication](https://github.com/reTHINK-project/use-cases/issues/93)
 
 **co-worker context**
@@ -116,13 +116,13 @@ When Alice context is "located in her home" a few Home automation features (see 
 
 #### Activity and Health Monitoring
 
-Alice health is continuously monitored through her bracelet and she follows a strict workout program to keep her in a good shape. Alice workout includes sessions in her gymnasium and outside her gymnasium (e.g. biking and running). Alice activity is continuously monitored by the App who also reminds her about workout activities to be performed. Alice's personal coach can remotely track Alice's performance, giving advices and setting up remote multimedia sessions to coach her (in a group or individually, according to subscribed workout program).
+Alice health is continuously monitored through her bracelet and she follows a strict workout program to keep her in a good shape. Alice workout includes sessions in her gymnasium and outside her gymnasium (e.g. biking and running). Alice activity is continuously monitored by the App who also reminds her about workout activities to be performed. Alice's personal coach can remotely track Alice's performance, giving advice and setting up remote multimedia sessions to coach her (in a group or individually, according to subscribed workout program).
 
 ![Actitivy and Health Monitoring Use Cases](smart-contextual-health-monitoring-use-cases.png)
 
 Workout Assistance App also enables her to meet and join other people following similar Workout programs. For example, during fitness sessions the App can also recommend to setup remote sessions at the same time and do fitness together as if they were in the same location. During these Do Remote Fitness Together Session, users can share in real time workout performance indicators in order to motivate each other.
 
-Alice activity and health monitoring produces Alice Health Context and Alice Activity status inferred according to some AI algorithms.
+Alice activity and health monitoring produce Alice Health Context and Alice Activity status inferred according to some AI algorithms.
 
 #### Personal Communication
 
@@ -145,7 +145,7 @@ As mentioned below, Alice identity selection will depend on her context. For exa
 
 Customers and Partners can use any application from other testbeds to communicate with Smart Contextual Assistance App. *to be identified the ones to interoperate with, later*
 
-Smart Contextual Assistance App office and home automation features should be able to be used in the Hotel Guest scenario when appropriately authorised by the Hotel management. The other way around should also be possible.
+Smart Contextual Assistance App office and home automation features should be able to be used in the Hotel Guest scenario when appropriately authorized by the Hotel management. The other way around should also be possible.
 
 Required reTHINK Framework Functionalities
 ------------------------------------------
