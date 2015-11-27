@@ -76,15 +76,23 @@ rectangle "Smart Contextual Assistance App" {
 	myCtxtH -down-> myCtxtObj
 
 
-	usecase myWorkoutBuddyH <<Hyperty>> as "**Workout Buddy**
+	usecase myWorkoutBuddyH <<Hyperty>> as "**My Fitness Buddy**
   --
   Hyperty to Handle
-  the match Workout Buddy
+  Fitness Buddy matches
 	and the setup of
-	Workout Buddy Sessions"
+	Fitness Buddy Sessions"
 
 	myWorkoutBuddyH -up-> myCtxtObj
 
+	usecase myCoachH <<Hyperty>> as "**My Coach**
+  --
+  Hyperty to Handle
+  Personal Coach tracking
+	and the setup of
+	Coaching Sessions"
+
+	myCoachH -up-> myCtxtObj
 
 	usecase roomH <<Hyperty Context>> as "**Room**
   --
@@ -100,6 +108,7 @@ rectangle "Smart Contextual Assistance App" {
 }
 
 actor Buddy <<Human>> as "Workout Buddy"
+actor Coach <<Human>> as "Coach"
 
 Alice .left- voiceH
 Customer .right- voiceH
@@ -108,6 +117,8 @@ Alice .left- myCtxtH
 Alice .left- myBraH
 Alice .left- myWorkoutBuddyH
 Buddy .right- myWorkoutBuddyH
+Alice .left- myCoachH
+Coach .right- myCoachH
 Office .left- roomH
 
 @enduml

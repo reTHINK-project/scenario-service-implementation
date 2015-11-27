@@ -1,7 +1,7 @@
 @startuml
 
 actor Alice
-actor Trainer
+actor "Coach" as Trainer
 actor WorkoutBuddy
 
 rectangle "Health and Activity Monitoring" {

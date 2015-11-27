@@ -116,11 +116,11 @@ When Alice context is "located in her home" a few Home automation features (see 
 
 #### Activity and Health Monitoring
 
-Alice health is continuously monitored through her bracelet and she follows a strict workout program to keep her in a good shape. Alice workout includes sessions in her gymnasium and outside her gymnasium (e.g. biking and running). Alice activity is continuously monitored by the App who also reminds her about workout activities to be performed. Alice's personal trainer can remotely track Alice's performance, giving advices and setting up remote multimedia sessions to train her (in a group or individually, according to subscribed workout program).
+Alice health is continuously monitored through her bracelet and she follows a strict workout program to keep her in a good shape. Alice workout includes sessions in her gymnasium and outside her gymnasium (e.g. biking and running). Alice activity is continuously monitored by the App who also reminds her about workout activities to be performed. Alice's personal coach can remotely track Alice's performance, giving advices and setting up remote multimedia sessions to coach her (in a group or individually, according to subscribed workout program).
 
 ![Actitivy and Health Monitoring Use Cases](smart-contextual-health-monitoring-use-cases.png)
 
-Workout Assistance App also enables her to meet and join other people following similar Workout programs. For example, during workout sessions (e.g. running) the App can also recommend to setup remote sessions at the same time and performing the workout together as if they were in the same location. During these Workout Remote Session, users can share in real time workout performance indicators in order to motivate each other.
+Workout Assistance App also enables her to meet and join other people following similar Workout programs. For example, during fitness sessions the App can also recommend to setup remote sessions at the same time and do fitness together as if they were in the same location. During these Do Remote Fitness Together Session, users can share in real time workout performance indicators in order to motivate each other.
 
 Alice activity and health monitoring produces Alice Health Context and Alice Activity status inferred according to some AI algorithms.
 
