@@ -55,8 +55,6 @@ startReading( SensorOptions options )
 
 Location Setup:
 
-![Location Setup]()
+![Location Setup](location-setup.png)
 
-Monitoring data collected from Location:
 
-![Monitoring Location]()
