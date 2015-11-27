@@ -94,5 +94,10 @@ Note that so far only one test bed operator has specified available components [
 
 ###Required Hyperties
 
-
 *identify required Hyperties, its main functionalities and associated data schemas. Use a graphical language to describe hyperties composition and relationships (to be defined)*
+
+This is the list of required hyperties for this scenario:
+- Communication Hyperty: Notification
+- Communication Hyperty: Group Chat
+- Communication Hyperty: Survey
+- Context Hyperty: Location
