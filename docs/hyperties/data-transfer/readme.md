@@ -37,8 +37,8 @@ This function sends an HTTP DELETE for a specific object-id
 
 ### Main data flows
 
-[DataTransferHypertyGET]
+![DataTransferHypertyGET](DataTransferHypertyGET.png)
 
-[DataTransferHypertyPOST]
+![DataTransferHypertyPOST](DataTransferHypertyPOST.png)
 
-[DataTransferHypertyDELETE]
+![DataTransferHypertyDELETE](DataTransferHypertyDELETE.png)
