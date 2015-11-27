@@ -19,27 +19,13 @@ participant "Message BUS" as bus
 
 app ->  voiceH : addListener( callback )
 
-app ->  voiceH : connect( bobIdentifier, options )
-
-group discover Bob
-
-voiceH -> msgF : createDiscoveryMessage( bobIdentifier, scope )
-
-voiceH <-- msgF : return discoveryBobMessage
-
-voiceH -> bus : postMessage( discoveryBobMessageReq )
-
-...
-
-voiceH <- bus : postMessage( discoveryBobMessageRes )
-
-voiceH -> msgF : getDiscoveryResponse( discoveryBobMessageRes )
-
-voiceH <-- msgF : bobHypertyURL
-
-end group
+note over voiceH
+  App listener to receive incoming connection requests
+end note
 
 newpage
+
+app ->  voiceH : connect( bobHypertyURL, options )
 
 group Connection Invite Bob
 

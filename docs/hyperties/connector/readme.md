@@ -15,7 +15,7 @@ The Connector main functionality is to handle two party audio and voice conversa
 
 ![Architecture](connector-arch.png)
 
-As depicted above, the Connector Hyperty comprises the Connector class that handles the creation of new outgoing or incoming connections. Each Connection is instance is controlled by the ConnectionController class that uses the the native WebRTC API.
+As depicted above, the Connector Hyperty comprises the Connector class that handles the creation of new outgoing or incoming connections. Each Connection instance is controlled by the ConnectionController class that uses the the native WebRTC API.
 
 The Connection signalling is handled by the Syncher class from the Hyperty Service Framework library according to the Reporter-Observer data synchronisation mechanism, by using the standard [Connection Data Objects](https://github.com/reTHINK-project/architecture/tree/master/docs/datamodel/connection).
 
@@ -65,9 +65,9 @@ This function is used to remove a peer from an existing connection instance.
 
 The following main use cases are supported by the Connector Hyperty:
 
-#### User Discovery
+#### Hyperty initialisation
 
-Discovery of User (Bob) to connect to:
+Application adds a listener to receive incoming connection requests events.
 
 ![Bob Discovery](connector-invite.png)
 

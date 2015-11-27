@@ -22,20 +22,9 @@ actor Customer <<Human>>
 actor Office <<Object>> as "Office Room"
 
 rectangle "Smart Contextual Assistance App" {
-  usecase voiceH <<Hyperty Connector>> as "**SmartVoice**
-  --
-  Hyperty to Handle Audio
-  and Video Communications"
 
-	component Connection <<Connection Object>> as comObj
 
-	component "Connection Context" <<Context Object>> as ctxtObj
-
-	voiceH -down-> comObj
-
-	voiceH -down-> ctxtObj
-
-  usecase contactsH <<Hyperty Context>> as "**SmartContacts**
+  usecase contactsH <<Hyperty Context>> as "**MyContacts**
   --
   Hyperty to Handle
   a presence enriched
@@ -49,8 +38,6 @@ rectangle "Smart Contextual Assistance App" {
 
 	contactsH -down-> presObj
 
-	contactsH -[hidden]up- comObj
-
 	usecase myBraH <<Hyperty Context>> as "**MyBracelet**
   --
   Hyperty to Collect
@@ -63,7 +50,7 @@ rectangle "Smart Contextual Assistance App" {
 
 	myBraH -[hidden]up- presObj
 
-	usecase myCtxtH <<Hyperty Context>> as "**MyHealthContext**
+	usecase myCtxtH <<Hyperty Context>> as "**MyContext**
   --
   Hyperty to Handle
   an Human individual
@@ -75,6 +62,17 @@ rectangle "Smart Contextual Assistance App" {
 
 	myCtxtH -down-> myCtxtObj
 
+	usecase voiceH <<Hyperty Connector>> as "**ContextualVoice**
+  --
+  Hyperty to Handle Audio
+  and Video Communications
+	according to User's Context"
+
+	component Connection <<Connection Object>> as comObj
+
+	voiceH -down-> comObj
+
+	voiceH -down-> myCtxtObj
 
 	usecase myWorkoutBuddyH <<Hyperty>> as "**My Fitness Buddy**
   --
@@ -85,6 +83,8 @@ rectangle "Smart Contextual Assistance App" {
 
 	myWorkoutBuddyH -up-> myCtxtObj
 
+	myWorkoutBuddyH -up-> comObj
+
 	usecase myCoachH <<Hyperty>> as "**My Coach**
   --
   Hyperty to Handle
@@ -93,6 +93,8 @@ rectangle "Smart Contextual Assistance App" {
 	Coaching Sessions"
 
 	myCoachH -up-> myCtxtObj
+
+	myCoachH -up-> comObj
 
 	usecase roomH <<Hyperty Context>> as "**Room**
   --
@@ -107,7 +109,7 @@ rectangle "Smart Contextual Assistance App" {
 
 }
 
-actor Buddy <<Human>> as "Workout Buddy"
+actor Buddy <<Human>> as "Fitness Buddy"
 actor Coach <<Human>> as "Coach"
 
 Alice .left- voiceH
@@ -116,9 +118,9 @@ Alice .left- contactsH
 Alice .left- myCtxtH
 Alice .left- myBraH
 Alice .left- myWorkoutBuddyH
-Buddy .right- myWorkoutBuddyH
-Alice .left- myCoachH
-Coach .right- myCoachH
+myWorkoutBuddyH .left- Buddy
+Alice . myCoachH
+myCoachH .right. Coach
 Office .left- roomH
 
 @enduml
