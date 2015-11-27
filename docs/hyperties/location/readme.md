@@ -33,7 +33,7 @@ Geolocation
 
 *Specify Hyperty API to be consumed by the Application*
 
-Bracelet API is aligned with [W3C Generic Sensor API](http://www.w3.org/TR/2015/WD-generic-sensor-20151015/)
+Location API is aligned with [W3C Generic Sensor API](http://www.w3.org/TR/2015/WD-generic-sensor-20151015/)
 
 **Discover Available Health Context from the Bracelet**
 
@@ -55,8 +55,6 @@ startReading( SensorOptions options )
 
 Location Setup:
 
-![Location Setup]()
+![Location Setup](location-setup.png)
 
-Monitoring data collected from Location:
 
-![Monitoring Location]()
