@@ -35,7 +35,7 @@ Geolocation
 
 Location API is aligned with [W3C Generic Sensor API](http://www.w3.org/TR/2015/WD-generic-sensor-20151015/)
 
-**Discover Available Health Context from the Bracelet**
+**Discover Available Location from the Device**
 
 ```
 Promise<ContextDataObjectList> discoverGeolocationContext( )
