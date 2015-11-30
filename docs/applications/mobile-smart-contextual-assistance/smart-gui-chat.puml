@@ -1,16 +1,16 @@
 @startsalt
-
 {+
-{ <b> <&arrow-left> | icon  }
-==
-{
-[<img:>] <b>vsilva 18:40
-bla bla bla bla
-..
-[avatarB] <b>pchainho 18:41
-bla bla bla bla
-}
---
-"write message     "
+  <&grid-four-up> joelpinheiro <&account-logout>
+  ==
+  {
+  {[Call] | [<b>Video] | [Chat]} 
+  ~~
+  [img:] <b>joelpinheiro 10:31
+  ping
+  [img:] <b>pchainho 10:32
+  pong
+  { "Write message... "}
+  }
+  --
 }
 @endsalt
