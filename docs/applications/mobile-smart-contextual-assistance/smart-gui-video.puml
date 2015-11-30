@@ -3,7 +3,7 @@
   <&grid-four-up> joelpinheiro <&account-logout>
   ==
   {
-  {[Call] | [<b>Video] | [Chat]} 
+  {[Audio] | [<b>Video] | [Chat]} 
   ~~
   {{+*************************************************
    *<Xframe>*
