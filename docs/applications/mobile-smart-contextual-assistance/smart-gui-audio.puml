@@ -1,0 +1,12 @@
+@startsalt
+{+
+  <&grid-four-up> joelpinheiro <&account-logout>
+  ==
+  {[<b>Audio] | [Video] | [Chat]} 
+  ~~
+    Audio call to <&person> pchainho
+    4:32
+    [Hang up]
+  --
+}
+@endsalt
