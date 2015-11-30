@@ -23,9 +23,13 @@ This UI is to Support Chat Conversations.
 
 This UI is to Support Audio Conversations.
 
+![audio ui](smart-gui-audio.png)
+
 #### Video Conversation
 
 This UI is to Support Video Conversations.
+
+![video ui](smart-gui-video.png)
 
 #### Account Settings
 
