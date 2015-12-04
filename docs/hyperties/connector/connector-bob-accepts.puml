@@ -31,13 +31,6 @@ end group
 
 voiceH -> app : on( AliceInvitationEvt )
 
-note right
-  App is notified about invitation event.
-  Question: How to get information about Alice identity. Three options:
-  1- Hyperty resolves Alice identity from Alice HypertyURL quering the Id Module
-  2- App resolves Alice identity from Alice HypertyURL quering the Id Module
-  3- Message already contains Alice identifier resolved by the Id Module
-end note
 
 group Hyperty subscribes connection object
 
@@ -54,6 +47,8 @@ sync -> bus : postMessage( subscribeConnectionReq )
 sync <- bus : postMessage( subscribeConnectionRes )
 
 sync --> voiceH : return ConnectionDataObject
+
+voiceH --> sync : notification.accept()
 
 end group
 

@@ -83,6 +83,16 @@ Bob receives Connection Request notification:
 
 ![Bob receives Invite](connector-bob-accepts.png)
 
+#### Alice sends ICE Candidates to Bob
+
+Alice is notified Bob has subscribed the Connection and can start receiving ICE Candidates:
+
+![Notification about Bob's subscription](connector-ice-candidates-update.png)
+
+Alice updates Connection with her Ice Candidates:
+
+![Notification about Bob's subscription](connector-ice-candidates-update_001.png)
+
 #### Accept incoming connection request
 
 Bob accepts Connection Request:
@@ -95,9 +105,9 @@ Alice is aknowledge that Bob accepts Connection Request:
 
 ![Alice Aked Bob accepts Invite](connector-alice-acked-bob-accepted-invitation.png)
 
-#### ICE candidates exchanged
+#### Bob sends ICE Candidates to Alice
 
-*to be provided*
+Similar to Alice sends ICE Candidates to Bob
 
 #### Connection is established
 
