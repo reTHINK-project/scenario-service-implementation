@@ -2,7 +2,7 @@
 
 actor Alice
 actor "Coach" as Trainer
-actor WorkoutBuddy
+actor "FitnessBuddy" as WorkoutBuddy
 
 rectangle "Health and Activity Monitoring" {
   usecase (Smart Contextual Health and Activity Monitoring) as healthCtrlUC
@@ -16,31 +16,31 @@ rectangle "Health and Activity Monitoring" {
 
   inferActivityContextUC -[hidden]up- inferHealthContextUC
 
-  usecase workoutCtrlUC as "Personal Workout Control\n
+  usecase workoutCtrlUC as "Fitness Control\n
    uses Activiy and Health context\n
-   to track Workout Program including\n
-   notification about Workout reminders"
+   to track Fitness Program including\n
+   notification about Fitness reminders"
 
   inferActivityContextUC -[hidden]down- workoutCtrlUC
 
-  usecase workoutSessionUC as "Workout Session\n given remotely by personal trainer"
+  usecase workoutSessionUC as "Fitness Session\n given remotely by personal coach"
 
   workoutSessionUC -[hidden]up- workoutCtrlUC
 
-  usecase workoutReportUC as "Report about User Performance Workout"
+  usecase workoutReportUC as "Report about Fitness User Performance"
 
   workoutSessionUC -[hidden]down- workoutReportUC
 
-  usecase workoutBuddyMatchUC as "Workout Buddy Match\n
+  usecase workoutBuddyMatchUC as "Fitness Buddy Match\n
   real time recommendation about other users\n
-  that might join for a get together remotely workout"
+  that might join for a get together for remote fitness"
 
   workoutBuddyMatchUC -[hidden]up- workoutReportUC
 
-  usecase workoutBuddySessionUC as "Workout Buddy Session\n
+  usecase workoutBuddySessionUC as "Fitness Buddy Session\n
   between remote users\n
   that might join for a get \n
-  together remotely workout session"
+  together remotely fitness session"
 
   workoutBuddySessionUC -[hidden]up- workoutBuddyMatchUC
 }
@@ -59,6 +59,6 @@ Alice -left-> healthCtrlUC : is assisted
 
 Trainer -right-> healthCtrlUC : assists
 
-WorkoutBuddy -left-> workoutBuddySessionUC : remotely joins Alice in Workout
+WorkoutBuddy -left-> workoutBuddySessionUC : remotely joins Alice Fitness
 
 @enduml
