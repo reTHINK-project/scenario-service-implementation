@@ -1,0 +1,30 @@
+@startuml
+autonumber
+
+participant "Group Chat\nApp" as app
+
+participant "Group Chat\nHyperty" as myChatH
+
+participant "Communication\nData Object" as myChat
+
+participant "Chat Message\nData Object" as myMsg
+
+participant "Syncher" as sync
+
+sync <- Bus : postMsg( Create ChatMsg Message )
+
+create myMsg
+
+sync -> myMsg : new Child
+
+sync -> myChat : addRemoteChild( Chat Message )
+
+app <-  myChat : onChanges( Chat Message )
+
+note right
+  assuming the App is directly observing the MyChat object.
+  Otherwise is the Hyperty that is observing the MyChat object and calls an App calback.
+
+end note
+
+@enduml

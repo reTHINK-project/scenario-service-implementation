@@ -1,0 +1,32 @@
+@startuml
+autonumber
+
+participant "Group Chat\nApp" as app
+
+participant "Group Chat\nHyperty" as myChatH
+
+participant "Communication\nData Object" as myChat
+
+participant "Chat Message\nData Object" as myMsg
+
+participant "Syncher" as sync
+
+app ->  myChatH : send( message )
+
+myChatH -> myChat : add( message )
+
+sync <- myChat : addChild( message )
+
+create myMsg
+
+sync -> myMsg : new
+
+sync -> Bus : postMsg( Create ChatMsg Message )
+
+myChatH <- myChat : return Chat Message
+
+myChatH -> app : return Chat Message
+
+
+
+@enduml
