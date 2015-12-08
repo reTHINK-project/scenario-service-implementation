@@ -19,7 +19,7 @@ The My Contacts Hyperty main functionality is to manage a personal contact list 
 
 My Contacts data model includes a list of Contact data objects that are compliant with [Identity Data Model](https://github.com/reTHINK-project/architecture/blob/master/docs/datamodel/user-identity/readme.md). Each Contact object is associate with a Contact Context object that is compliant with [Context Data Model](https://github.com/reTHINK-project/architecture/blob/master/docs/datamodel/context/readme.md) which is Observed by the MyContacts Hyperty. Optionaly, the MyContacts object is itself compliant with a (group) Identity data model.
 
-![My Contacts Data Model](my-contacts-setup.png)
+![My Contacts Data Model](my-contacts-data-model.png)
 
 ### Hyperty API
 
