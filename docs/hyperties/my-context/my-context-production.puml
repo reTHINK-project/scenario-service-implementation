@@ -1,0 +1,39 @@
+@startuml
+autonumber
+
+participant "My Context\nApp" as app
+
+participant "My Context\nHyperty" as myCtxtH
+
+participant "My Context\nData Object" as myCtxt
+
+participant "Context Source\nData Object" as ctxtSrc
+
+participant "Syncher" as sync
+
+alt context value change is set by App
+
+app ->  myCtxt : set context value
+
+else context value change is set by observed Context Source
+
+  bus -> sync : postMsg( Update Context Message )
+
+  sync -> ctxtSrc : set context valuse
+
+  ctxtSrc -> myCtxtH : hypertyCallback( source context changes )
+
+  myCtxtH -> myCtxt : set context value
+
+end
+
+group MyContext changes are published in myContextURL/changes
+
+myCtxt -> sync : syncCallback( my context changes )
+
+sync -> myContextURL : update( my context changes )
+
+end
+
+
+@enduml

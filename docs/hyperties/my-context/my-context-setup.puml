@@ -1,0 +1,60 @@
+@startuml
+autonumber
+
+participant "My Context\nApp" as app
+
+participant "My Context\nHyperty" as myCtxtH
+
+participant "My Context\nData Object" as myCtxt
+
+participant "Context Source\nData Object" as myCtxtSrc
+
+participant "Syncher" as sync
+
+participant "Msg BUS" as bus
+
+
+app -> myCtxtH : createMyContext\n( MyContextURL, ContextSourceURLList )
+
+loop subscribe for each context producer source
+
+myCtxtH -> sync : subscribe\n(.., ContextSourceURL, .. )
+
+bus <- sync : postMessage\n( Subscribe Context Message )
+
+...
+
+bus --> sync : postMessage\n( Subscribe Context Response Message )
+
+create myCtxtSrc
+
+sync -> myCtxtSrc : new
+
+myCtxtH <-- sync : return My Context Source
+
+myCtxtH <-  myCtxtH : Object.observe\n( MyContextSource , callback )
+
+end
+
+group create My Context
+
+sync <- myCtxtH : create( .., MyContextURL, InitialContext )
+
+bus <- sync : postMessage\n( Create Context Message )
+
+...
+
+bus --> sync : postMessage\n( Create Context Response Message )
+
+create myCtxt
+
+sync -> myCtxt : new
+
+myCtxtH <-- sync : return My Context
+
+app <-- myCtxtH : return MyContext
+
+
+end
+
+@enduml

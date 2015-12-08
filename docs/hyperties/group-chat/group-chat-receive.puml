@@ -19,12 +19,11 @@ sync -> myMsg : new Child
 
 sync -> myChat : addRemoteChild( Chat Message )
 
-app <-  myChat : onChanges( Chat Message )
+myChatH <- myChat : onChanges( Chat Message )
 
-note right
-  assuming the App is directly observing the MyChat object.
-  Otherwise is the Hyperty that is observing the MyChat object and calls an App calback.
+myChatH <- myChatH : index
 
-end note
+app <- myChatH : on( indexed Chat Message)
+
 
 @enduml

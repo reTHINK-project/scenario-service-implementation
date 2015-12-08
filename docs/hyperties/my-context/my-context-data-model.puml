@@ -1,0 +1,34 @@
+@startuml
+
+class "Data Sync\nReporting" as Report {
+
+}
+
+class "Data Sync\nObservation" as Observe {
+
+}
+
+package Context {
+class Context{
+	}
+}
+
+package MyContext {
+
+class ContextSource{
+		}
+
+class MyContext{
+		}
+
+}
+
+MyContext -up-|> Report
+MyContext -|> Context
+
+ContextSource -up-|> Observe
+ContextSource -|> Context
+
+MyContext "1"*..>"0..*" ContextSource
+
+@enduml
