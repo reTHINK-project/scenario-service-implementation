@@ -17,7 +17,7 @@ The My Context Hyperty main functionality is to collect context data from other 
 
 *Identify reTHINK standardised data object schemas or Specify new Data Object schemas handled by the Hyperty*
 
-![My Context Data Model](my-context-setup.png)
+![My Context Data Model](my-context-data-model.png)
 
 This Hyperty handles a list of observed standard [Context Data Object](https://github.com/reTHINK-project/architecture/tree/master/docs/datamodel/context), which are aggregated and reported in another standard Context Data Object.
 
