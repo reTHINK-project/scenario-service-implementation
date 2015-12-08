@@ -1,0 +1,43 @@
+@startuml
+
+package Identity {
+class Identity {
+	}
+}
+
+class "Data Sync\nObservation" as Observe {
+
+}
+
+
+package Context {
+class Context{
+	}
+}
+
+package MyContacts {
+
+class MyContacts{
+
+		}
+
+class Contact{
+		}
+
+class ContactContext{
+		}
+
+}
+
+MyContacts -|> Identity
+
+Contact -|> Identity
+
+ContactContext -|> Observe
+ContactContext -up-|> Context
+
+MyContacts "1"*..>"1..*" Contact
+Contact "1"..>"1" ContactContext
+
+
+@enduml

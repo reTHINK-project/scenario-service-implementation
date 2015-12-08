@@ -1,0 +1,20 @@
+@startuml
+autonumber
+
+participant "My Contacts\nApp" as app
+
+participant "My Contacts\nHyperty" as myContactsH
+
+participant "My Contact Context\nData Object" as myContactCtxt
+
+participant "Syncher" as sync
+
+participant "Msg BUS" as bus
+
+bus -> sync : postMsg\n( Update Contact Context Message )
+
+myContactCtxt <- sync : set context value
+
+myContactCtxt -> app : appCallback( contact context changes )
+
+@enduml

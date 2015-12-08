@@ -1,0 +1,88 @@
+@startuml
+autonumber
+
+participant "My Contacts\nApp" as app
+
+participant "My Contacts\nHyperty" as myContactsH
+
+participant "My Contacts\nData Object" as myContacts
+
+participant "My Contact\nData Object" as myContact
+
+participant "My Contact Context\nData Object" as myContactCtxt
+
+participant "Syncher" as sync
+
+participant "Msg BUS" as bus
+
+participant "Graph Connector" as graph
+
+participant "Identity Module" as idMod
+
+app ->  myContactsH : getMyContacts()
+
+group retrieve Contacts from Graph Connector
+
+myContactsH -> bus : postMessage( Read MyGraph Message )
+
+graph <- bus : postMessage\n( Read MyGraph Message )
+
+graph -> bus : postMessage\n( Response Read MyGraph Message )
+
+myContactsH <- bus : postMessage( Response Read MyGraph Message )
+
+end
+
+loop for each contact retrieve identity data and subscribe presence
+
+  group retrieve contact info
+
+  myContactsH -> bus : postMessage( Read Identity Message )
+
+  idMod <- bus : postMessage\n( Read Identity Message )
+
+  idMod -> bus : postMessage\n( Read Identity Response Message )
+
+  myContactsH <- bus : postMessage( Read Identity Response Message )
+
+  create myContact
+
+  myContactsH -> myContact : new
+
+  end
+
+  group subscribe contact presence
+
+  myContactsH -> sync : subscribe\n(.., contextURL, .. )
+
+  note right
+    Contact ContextURL should be
+     retrieved in the previous step
+    when reading the Identity Data.
+    ie Identity Context URL should be
+     defined in the Identity User Profile.
+  end note
+
+  bus <- sync : postMessage\n( Subscribe Context Message )
+
+...
+
+  bus --> sync : postMessage\n( Subscribe Context Response Message )
+
+  create myContactCtxt
+
+  sync -> myContactCtxt : new
+
+  myContactsH <-- sync : return My Contact Context
+
+  myContactsH <-  myContactsH : Object.observe\n( MyContactContext , callback )
+
+  end
+end
+
+app <-  myContactsH : return MyContacts
+
+app <-  app : Object.observe\n( MyContacts , callback )
+
+
+@enduml
