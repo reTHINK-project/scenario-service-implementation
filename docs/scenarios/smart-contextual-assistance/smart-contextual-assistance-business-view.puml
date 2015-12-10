@@ -1,8 +1,8 @@
 @startuml
 
-actor "PT Customer" as client
+actor "HyBroker Customer" as client
 
-usecase (PT Service Broker) as pt
+usecase (HyBroker Service Broker) as pt
 usecase (HySmart Hyperty Service Provider) as hySmart
 usecase (iHackker Identity Provider) as iHackker
 
