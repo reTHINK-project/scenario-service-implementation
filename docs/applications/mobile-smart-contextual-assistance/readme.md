@@ -13,23 +13,23 @@ Application_Name_1_Include_Title_here
 
 ### Smart Phone User Interface
 
+#### Fitness Context
+
+Mobile Smart GUI Fitness.
+
+![Fitness Context](smart-gui-fitness.png)
+
 #### Chat Conversation
 
 This UI is to Support Chat Conversations.
-
-![chat ui](smart-gui-chat.png)
 
 #### Audio Conversation
 
 This UI is to Support Audio Conversations.
 
-![audio ui](smart-gui-audio.png)
-
 #### Video Conversation
 
 This UI is to Support Video Conversations.
-
-![video ui](smart-gui-video.png)
 
 #### Account Settings
 
