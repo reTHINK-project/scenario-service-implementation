@@ -1,8 +1,7 @@
 Smart Contextual Assistance
 ---------------------------
 
-Scenario Environment
---------------------
+### Scenario Environment
 
 The Smart Contextual Assistance scenario is based on [D1.1 Contextual Enriched Communication in Smart Enterprises](https://github.com/reTHINK-project/use-cases/wiki/Contextual-Enriched-Communication-in-Smart-Enterprises). Stakeholders and Business Roles involved in the Smart Contextual Assistance scenario are the following:
 
@@ -19,8 +18,7 @@ The Smart Contextual Assistance scenario is based on [D1.1 Contextual Enriched C
 
 ![Main Use Cases](smart-contextual-assistance-business-view.png)
 
-User perspective
-----------------
+### User perspective
 
 The Smart Contextual Assistance Apps automatically adapts its behavior according to Alice's context including location (office room or home room) context, activity and communication context. Two main Alice's context's are considered: Work context and Personal context.
 
@@ -50,7 +48,7 @@ The following WP1 Use Cases are required:
 -	[Information reception from a sensor](https://github.com/reTHINK-project/use-cases/issues/70)
 -	Device Control
 
-### Work Context
+#### Work Context
 
 In Work Context three main Use Cases are supported by the Smart Contextual Assistance app:
 
@@ -58,7 +56,7 @@ In Work Context three main Use Cases are supported by the Smart Contextual Assis
 -	Business Communication and Cooperation
 -	Office Automation
 
-#### Smart Working (Occupational safety and health)
+##### Smart Working (Occupational safety and health)
 
 While Alice is in a Work Context, Alice health and activity is continuously monitored through her bracelet for occupational safety and health purposes. Alice's personal data is collected according to applicable labor laws and she is able to fully control it.
 
@@ -66,13 +64,13 @@ While Alice is in a Work Context, Alice health and activity is continuously moni
 
 Occupational safety and health doctors can remotely track Alice's health, giving advice and setting up remote occupational safety and health multimedia appointments to coach her.
 
-#### Office Automation
+##### Office Automation
 
 When Alice context is "located in the Office" a few office automation features (see picture below) her available from the Smart Business Assistance app.
 
 ![Office Automation Use Cases](smart-contextual-office-automation-use-cases.png)
 
-#### Business Communication
+##### Business Communication
 
 Alice context can also be set according to the communication party (see figure below), namely:
 
@@ -104,7 +102,7 @@ In the co-worker context, besides the basic chat, audio and video features, the 
 
 Similar to co-worker context. The big difference is that the organisation of sharable resources during the conversation depends on the related partnership project.
 
-### Personal Context
+#### Personal Context
 
 In Alice's Personal Context, three main use cases are supported:
 
@@ -112,13 +110,13 @@ In Alice's Personal Context, three main use cases are supported:
 -	Home Automation
 -	Personal Communication
 
-![Home Context Use Cases](smart-contextual-home-use-cases.png)
+![Home Context Use Cases](smart-contextual-personal-use-cases.png)
 
-#### Home Automation
+##### Home Automation
 
 When Alice context is "located in her home" a few Home automation features (see picture below) her available from the Smart Personal Assistance app.
 
-#### Smart Living
+##### Smart Living
 
 Alice health is continuously monitored through her bracelet and she follows a strict workout program to keep her in a good shape. Alice workout includes sessions in her gymnasium and outside her gymnasium (e.g. biking and running). Alice activity is continuously monitored by the App who also reminds her about workout activities to be performed. Alice's personal coach can remotely track Alice's performance, giving advice and setting up remote multimedia sessions to coach her (in a group or individually, according to subscribed workout program).
 
@@ -128,7 +126,7 @@ Workout Assistance App also enables her to meet and join other people following 
 
 Alice activity and health monitoring produce Alice Health Context and Alice Activity status inferred according to some AI algorithms.
 
-#### Personal Communication
+##### Personal Communication
 
 Alice's communication experience is adapted according to Alice's context, namely:
 
@@ -137,18 +135,17 @@ Alice's communication experience is adapted according to Alice's context, namely
 
 Alice context can also be set according to the communication party including friends and relatives.
 
-### Identity Management and Trust from user perspective
+#### Identity Management and Trust from user perspective
 
 As mentioned below, Alice identity selection will depend on her context. For example, Enterprise Identity will be used for anonymous customers while a personal Identity will be used for loyal Customers. Trust will also be set according to selected identities.
 
-### Interoperability from user perspective
+#### Interoperability from user perspective
 
 Customers and Partners can use any application from other testbeds to communicate with Smart Contextual Assistance App.
 
 Smart Contextual Assistance App office and home automation features should be able to be used in the Hotel Guest scenario when appropriately authorized by the Hotel management. The other way around should also be possible.
 
-Required reTHINK Framework Functionalities
-------------------------------------------
+### Required reTHINK Framework Functionalities
 
 The Smart Contextual Assistance requires the following major reTHINK functionalities:
 
@@ -181,8 +178,7 @@ The following APIs and Procedures are required:
 -	Screen Sharing
 -	Device Control / Actuation
 
-Required Testbed features
--------------------------
+### Required Testbed features
 
 The following domains should be provided:
 
@@ -204,8 +200,7 @@ HySmart should provide the following servers (and associated sub-domains):
 -	Domain Registry (registry.hysmart.rethink.ptinovacao.pt)
 -	Catalogue server (catalogue.hysmart.rethink.ptinovacao.pt)
 
-Required Hyperties
-------------------
+### Required Hyperties
 
 The following Hyperties are required for the Smart Contextual Assistance scenario:
 
