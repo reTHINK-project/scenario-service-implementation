@@ -15,31 +15,21 @@ Application_Name_1_Include_Title_here
 
 #### Fitness Context
 
-![Fitness Context](smart_gui_fit_locked.png)
+Mobile Smart GUI Fitness.
 
-![Fitness Context](smart_gui_fit_coach.png)
-
-![Fitness Context](smart_gui_fit_chat.png)
-
-![Fitness Context](smart_gui_fit_analysis.png)
+![Fitness Context](smart-gui-fitness.png)
 
 #### Chat Conversation
 
 This UI is to Support Chat Conversations.
 
-![chat ui](smart-gui-chat.png)
-
 #### Audio Conversation
 
 This UI is to Support Audio Conversations.
 
-![audio ui](smart-gui-audio.png)
-
 #### Video Conversation
 
 This UI is to Support Video Conversations.
-
-![video ui](smart-gui-video.png)
 
 #### Account Settings
 
