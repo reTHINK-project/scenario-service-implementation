@@ -13,6 +13,16 @@ Application_Name_1_Include_Title_here
 
 ### Smart Phone User Interface
 
+#### Fitness Context
+
+![Fitness Context](smart_gui_fit_locked.png)
+
+![Fitness Context](smart_gui_fit_coach.png)
+
+![Fitness Context](smart_gui_fit_chat.png)
+
+![Fitness Context](smart_gui_fit_analysis.png)
+
 #### Chat Conversation
 
 This UI is to Support Chat Conversations.
