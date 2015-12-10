@@ -23,6 +23,27 @@ actor Office <<Object>> as "Office Room"
 
 rectangle "Smart Contextual Assistance App" {
 
+usecase myBraH <<Hyperty Context>> as "**MyBracelet**
+--
+Hyperty to Collect
+and publish data
+from a Bracelet"
+
+component "Bracelet Data" <<Context Object>> as myBraObj
+
+myBraH -down-> myBraObj
+
+usecase myCtxtH <<Hyperty Context>> as "**MyContext**
+--
+Hyperty to Handle
+an Human individual
+Health context"
+
+component "Individual Context" <<Context Object>> as myCtxtObj
+
+myCtxtH -up-> myBraObj
+
+myCtxtH -down-> myCtxtObj
 
   usecase contactsH <<Hyperty Context>> as "**MyContacts**
   --
@@ -32,35 +53,9 @@ rectangle "Smart Contextual Assistance App" {
 
 	component UserProfile <<Identity Object>> as idObj
 
-	component "Presence" <<Context Object>> as presObj
-
 	contactsH -down-> idObj
 
-	contactsH -down-> presObj
-
-	usecase myBraH <<Hyperty Context>> as "**MyBracelet**
-  --
-  Hyperty to Collect
-	and publish data
-	from a Bracelet"
-
-	component "Bracelet Data" <<Context Object>> as myBraObj
-
-	myBraH -down-> myBraObj
-
-	myBraH -[hidden]up- presObj
-
-	usecase myCtxtH <<Hyperty Context>> as "**MyContext**
-  --
-  Hyperty to Handle
-  an Human individual
-	Health context"
-
-	component "Individual Context" <<Context Object>> as myCtxtObj
-
-	myCtxtH -up-> myBraObj
-
-	myCtxtH -down-> myCtxtObj
+	contactsH -down-> myCtxtObj
 
 	usecase voiceH <<Hyperty Connector>> as "**ContextualVoice**
   --
@@ -73,6 +68,14 @@ rectangle "Smart Contextual Assistance App" {
 	voiceH -down-> comObj
 
 	voiceH -down-> myCtxtObj
+
+	usecase chatH <<Hyperty Communication>> as "**GroupChat**
+  --
+  Hyperty to Handle Group Chat"
+
+	component Communication <<Communication Object>> as commObj
+
+	chatH -down-> commObj
 
 	usecase myWorkoutBuddyH <<Hyperty>> as "**My Fitness Buddy**
   --
@@ -110,17 +113,19 @@ rectangle "Smart Contextual Assistance App" {
 }
 
 actor Buddy <<Human>> as "Fitness Buddy"
-actor Coach <<Human>> as "Coach"
+actor Coach <<Human>> as "Coach/Doctor"
 
 Alice .left- voiceH
 Customer .right- voiceH
+Customer .right- chatH
+Alice .left- chatH
 Alice .left- contactsH
 Alice .left- myCtxtH
 Alice .left- myBraH
 Alice .left- myWorkoutBuddyH
-myWorkoutBuddyH .left- Buddy
+myWorkoutBuddyH .. Buddy
 Alice . myCoachH
-myCoachH .right. Coach
+myCoachH .. Coach
 Office .left- roomH
 
 @enduml
