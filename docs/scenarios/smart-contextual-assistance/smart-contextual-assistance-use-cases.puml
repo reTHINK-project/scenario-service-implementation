@@ -4,14 +4,10 @@ usecase (Smart Contextual Assistance) as assistUC
 usecase (Smart Contextual Business Assistance) as bizzAssistUC
 usecase (Smart Contextual Personal Assistance) as myAssistUC
 usecase (Human Context Inference) as humanCtxtUC
-usecase (Physical Space Context Inference) as spaceCtxtUC
 usecase (Contextual Decisions on Humans) as smartHumanUC
-usecase (Contextual Decisions on Physical Spaces) as smartSpaceUC
 
 smartHumanUC <.. assistUC : <<includes>>
 humanCtxtUC <.. assistUC : <<includes>>
-smartSpaceUC <.. assistUC : <<includes>>
-spaceCtxtUC <.. assistUC : <<includes>>
 
 assistUC <|-- bizzAssistUC
 assistUC <|-- myAssistUC

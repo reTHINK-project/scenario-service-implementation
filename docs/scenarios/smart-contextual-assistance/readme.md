@@ -6,62 +6,75 @@ Smart Contextual Assistance
 Scenario Environment
 --------------------
 
--	PT is a Business Broker managing an ecosystem of different partners including HySmart which is an expert on IoT Hyperties
--	PT delivers Smart Business Assistance App in a partnership with HySmart
--	PT also delivers communication (ie plays the CSP role) and Identity Hyperties (ie plays the IdP role)
--	PT provides a Global Registry
--	Alice is an individual end-user (service consumer) that works for Old Inn hotel (organization consumer), which provided her a Smart Work Assistance App to support her in the Job.
--	Alice is free to use an Identity provided by PT or by others trustful IdPs like the iHackker IdP
+The Smart Contextual Assistance scenario is based on [D1.1 Contextual Enriched Communication in Smart Enterprises](https://github.com/reTHINK-project/use-cases/wiki/Contextual-Enriched-Communication-in-Smart-Enterprises). Stakeholders and Business Roles involved in the Smart Contextual Assistance scenario are the following:
+
+-	HyBroker is a Business Broker managing an ecosystem of different partners including HySmart which is an expert on IoT Hyperties
+-	HyBroker delivers Smart Business Assistance App in a partnership with HySmart
+-	HyBroker also delivers communication (ie plays the CSP role) and Identity Hyperties (ie plays the IdP role)
+-	HyBroker provides a Global Registry
+-	Alice is an individual end-user (service consumer) that works for HyDev Software House (organization consumer), which provided her a Smart Work Assistance App to support her in the Job.
+-	Alice is free to use an Identity provided by HyBroker or by others trustful IdPs like the iHacker IdP
 -	Smart Business Assistance enables Alice to collaborate with co-workers, external partners using other similar applications, as well as with customers.
--	Smart Business Assistance enables Alice to control some office devices including ...
--	Alice has subscribed additional Smart Contextual Assistance features, with a special discount, to be used in a personal context ie acting as a Smart Personal Assistance App, enabling Alice to manage personal communications and to control her smart home devices.
+-	Smart Business Assistance enables Alice to control some office devices.
+-	Smart Business Assistance is also used for occupational safety and health purposes through a bracelet wared by Alice.
+-	Alice has subscribed additional Smart Contextual Assistance features, with a special discount, to be used in a personal context ie acting as a Smart Personal Assistance App, enabling Alice to manage personal communications, to control her smart home devices and well being.
 
 ![Main Use Cases](smart-contextual-assistance-business-view.png)
-
-Alice uses a bracelet to track her health status.
-
-At Old Inn hotel, the following devices are available:
-
--	1 Web Cameras eg [Raspberry PI Camera Module](https://www.raspberrypi.org/products/camera-module/)
--	[Power Control ](https://energenie4u.co.uk/catalogue/category/Raspberry-Pi-Accessories)
-
-At Alice's home, the following devices are available:
-
--	1 Web Cameras eg [Raspberry PI Camera Module](https://www.raspberrypi.org/products/camera-module/)
--	[Power Control ](https://energenie4u.co.uk/catalogue/category/Raspberry-Pi-Accessories)
 
 User perspective
 ----------------
 
 *Textual description of the scenario including the main use cases to be supported. Refer as much as possible to use cases defined in D1.1.*
 
-The Smart Contextual Assistance Apps automatically adapts its behavior according to Alice's context and a Physical Space's (office room or home room) context. Two main Alice's context's are considered: Work context and Personal context.
+The Smart Contextual Assistance Apps automatically adapts its behavior according to Alice's context including location (office room or home room) context, activity and communication context. Two main Alice's context's are considered: Work context and Personal context.
 
 ![Main Use Cases](smart-contextual-assistance-use-cases.png)
 
-### Work Context
-
-Alice context is mainly derived from the following Context sources:
+Alice context can be derived from different sources including:
 
 -	location
--	calendar
+-	wearable devices including bracelet
 -	communication parties
--	opened web documents
 -	sensors in Alice's mobile
 -	sensors in physical places where Alice is located
+-	calendar
+-	opened web documents
+
+The following WP1 Use Cases are required:
+
+-	[H2H Conversation with single CSP](https://github.com/reTHINK-project/use-cases/issues/1)
+-	[Messaging / Chat](https://github.com/reTHINK-project/use-cases/issues/35)
+-	[H2H inter-domain Conversation with different CSPs and external IdPs](https://github.com/reTHINK-project/use-cases/issues/95)
+-	[H2H Multiparty Conversations](https://github.com/reTHINK-project/use-cases/issues/86)
+-	[Context-Aware Contact Center](https://github.com/reTHINK-project/use-cases/issues/94)
+-	[Business Identity in H2H Communication](https://github.com/reTHINK-project/use-cases/issues/93)
+-	[Human presence](https://github.com/reTHINK-project/use-cases/issues/47)
+-	[Registering Devices](https://github.com/reTHINK-project/use-cases/issues/66)
+-	[M2M Always Connected in Trustful Domains for Multi-vendor devices](https://github.com/reTHINK-project/use-cases/issues/5)
+-	[Information reception from a sensor](https://github.com/reTHINK-project/use-cases/issues/70)
+-	Device Control
+
+### Work Context
+
+In Work Context three main Use Cases are supported by the Smart Contextual Assistance app:
+
+-	Smart Working provides Occupational safety and health features
+-	Business Communication and Cooperation
+-	Office Automation
+
+#### Smart Working (Occupational safety and health)
+
+While Alice is in a Work Context, Alice health and activity is continuously monitored through her bracelet for occupational safety and health purposes. Alice's personal data is collected according to applicable labor laws and she is able to fully control it.
+
+![Smart Working](smart-contextual-smart-working-use-cases.png)
+
+Occupational safety and health doctors can remotely track Alice's health, giving advice and setting up remote occupational safety and health multimedia appointments to coach her.
 
 #### Office Automation
 
 When Alice context is "located in the Office" a few office automation features (see picture below) her available from the Smart Business Assistance app.
 
 ![Office Automation Use Cases](smart-contextual-office-automation-use-cases.png)
-
-The following WP1 Use Cases are required:
-
--	[Registering Devices](https://github.com/reTHINK-project/use-cases/issues/66)
--	[M2M Always Connected in Trustful Domains for Multi-vendor devices](https://github.com/reTHINK-project/use-cases/issues/5)
--	[Information reception from a sensor](https://github.com/reTHINK-project/use-cases/issues/70)
--	Device Control (*no use case defined in WP1*\)
 
 #### Business Communication
 
@@ -73,18 +86,6 @@ Alice context can also be set according to the communication party (see figure b
 
 ![Business Communication Use Cases](smart-contextual-business-communication-use-cases.png)
 
-The following WP1 Use Cases are required:
-
--	[H2H Conversation with single CSP](https://github.com/reTHINK-project/use-cases/issues/1)
--	[Messaging / Chat](https://github.com/reTHINK-project/use-cases/issues/35)
--	[H2H inter-domain Conversation with different CSPs and external IdPs](https://github.com/reTHINK-project/use-cases/issues/95)
--	[H2H Multiparty Conversations](https://github.com/reTHINK-project/use-cases/issues/86)
--	[Human presence](https://github.com/reTHINK-project/use-cases/issues/47)
-
-Alice calendar and opened Web Documents is another source of information to be taken into account to infer Alice Context.
-
-*to be done: provide use cases diagram for work context inference*
-
 According to the context status, the communication experience is adapted in order to make it as effective as possible, e.g. Alice Identity selection and associated user profile data, availability of communication features like video, etc.
 
 **Customer Context**
@@ -92,11 +93,6 @@ According to the context status, the communication experience is adapted in orde
 The picture below depicts the different Customer Communication Use Cases.
 
 ![Customer Communication Use Cases](smart-contextual-customer-communication-use-cases.png)
-
-The following WP1 Use Cases are required:
-
--	[Context-Aware Contact Center](https://github.com/reTHINK-project/use-cases/issues/94)
--	[Business Identity in H2H Communication](https://github.com/reTHINK-project/use-cases/issues/93)
 
 **co-worker context**
 
@@ -114,11 +110,11 @@ The following WP1 Use Cases are required:
 
 When Alice context is "located in her home" a few Home automation features (see picture below) her available from the Smart Personal Assistance app.
 
-#### Activity and Health Monitoring
+#### Smart Living
 
 Alice health is continuously monitored through her bracelet and she follows a strict workout program to keep her in a good shape. Alice workout includes sessions in her gymnasium and outside her gymnasium (e.g. biking and running). Alice activity is continuously monitored by the App who also reminds her about workout activities to be performed. Alice's personal coach can remotely track Alice's performance, giving advice and setting up remote multimedia sessions to coach her (in a group or individually, according to subscribed workout program).
 
-![Actitivy and Health Monitoring Use Cases](smart-contextual-health-monitoring-use-cases.png)
+![Actitivy and Health Monitoring Use Cases](smart-contextual-smart-living-use-cases.png)
 
 Workout Assistance App also enables her to meet and join other people following similar Workout programs. For example, during fitness sessions the App can also recommend to setup remote sessions at the same time and do fitness together as if they were in the same location. During these Do Remote Fitness Together Session, users can share in real time workout performance indicators in order to motivate each other.
 

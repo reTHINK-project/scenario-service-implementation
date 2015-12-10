@@ -55,14 +55,6 @@ loop for each contact retrieve identity data and subscribe presence
 
   myContactsH -> sync : subscribe\n(.., contextURL, .. )
 
-  note right
-    Contact ContextURL should be
-     retrieved in the previous step
-    when reading the Identity Data.
-    ie Identity Context URL should be
-     defined in the Identity User Profile.
-  end note
-
   bus <- sync : postMessage\n( Subscribe Context Message )
 
 ...
