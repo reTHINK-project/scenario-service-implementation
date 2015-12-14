@@ -9,9 +9,7 @@ Connector Hyperty
 
 ### Architecture
 
-*Describe main Hyperty functionalities, Hyperty type and scenarios where the Hyperty will be used. Describe main internal Hyperty component architecture with a class diagram.*
-
-The Connector main functionality is to handle two party audio and voice conversations. *the support of Multiparty calls is for further study*
+The Connector main functionality is to handle two party audio and voice conversations.
 
 ![Architecture](connector-arch.png)
 
@@ -21,13 +19,9 @@ The Connection signalling is handled by the Syncher class from the Hyperty Servi
 
 ### Hyperty Data Objects schemas
 
-*Identify reTHINK standardised data object schemas or Specify new Data Object schemas handled by the Hyperty*
-
 This Hyperty handles standard [Connection Data Objects](https://github.com/reTHINK-project/architecture/tree/master/docs/datamodel/connection).
 
 ### Hyperty API
-
-*Specify Hyperty API to be consumed by the Application*
 
 The Connector Hyperty implements two Hyperty APIs:
 
@@ -61,19 +55,17 @@ This function is used to remove a peer from an existing connection instance.
 
 ### Main data flows
 
-*Use MSCs to describe how the Application can use the Hyperty API for the main use cases supported by the Hyperty. Mapping between the Hyperty API functions and the Hyperty Framework functions including the Data Object handling should be depicted in separated in Diagrams*
-
 The following main use cases are supported by the Connector Hyperty:
 
 #### Hyperty initialisation
 
 Application adds a listener to receive incoming connection requests events.
 
-![Bob Discovery](connector-invite.png)
+![Initialisation](connector-invite.png)
 
 #### Create new Connection
 
-Notify Bob about new incoming Connection Request:
+Invite Bob for a new communication:
 
 ![Invite Bob](connector-invite_001.png)
 
@@ -91,7 +83,7 @@ Alice is notified Bob has subscribed the Connection and can start receiving ICE 
 
 Alice updates Connection with her Ice Candidates:
 
-![Notification about Bob's subscription](connector-ice-candidates-update_001.png)
+![Alice’s peer is Updated with ICE Candidates](connector-ice-candidates-update_001.png)
 
 #### Accept incoming connection request
 

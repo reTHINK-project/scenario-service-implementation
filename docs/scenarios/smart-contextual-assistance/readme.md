@@ -1,6 +1,55 @@
 Smart Contextual Assistance
 ---------------------------
 
+### Summary
+
+The Smart Contextual Assistance scenario is based on [D1.1 Contextual Enriched Communication in Smart Enterprises](https://github.com/reTHINK-project/use-cases/wiki/Contextual-Enriched-Communication-in-Smart-Enterprises) and is supported by an App delivering Human to Human communication and Human to Machine communication (IoT) features that automaticaly adapt according to users context. Thus, it behaves as a Smart Business Assistance app when the user is in a Work context or it behaves as a Smart Personal Assistance app when the user is in a Personal context. The Smart Business Assistance enables Alice to collaborate with co-workers, external partners using other similar applications, as well as with customers. In addition, the Smart Business Assistance enables Alice to control office rooms and uses user's bracelet for occupational safety and health purposes. The Smart Personal Assistance manages personal communications, enables the control of smart home devices and provides a personal wellness coach to assist user's wellbeing.
+
+User's context can be derived from different sources including:
+
+-	location
+-	wearable devices including bracelet
+-	communication parties
+-	sensors in Alice's mobile
+-	sensors in physical places where Alice is located
+-	calendar
+-	opened web documents
+
+#### Summary of Required functionalities
+
+The Smart Contextual Assistance requires the following major reTHINK functionalities:
+
+**Phase 1**
+
+-	Hyperty Runtime in Browser
+-	Hyperty Runtime in Smartphone
+-	Hyperty Runtime in Nodejs
+-	Vertx Message Node and its associated Protostub
+-	A second Message Node and its associated Protostub to test cross domain H2H Communication interoperability
+-	Catalogue server as specified in D2.2 supporting protostub descriptors, Hyperty descriptors, Data Object Schema.
+-	Domain Registry as specified in D2.2 supporting Hyperty Instance registration, Hyperty Data Object Instance registration
+-	An IdP server and its associated IdP (Proxy) protostub
+-	Account registration
+-	Identity login
+-	Authorisation
+-	Identity association to Hyperty
+-	Identity assertion
+-	Chat and Group Chat
+-	Human Presence
+
+**Phase 2**
+
+-	Discovery service
+-	Hyperty Runtime in Kurento Media Server to support Group Communication
+-	Catalogue server as specified in D2.2 supporting protostub descriptors, Hyperty descriptors, Data Object Schema, Hyperty Runtime descriptors.
+-	Domain Registry as specified in D2.2 supporting Hyperty Instance registration, Hyperty Data Object Instance registration, Hyperty Runtime instance registration
+-	Human Discovery
+-	Machine / Object Discovery
+-	Trust calculation / evaluation
+-	File Sharing
+-	Screen Sharing
+-	Device Control / Actuation
+
 ### Scenario Environment
 
 The Smart Contextual Assistance scenario is based on [D1.1 Contextual Enriched Communication in Smart Enterprises](https://github.com/reTHINK-project/use-cases/wiki/Contextual-Enriched-Communication-in-Smart-Enterprises). Stakeholders and Business Roles involved in the Smart Contextual Assistance scenario are the following:
@@ -144,6 +193,16 @@ As mentioned below, Alice identity selection will depend on her context. For exa
 Customers and Partners can use any application from other testbeds to communicate with Smart Contextual Assistance App.
 
 Smart Contextual Assistance App office and home automation features should be able to be used in the Hotel Guest scenario when appropriately authorized by the Hotel management. The other way around should also be possible.
+
+#### Required Policies
+
+The following Policies should be available for the Smart Contextual Assistance scenario:
+
+-	access control to Context data collected from the bracelet (ie policies applied to subscription requests to ContextURL where Bracelet data is published to) according to identities (eg to Occupational safety and health doctors, Fitness Coach or that they work on behalf of some Occupational), date / time and user context (including location and communication context).
+-	similar to previous one but now applied to higher level inferred Context data processed by the MyContext Hyperty. These policies can be applied to decide eg what level of context data should be provided to MyContacts Hyperty and when displaying info about the user requesting a communication.
+-	policies to control communication requests according to user context and the identity of the requester. Possible actions: notify user, reject request, play audio/video, send notification, execute bot to collect further information about the communication request.
+-	policies to change the Room context according to the User Context and its Identity. Possible actions: turn on lights and set temperature to a certain value
+-	Policies to match user profiles and user contexts
 
 ### Required reTHINK Framework Functionalities
 

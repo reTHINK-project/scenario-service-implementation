@@ -3,7 +3,7 @@
 !include m2m-health-use-cases.puml
 !include h2m-use-cases.puml
 
-rectangle "Home Context" {
+rectangle "Personal Context" {
 
   usecase (Smart Contextual Personal Assistance) as myAssistUC
 
@@ -19,16 +19,16 @@ myAssistUC <|-down-- homeAutoUC
 myAssistUC <|-down-- myHealthUC
 myAssistUC <|-down-- myCommUC
 
-lightCtrlUC <.. homeAutoUC : <<includes>>
-temperatureCtrlUC <.. homeAutoUC : <<includes>>
-videoMonitorUC <.. homeAutoUC : <<includes>>
-temperatureUC <.up. homeAutoUC : <<includes>>
-lightUC <.up. homeAutoUC : <<includes>>
+lightCtrlUC <.up. homeAutoUC : <<includes>>
+temperatureCtrlUC <.up.. homeAutoUC : <<includes>>
+videoMonitorUC <.up. homeAutoUC : <<includes>>
+temperatureUC <.up.. homeAutoUC : <<includes>>
+lightUC <.up.. homeAutoUC : <<includes>>
 powerUC <.up. homeAutoUC : <<includes>>
 
 heartMonitorUC <. myHealthUC : <<includes>>
-bodyTemperatureUC <.up. myHealthUC : <<includes>>
-ecgUC <.up. myHealthUC : <<includes>>
+bodyTemperatureUC <.left. myHealthUC : <<includes>>
+ecgUC <.up.. myHealthUC : <<includes>>
 
 
 @enduml
