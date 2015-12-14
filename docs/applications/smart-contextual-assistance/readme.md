@@ -53,29 +53,16 @@ This UI is the focus when the user is in a Fitness Buddy Video context status.
 
 ![Fitness Buddy Video Session](fitness-buddy-video.png)
 
-#### Contacts Management with Presence
+#### Work Context
 
-This UI is used to manage contacts enriched with presence including:
+Smart GUI Work Timeline.
 
--	Browse Contacts
--	Search Contacts
--	Add/Remove Contacts
--	Setup Conversations
+![Work Context Timeline](work-timeline.png)
 
-#### Contact Edition
+This UI is the focus when the user is in a Business Chat conversation.
 
-This UI is used to edit a contact
+![Work Conversation](work-conversation.png)
 
-#### Context Status
+This UI is the focus when the user is in a Business Video Conversation.
 
-This UI is to Consult User Context.
-
-#### Discovery
-
-This UI is to Discover users and contexts.
-
-#### Room Control
-
-This UI is used to monitor and control devices in a room.
-
-### Browser UI
+![Business Video Conversation](work-media-conversation.png)
