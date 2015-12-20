@@ -3,8 +3,8 @@
 actor Alice
 actor "Occupational safety\nand health Doctor" as Trainer
 
-rectangle "Smart Living (Occupational safety and health)" {
-  usecase healthCtrlUC as "Smart Living (Occupational safety and health)"
+rectangle "Smart Working (Occupational safety and health)" {
+  usecase healthCtrlUC as "Smart Working (Occupational safety and health)"
 
   usecase healthMonitorUC as "Collect and Publish Data\nfrom Bracelet"
 

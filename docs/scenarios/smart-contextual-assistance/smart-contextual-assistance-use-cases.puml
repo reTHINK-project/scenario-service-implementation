@@ -3,11 +3,6 @@
 usecase (Smart Contextual Assistance) as assistUC
 usecase (Smart Contextual Business Assistance) as bizzAssistUC
 usecase (Smart Contextual Personal Assistance) as myAssistUC
-usecase (Human Context Inference) as humanCtxtUC
-usecase (Contextual Decisions on Humans) as smartHumanUC
-
-smartHumanUC <.. assistUC : <<includes>>
-humanCtxtUC <.. assistUC : <<includes>>
 
 assistUC <|-- bizzAssistUC
 assistUC <|-- myAssistUC

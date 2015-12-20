@@ -41,6 +41,14 @@ This function is used to create a new connection providing the identifier of use
 
 The Hyperty ConnectionController API is used to control a connection instance.
 
+**accept**
+
+This function is used to accept an incoming connection request.
+
+**decline**
+
+This function is used to decline an incoming connection request.
+
 **disconnect**
 
 This function is used to close an existing connection instance.

@@ -29,9 +29,6 @@ sync -> bus : postMessage( createConnectionObjectRes )
 
 end group
 
-voiceH -> app : on( AliceInvitationEvt )
-
-
 group Hyperty subscribes connection object
 
 voiceH -> sync : subscribe( connectionURL )
@@ -50,25 +47,33 @@ sync --> voiceH : return ConnectionDataObject
 
 voiceH --> sync : notification.accept()
 
+create connCtrl
+
+voiceH -> connCtrl : new( Connection )
+
+connCtrl -> connCtrl : Object.observe(Connection, callback )
+
+voiceH -> app : on( ConnectionController )
+
 end group
 
 newpage
 
 group Bob accepts Connection Invitation from Alice
 
-app -> voiceH : AliceInvitationEvt.accept()
+app -> connCtrl : accept()
 
-voiceH -> ConnA : get Alice CommResources\n(incl SDP)
+connCtrl -> ConnA : get Alice CommResources\n(incl SDP)
 
-voiceH <-- ConnA : return Alice CommResources\n(incl SDP)
+connCtrl <-- ConnA : return Alice CommResources\n(incl SDP)
 
-voiceH -> wrtcAPI : set Alice CommResources\n(incl SDP)
+connCtrl -> wrtcAPI : set Alice CommResources\n(incl SDP)
 
-voiceH -> wrtcAPI : get CommResources\n(incl SDP)
+connCtrl -> wrtcAPI : get CommResources\n(incl SDP)
 
-voiceH <-- wrtcAPI : return CommResources\n(incl SDP)
+connCtrl <-- wrtcAPI : return CommResources\n(incl SDP)
 
-voiceH -> sync : create( connectionObjSchema, CommResources, aliceHypertyURL )
+connCtrl -> sync : create( connectionObjSchema, CommResources, aliceHypertyURL )
 
 create ConnB
 
@@ -82,16 +87,8 @@ sync -> bus : postMessage( createBobPeerObjectReqMsg )
 
 sync <- bus : postMessage( createBobPeerObjectResOkMsg )
 
-voiceH <-- sync : return BobPeer
+connCtrl <-- sync : return BobPeer
 
 end group
-
-create connCtrl
-
-voiceH -> connCtrl : new( Connection, BobPeer )
-
-connCtrl -> connCtrl : Object.observe(Connection, callback )
-
-app <-- voiceH :  return ConnectionController
 
 @enduml
