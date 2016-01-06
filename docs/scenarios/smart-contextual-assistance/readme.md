@@ -247,10 +247,10 @@ The following domains should be provided:
 
 HyBroker should provide the following servers (and associated sub-domains):
 
--	Vertx Messaging Node (node.broker.rethink.ptinovacao.pt)
--	Domain Registry (registry.broker.rethink.ptinovacao.pt)
--	Catalogue server (catalogue.broker.rethink.ptinovacao.pt)
--	IdM Server (?) (idm.broker.rethink.ptinovacao.pt)
+-	Vertx Messaging Node (node.hybroker.rethink.ptinovacao.pt)
+-	Domain Registry (registry.hybroker.rethink.ptinovacao.pt)
+-	Catalogue server (catalogue.hybroker.rethink.ptinovacao.pt)
+-	IdM Server (?) (idm.hybroker.rethink.ptinovacao.pt)
 -	Global Registry
 -	TURN/STUN server
 
