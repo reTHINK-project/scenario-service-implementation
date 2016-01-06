@@ -247,7 +247,7 @@ The following domains should be provided:
 
 HyBroker should provide the following servers (and associated sub-domains):
 
--	Vertx Messaging Node (node.hybroker.rethink.ptinovacao.pt)
+-	Vertx Messaging Node (msg-node.hybroker.rethink.ptinovacao.pt)
 -	Domain Registry (registry.hybroker.rethink.ptinovacao.pt)
 -	Catalogue server (catalogue.hybroker.rethink.ptinovacao.pt)
 -	IdM Server (?) (idm.hybroker.rethink.ptinovacao.pt)
