@@ -7,7 +7,6 @@ The module will accept a JSON configuration that will be saved in mongo DB
 - List of available rooms: Room1,Room2,Room3,Room4
 - For enabling admin access, there will be a group created, with a name configured in the config file and the list of identities of the persons in the group. ToDo: check if the rethink IdP supports grouping, role-based access
 - Mapping of devices to Rooms. The JSON will contain pairs: {"roomId": "firstRoomId", "devices":["deviceId1", "deviceId2"...]}
-- 
 - In the DB for each room there will be a raw containing (at least) the information:if it is booked or not, GuestId, Admin Group Name
 - In the DB the mapping of devices to Rooms will be mirrored.
 
