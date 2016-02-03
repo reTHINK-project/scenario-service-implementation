@@ -11,13 +11,13 @@ The Group Chat main functionality is to handle Text conversations among groups.
 
 *Identify reTHINK standardised data object schemas or Specify new Data Object schemas handled by the Hyperty*
 
-This Hyperty handles standard [Communication Data Objects](https://github.com/reTHINK-project/architecture/tree/master/docs/datamodel/connection) extended for Chat Communications:
+This Hyperty handles standard [Communication Data Objects](https://github.com/reTHINK-project/dev-service-framework/blob/master/docs/datamodel/communication/readme.md) extended for Chat Communications:
 
 ![Group Chat Data Model](group-chat-data-model.png)
 
-Each message is a SyncDataChild object with the URL comm:\\<hyperty-creator-domain>\<chatId>\child\<participantId>\<chatMsgId>
+Each message is a SyncDataChild object.
 
-The Hyperty author is the reporter off the Chat Message and all other Group Chat Hyperty participants are observers.
+The Hyperty author is the Reporter of the Chat Message and all other Group Chat Hyperty participants are observers.
 
 ### Hyperty API
 
