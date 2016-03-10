@@ -2,7 +2,11 @@
  * Created by pzu on 11.02.16.
  */
 import db from './models/db';
-import hotel from './models/Hotel';
+import Hotel from './models/Hotel';
+import Room from './models/Room';
+import Device from './models/Device';
+import async from 'async';
+import logger from 'logops';
 
 
 class Database {
@@ -10,7 +14,6 @@ class Database {
     constructor(host = 'localhost', dbname = 'hotel') {
         this._host = host;
         this._dbname = dbname;
-        this.hotel = hotel; //This is needed to fix scope-issues (async calls)
         this.db = db;
     }
 
@@ -57,6 +60,8 @@ class Database {
         return db.connection;
     }
 
+    //TODO: Object-references (Device needs room assigned etc.)
+    //TODO: Proper error-handling (improve callbacks)
     createHotel(config, callback) {
         if (typeof config === 'undefined') {
             return callback(new Error("Missing config!"));
@@ -66,26 +71,94 @@ class Database {
                 return callback(new Error("Can't save data to db! Not connected!"));
             }
             else {
-                var HotelModel = this.hotel.model;
-                var newHotel = new HotelModel();
 
-                if (typeof config.name === 'undefined') {
-                    return callback(new Error("Hotel-Name is mandatory!"));
-                }
-                else {
-                    newHotel.name = config.name;
+                async.parallel([
+                    function parseHotel(callback) {
+                        var newHotel = Hotel.model();
 
-                    if (typeof config.rooms !== 'undefined') {
-                        newHotel.rooms = config.rooms;
+                        newHotel.name = config.name;
+
+                        newHotel.save(function (error) {
+                            if (error) {
+                                logger.error(error);
+                                return callback();
+                            }
+                        });
+                    },
+                    function parseRooms(callback) {
+                        if (typeof config.rooms !== 'undefined') {
+                            logger.debug("Room-cfg existing, adding to db.");
+
+                            config.rooms.forEach(function (cfg_room) {
+                                var room = Room.model();
+                                room.name = cfg_room.name;
+                                room.isBooked = cfg_room.isBooked;
+                                room.members = cfg_room.members;
+                                room.save(function (error) {
+                                    if (error) {
+                                        logger.error(error);
+                                        return callback();
+                                    }
+                                })
+                            });
+                        }
+                    },
+
+                    function parseDevices() {
+                        if (typeof config.devices !== 'undefined') {
+                            logger.debug("Device-cfg existing, adding to db.");
+                            config.devices.forEach(function (cfg_device) {
+                                var device = Device.model();
+                                device.name = cfg_device.name;
+                                device.save(function (error) {
+                                    if (error) {
+                                        logger.error(error);
+                                        return callback();
+                                    }
+                                })
+                            });
+                        }
                     }
-
-                    newHotel.save(function (error) {
-                        callback(error);
-                    })
-                }
+                ], function () {
+                    callback();
+                });
             }
         }
     }
+
+    /*
+     register type:Boolean - Register or de-register device
+     */
+    registerDevice(deviceName, register, callback) {
+        if (typeof register !== 'boolean') {
+            return callback(new Error("Invalid param. register, boolean expected."));
+        }
+
+        Device.model.findOne({name: deviceName}, function (error, device) { //Get device by name
+            if (error) {
+                return callback(error);
+            }
+            else {
+                if (!device) {
+                    logger.debug("Device not existing in db, creating ...");
+
+                    device = Device.model();
+                    device.name = deviceName;
+                }
+
+                device.registration.registered = register;
+                if (register) device.registration.timestamp = Date.now();
+
+                device.save(function (error) {
+                    if (error) {
+                        return callback(error);
+                    }
+                    callback();
+                });
+            }
+        });
+    }
+
 }
 
 export default Database;

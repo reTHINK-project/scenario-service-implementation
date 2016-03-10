@@ -1,6 +1,8 @@
 import logger from 'logops';
 import lwm2mlib from 'lwm2m-node-lib';
 import Database from './Database';
+import Hotel from './models/Hotel';
+import Device from './models/Device';
 
 'use strict';
 
@@ -22,7 +24,7 @@ lwm2m.getConfig = function () {
     return config;
 };
 
-//TODO: Implement with module 'async' for cleaner code
+//TODO: Promises
 lwm2m.start = function (callback) {
     if (typeof config === 'undefined') {
         logger.error("Missing configuration!");
@@ -89,17 +91,35 @@ lwm2m.stop = function (callback) {
     });
 };
 
+
+//TODO: Update references
 function registrationHandler(endpoint, lifetime, version, binding, payload, callback) {
     logger.info('\nDevice registration:\n----------------------------\n');
     logger.info('Endpoint name: %s\nLifetime: %s\nBinding: %s', endpoint, lifetime, binding);
-    //TODO: Read data (humidity and temperature)
-    callback();
+
+    database.registerDevice(endpoint, true, function (error) {
+        if (error) {
+            logger.error("Error while updating device-data")
+        }
+        logger.debug("Device info for '%s' stored in db.", endpoint);
+
+        callback();
+    });
 }
 
+//TODO: Update references
 function unregistrationHandler(device, callback) {
     logger.info('\nDevice unregistration:\n----------------------------\n');
-    logger.info('Device location: %s', device);
-    callback();
+    logger.info('Device location: %s', device.name);
+
+    database.registerDevice(device.name, false, function (error) {
+        if (error) {
+            logger.error("Error while updating device-data", error)
+        }
+        logger.debug("Device info for '%s' stored in db.", device.name);
+
+        callback();
+    });
 }
 
 function setHandlers(callback) {

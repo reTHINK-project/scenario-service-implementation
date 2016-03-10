@@ -3,15 +3,14 @@
  */
 'use strict';
 import mongoose from 'mongoose';
-import device from './Device';
 
 var Schema = mongoose.Schema;
 var room = {};
 
 room.schema = new Schema({
+    name: String,
     isBooked: Boolean,
-    id: String,
-    devices: [device.schema],
+    devices: [{type: Schema.Types.ObjectId, ref: 'Device'}],
     members: [String]
 });
 

@@ -16,8 +16,7 @@
     "logops": "^1.0.0-alpha.5",
     "lwm2m-node-lib": "^0.5.0",
     "mongodb": "^2.1.7",
-    "mongoose": "^4.4.6",
-    "mongoose-auto-increment": "^5.0.1"
+    "mongoose": "^4.4.6"
   },
   "devDependencies": {
     "babel": "~6.3.26",

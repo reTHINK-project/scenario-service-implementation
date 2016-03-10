@@ -10,35 +10,30 @@ config.db = {
 
 //Configuration of the Hotel
 //--------------------------------------------------
+
 config.hotel = {
     name: 'MyHotel',
+    groups: [],
     rooms: [
         {
             name: 'Room 1',
             isBooked: false,
-            devices: [
-                {
-                    id: "0"
-                },
-                {
-                    id: '1'
-                }
-            ],
+            devices: [],
             members: []
         },
         {
             name: 'Room 2',
-            isBooked: false,
+            isBooked: true,
             devices: [],
             members: []
         }
     ],
-    groups: [
+    devices: [
         {
-            name: 'Staff',
-            role: 'admin',
-            members: []
-
+            name: 'myHeating'
+        },
+        {
+            name: 'myLight'
         }
     ]
 };
@@ -57,7 +52,7 @@ config.server = {
         type: 'mongodb',
         host: config.db.host,
         port: config.db.port,
-        db: 'lwm2m' //TODO: Is it okay to have them both in the same db? conflicts?
+        db: 'lwm2m'
     },
     formats: [
         {

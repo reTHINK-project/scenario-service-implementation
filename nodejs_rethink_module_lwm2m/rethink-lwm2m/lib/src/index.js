@@ -16,6 +16,14 @@ var _Database = require('./Database');
 
 var _Database2 = _interopRequireDefault(_Database);
 
+var _Hotel = require('./models/Hotel');
+
+var _Hotel2 = _interopRequireDefault(_Hotel);
+
+var _Device = require('./models/Device');
+
+var _Device2 = _interopRequireDefault(_Device);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 'use strict';
@@ -38,7 +46,7 @@ lwm2m.getConfig = function () {
     return config;
 };
 
-//TODO: Implement with module 'async' for cleaner code
+//TODO: Promises
 lwm2m.start = function (callback) {
     if (typeof config === 'undefined') {
         _logops2.default.error("Missing configuration!");
@@ -100,17 +108,34 @@ lwm2m.stop = function (callback) {
     });
 };
 
+//TODO: Update references
 function registrationHandler(endpoint, lifetime, version, binding, payload, callback) {
     _logops2.default.info('\nDevice registration:\n----------------------------\n');
     _logops2.default.info('Endpoint name: %s\nLifetime: %s\nBinding: %s', endpoint, lifetime, binding);
-    //TODO: Read data (humidity and temperature)
-    callback();
+
+    database.registerDevice(endpoint, true, function (error) {
+        if (error) {
+            _logops2.default.error("Error while updating device-data");
+        }
+        _logops2.default.debug("Device info for '%s' stored in db.", endpoint);
+
+        callback();
+    });
 }
 
+//TODO: Update references
 function unregistrationHandler(device, callback) {
     _logops2.default.info('\nDevice unregistration:\n----------------------------\n');
-    _logops2.default.info('Device location: %s', device);
-    callback();
+    _logops2.default.info('Device location: %s', device.name);
+
+    database.registerDevice(device.name, false, function (error) {
+        if (error) {
+            _logops2.default.error("Error while updating device-data", error);
+        }
+        _logops2.default.debug("Device info for '%s' stored in db.", device.name);
+
+        callback();
+    });
 }
 
 function setHandlers(callback) {

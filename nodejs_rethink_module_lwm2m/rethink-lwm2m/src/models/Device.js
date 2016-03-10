@@ -5,9 +5,11 @@ var Schema = mongoose.Schema;
 var device = {};
 
 device.schema = new Schema({
-    id: String,
+    name: {type: String, unique: true},
+    room: {type: Schema.Types.ObjectId, ref: 'Room'},
+
     registration: {
-        registered: Boolean,
+        registered: {type: Boolean, default: false},
         timestamp: {type: Date, default: Date.now}
     },
     lastValue: {
