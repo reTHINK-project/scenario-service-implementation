@@ -16,13 +16,13 @@ config.hotel = {
     groups: [],
     rooms: [
         {
-            name: 'Room 1',
+            name: 'room1',
             isBooked: false,
             devices: [],
             members: []
         },
         {
-            name: 'Room 2',
+            name: 'room2',
             isBooked: true,
             devices: [],
             members: []
@@ -30,9 +30,11 @@ config.hotel = {
     ],
     devices: [
         {
+            room: 'room2',
             name: 'myHeating'
         },
         {
+            room: 'room1',
             name: 'myLight'
         }
     ]

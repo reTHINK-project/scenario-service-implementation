@@ -11,15 +11,25 @@ import logger from 'logops';
 
 class Database {
 
-    constructor(host = 'localhost', dbname = 'hotel') {
-        this._host = host;
-        this._dbname = dbname;
-        this.db = db;
+    constructor(config) {
+        this._config = config;
+    }
+
+    set config(config) {
+        this._config = config;
+    }
+
+    get config() {
+        return this._config;
+    }
+
+    get connection() {
+        return db.connection;
     }
 
     connect(callback) {
         if (!this.connected()) {
-            db.init(this._host, this._dbname, function () {
+            db.init(this.config.db.host, this.config.db.database, function () {
                 callback();
             })
         }
@@ -48,22 +58,19 @@ class Database {
         }
     }
 
-    //TODO: sync?, improve check? Could compare db-attributes with cfg-attr.
     isInitialised(callback) {
-        this.db.connection.db.listCollections({name: 'hotels'}) //appended 's' is mongoose-behavior, see: http://bit.ly/1Lq65AJ)
+        db.connection.db.listCollections({name: 'hotels'}) //appended 's' is mongoose-behavior, see: http://bit.ly/1Lq65AJ)
             .next(function (err, collinfo) {
                 callback(typeof collinfo !== 'undefined' && collinfo !== null, err);
             });
     }
 
-    get connection() {
-        return db.connection;
-    }
 
-    //TODO: Object-references (Device needs room assigned etc.)
     //TODO: Proper error-handling (improve callbacks)
-    createHotel(config, callback) {
-        if (typeof config === 'undefined') {
+    createHotel(callback) {
+        var that = this;
+
+        if (typeof this.config === 'undefined') {
             return callback(new Error("Missing config!"));
         }
         else {
@@ -71,60 +78,192 @@ class Database {
                 return callback(new Error("Can't save data to db! Not connected!"));
             }
             else {
+                var errors = [];
 
-                async.parallel([
-                    function parseHotel(callback) {
-                        var newHotel = Hotel.model();
-
-                        newHotel.name = config.name;
-
-                        newHotel.save(function (error) {
-                            if (error) {
-                                logger.error(error);
-                                return callback();
-                            }
-                        });
-                    },
-                    function parseRooms(callback) {
-                        if (typeof config.rooms !== 'undefined') {
-                            logger.debug("Room-cfg existing, adding to db.");
-
-                            config.rooms.forEach(function (cfg_room) {
-                                var room = Room.model();
-                                room.name = cfg_room.name;
-                                room.isBooked = cfg_room.isBooked;
-                                room.members = cfg_room.members;
-                                room.save(function (error) {
-                                    if (error) {
-                                        logger.error(error);
-                                        return callback();
-                                    }
-                                })
-                            });
-                        }
-                    },
-
-                    function parseDevices() {
-                        if (typeof config.devices !== 'undefined') {
-                            logger.debug("Device-cfg existing, adding to db.");
-                            config.devices.forEach(function (cfg_device) {
-                                var device = Device.model();
-                                device.name = cfg_device.name;
-                                device.save(function (error) {
-                                    if (error) {
-                                        logger.error(error);
-                                        return callback();
-                                    }
-                                })
-                            });
-                        }
+                that._parseHotel(function (error) {
+                    if (error) {
+                        errors.push(error);
                     }
-                ], function () {
-                    callback();
+                    that._parseRooms(function (error) {
+                        if (error) {
+                            errors.push(error);
+                        }
+                        that._parseDevices(function (error) {
+                            if (error) {
+                                errors.push(error);
+                            }
+                            that._setReferences(function (error) {
+                                if (error) {
+                                    errors.push(error);
+                                }
+                                errors.forEach(function (error) {
+                                    logger.debug("Error: ", error);
+                                });
+                                if (errors.length === 0) {
+                                    errors = null;
+                                }
+                                callback(errors);
+                            });
+                        });
+                    });
                 });
             }
         }
     }
+
+    _parseHotel(callback) {
+        var newHotel = Hotel.model();
+        newHotel.name = this.config.hotel.name;
+        newHotel.save(function (error) {
+            callback(error);
+        });
+    }
+
+    _parseRooms(callback) {
+        var that = this;
+        if (this.config.hotel.hasOwnProperty('rooms')) {
+            logger.debug("Room-cfg existing, adding to db.");
+
+            var errors = [];
+            var hotel;
+
+            Hotel.model.findOne({name: that.config.hotel.name}, function (error, result) {
+                if (error) {
+                    errors.push(error);
+                }
+                hotel = result;
+
+                if (!hotel) {
+                    errors.push(new Error("Hotel missing in db. Inconsistent data. Not able to link hotel->rooms."));
+                }
+
+                async.each(that.config.hotel.rooms, function (cfg_room, callback2) {
+                        var room = Room.model();
+                        room.name = cfg_room.name;
+                        room.isBooked = cfg_room.isBooked;
+                        room.members = cfg_room.members;
+                        room.save(function (error) {
+                            if (error) {
+                                errors.push(error);
+                            }
+                            logger.debug("Added room '%s'", cfg_room.name);
+                            if (hotel) {
+                                hotel.rooms.push(room); //Add room to hotel-list
+                                logger.debug("Added %s to %s.rooms[]", room.name, hotel.name);
+                            }
+                            callback2();
+                        });
+
+                    },
+                    function () { //Could stop on first error here
+                        if (errors.length === 0) {
+                            errors = null;
+                        }
+                        if (hotel) {
+                            hotel.save(function (error) {
+                                if (error) { //Could be cleaner
+                                    errors = [];
+                                    errors.push(error);
+                                }
+                                callback();
+                            })
+                        }
+                        else {
+                            callback(errors);
+                        }
+                    }
+                );
+            });
+        }
+        else {
+            callback();
+        }
+    }
+
+    _parseDevices(callback) {
+        if (this.config.hotel.hasOwnProperty('devices')) {
+            logger.debug("Device-cfg existing, adding to db.");
+
+            var errors = [];
+            async.each(this.config.hotel.devices, function (cfg_device, callback2) {
+                var device = Device.model();
+                device.name = cfg_device.name;
+                device.save(function (error) {
+                    if (error) {
+                        errors.push(error);
+                    }
+                    logger.debug("Added device '%s'", cfg_device.name);
+                    callback2();
+                });
+            }, function () {
+                if (errors.length === 0) {
+                    errors = null;
+                }
+                callback(errors);
+            });
+        }
+        else {
+            callback();
+        }
+    }
+
+    _setReferences(callback) {
+        var errors = [];
+        logger.debug("Establishing db-references");
+        async.each(this.config.hotel.devices, function (cfg_device, callback2) {
+            if (cfg_device.hasOwnProperty('room')) {
+                Room.model.findOne({name: cfg_device.room}, function (error, room) {
+                    if (error) {
+                        logger.error("Error while querying db", error);
+                    }
+                    else {
+                        if (!room) {
+                            logger.error("Invalid reference '%s.%s'! Room '%s' not found.", cfg_device.name, cfg_device.room, cfg_device.room);
+                        }
+                        else {
+                            Device.model.findOne({name: cfg_device.name}, function (error, device) {
+                                if (error) {
+                                    logger.error("Error while querying db", error);
+                                }
+                                else {
+                                    if (!device) {
+                                        logger.error("Can't set reference, device '%s' not found in db", cfg_device.name);
+                                    }
+                                    else {
+                                        //Bidirectional
+                                        device.room = room;
+                                        room.devices.push(device);
+
+                                        device.save(function (error) {
+                                            if (error) {
+                                                errors.push(error);
+                                            }
+                                            room.save(function (error) {
+                                                if (error) {
+                                                    errors.push(error);
+                                                }
+                                                logger.debug("Linked device '%s' to room '%s'", device.name, room.name);
+                                                callback2();
+                                            })
+                                        });
+                                    }
+                                }
+                            });
+                        }
+                    }
+                });
+            }
+            else {
+                logger.debug("Device '%s' has no room-reference. Skipping...", cfg_device.name);
+            }
+        }, function () {
+            if (errors.length === 0) {
+                errors = null;
+            }
+            callback(errors);
+        });
+    }
+
 
     /*
      register type:Boolean - Register or de-register device
@@ -158,7 +297,6 @@ class Database {
             }
         });
     }
-
 }
 
 export default Database;

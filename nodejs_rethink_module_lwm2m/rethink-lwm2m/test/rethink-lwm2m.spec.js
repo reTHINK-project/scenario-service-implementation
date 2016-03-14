@@ -35,5 +35,7 @@ describe('Test module', function () {
 
             });
         });
+
+        //TODO: Add tests utilising client-script from lwm2m-module (https://github.com/telefonicaid/lwm2m-node-lib/blob/master/bin/iotagent-lwm2m-client.js)
     });
 });

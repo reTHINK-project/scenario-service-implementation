@@ -25,12 +25,13 @@ lwm2m.getConfig = function () {
 };
 
 //TODO: Promises
+//TODO: Let all errors bubble up to this layer, output in lower layers only as DEBUG
 lwm2m.start = function (callback) {
     if (typeof config === 'undefined') {
         logger.error("Missing configuration!");
     }
 
-    database = new Database(config.db.host, config.db.database);
+    database = new Database(config);
 
     database.connect(function (error) {
         if (error) {
@@ -42,7 +43,7 @@ lwm2m.start = function (callback) {
             }
             else {
                 if (!initialised) {
-                    database.createHotel(config.hotel, function (error) {
+                    database.createHotel(function (error) {
                         if (error) {
                             logger.error(error);
                             return callback(error);
@@ -56,6 +57,7 @@ lwm2m.start = function (callback) {
                 }
             }
 
+            //TODO: Order: start lwm2m after db-init only!
             lwm2m.server.start(config.server, function (error, results) {
                 if (error) {
                     return callback(error);
@@ -91,8 +93,6 @@ lwm2m.stop = function (callback) {
     });
 };
 
-
-//TODO: Update references
 function registrationHandler(endpoint, lifetime, version, binding, payload, callback) {
     logger.info('\nDevice registration:\n----------------------------\n');
     logger.info('Endpoint name: %s\nLifetime: %s\nBinding: %s', endpoint, lifetime, binding);
@@ -107,7 +107,6 @@ function registrationHandler(endpoint, lifetime, version, binding, payload, call
     });
 }
 
-//TODO: Update references
 function unregistrationHandler(device, callback) {
     logger.info('\nDevice unregistration:\n----------------------------\n');
     logger.info('Device location: %s', device.name);
