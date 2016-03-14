@@ -1,0 +1,34 @@
+@startuml
+autonumber
+
+participant "My City\nApp" as app
+
+participant "Survey\nHyperty" as mySurveyHyperty
+
+participant "Survey\nData Object" as mySurveyDO
+
+participant "Syncher" as sync
+
+create mySurveyHyperty
+
+app ->  mySurveyHyperty : new()
+
+group discover available Context Location 
+
+mySurveyHyperty -> sync : create(  )
+
+create mySurveyDO 
+
+sync -> mySurveyDO : new
+
+sync -> sync : Object.observe\n( mySurvey )
+
+mySurveyHyperty <-- sync : return mySurvey
+
+end
+
+app <--  mySurveyHyperty : return myLocation Context
+
+app -> app : Object.observe\n( myLocation, callback )
+
+@enduml
