@@ -117,28 +117,22 @@ function registrationHandler(endpoint, lifetime, version, binding, payload, call
     logger.info('\nDevice registration:\n----------------------------\n');
     logger.info('Endpoint name: %s\nLifetime: %s\nBinding: %s', endpoint, lifetime, binding);
 
-    database.registerDevice(endpoint, true, function (error) {
-        if (error) {
-            logger.error("Error while updating device-data")
-        }
-        logger.debug("Device info for '%s' stored in db.", endpoint);
-
-        callback();
-    });
+    database.registerDevice(endpoint, true)
+        .catch(function (error) {
+            logger.error("Error while updating device-data", error);
+        })
+        .then(callback);
 }
 
 function unregistrationHandler(device, callback) {
     logger.info('\nDevice unregistration:\n----------------------------\n');
     logger.info('Device location: %s', device.name);
 
-    database.registerDevice(device.name, false, function (error) {
-        if (error) {
-            logger.error("Error while updating device-data", error)
-        }
-        logger.debug("Device info for '%s' stored in db.", device.name);
-
-        callback();
-    });
+    database.registerDevice(device.name, true)
+        .catch(function (error) {
+            logger.error("Error while updating device-data", error);
+        })
+        .then(callback);
 }
 
 function setHandlers() {

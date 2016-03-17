@@ -291,33 +291,34 @@ class Database {
     /*
      register type:Boolean - Register or de-register device
      */
-    registerDevice(deviceName, register, callback) {
-        if (typeof register !== 'boolean') {
-            return callback(new Error("Invalid param. register, boolean expected."));
-        }
-
-        Device.model.findOne({name: deviceName}, function (error, device) { //Get device by name
-            if (error) {
-                return callback(error);
+    registerDevice(deviceName, register) {
+        return new Promise(function (resolve, reject) {
+            if (typeof register !== 'boolean') {
+                reject(new Error("Invalid param. register, boolean expected."));
             }
-            else {
-                if (!device) {
-                    logger.debug("Device not existing in db, creating ...");
-
-                    device = Device.model();
-                    device.name = deviceName;
+            Device.model.findOne({name: deviceName}, function (error, device) { //Get device by name
+                if (error) {
+                    reject(error);
                 }
+                else {
+                    if (!device) {
+                        logger.debug("Device not existing in db, creating ...");
 
-                device.registration.registered = register;
-                if (register) device.registration.timestamp = Date.now();
-
-                device.save(function (error) {
-                    if (error) {
-                        return callback(error);
+                        device = Device.model();
+                        device.name = deviceName;
                     }
-                    callback();
-                });
-            }
+
+                    device.registration.registered = register;
+                    if (register) device.registration.timestamp = Date.now();
+
+                    device.save(function (error) {
+                        if (error) {
+                            reject(error);
+                        }
+                        resolve();
+                    });
+                }
+            });
         });
     }
 }
