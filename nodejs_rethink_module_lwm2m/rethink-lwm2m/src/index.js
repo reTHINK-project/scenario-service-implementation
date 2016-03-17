@@ -24,72 +24,92 @@ lwm2m.getConfig = function () {
     return config;
 };
 
-//TODO: Promises
-//TODO: Let all errors bubble up to this layer, output in lower layers only as DEBUG
-lwm2m.start = function (callback) {
-    if (typeof config === 'undefined') {
-        logger.error("Missing configuration!");
-    }
-
-    database = new Database(config);
-
-    database.connect(function (error) {
-        if (error) {
-            return callback(error);
+lwm2m.start = function () {
+    return new Promise(function (resolve, reject) {
+        if (typeof config === 'undefined') {
+            logger.error("Missing configuration!");
+            reject();
         }
-        database.isInitialised(function (initialised, err) {
-            if (err) {
-                logger.error(err);
-            }
-            else {
-                if (!initialised) {
-                    database.createHotel(function (error) {
-                        if (error) {
-                            logger.error(error);
-                            return callback(error);
+        database = new Database(config);
+        database.connect()
+            .catch(function (error) {
+                logger.error(error);
+                reject(error);
+            })
+            .then(function () {
+                database.isInitialised()
+                    .catch(function (error) {
+                        logger.error(error);
+                        reject(error);
+                    })
+                    .then(function (initialised) {
+                        if (!initialised) {
+                            database.createHotel()
+                                .catch(function (error) {
+                                    logger.error(error);
+                                    reject(error);
+                                })
+                                .then(function (errors) {
+                                    if (errors) {
+                                        logger.error("Problems while initialising db: ", errors);
+                                    }
+                                    else {
+                                        logger.info("Database initialised with config-data!");
+                                    }
+                                    startm2m()
+                                        .catch(reject)
+                                        .then(resolve);
+                                });
                         }
-
-                        logger.info("Database initialised with config-data! Ready to start.");
+                        else {
+                            logger.info("Database already initialised. Using existing data.");
+                            startm2m()
+                                .catch(reject)
+                                .then(resolve);
+                        }
                     });
-                }
-                else {
-                    logger.info("Database already initialised. Using existing data.");
-                }
-            }
-
-            //TODO: Order: start lwm2m after db-init only!
-            lwm2m.server.start(config.server, function (error, results) {
-                if (error) {
-                    return callback(error);
-                }
-                lwm2m.serverInfo = results;
-                setHandlers(function () {
-                    logger.info("Initialised registration handlers");
-                    callback();
-                });
-
             });
-
-        });
     });
 };
 
-
-lwm2m.stop = function (callback) {
-    database.disconnect(function (error) {
-        if (error) {
-            logger.error(error);
-        }
+function startm2m() {
+    return new Promise(function (resolve, reject) {
+        lwm2m.server.start(config.server, function (error, results) {
+            if (error) {
+                logger.error(error);
+                reject(error);
+            }
+            else {
+                lwm2m.serverInfo = results;
+                setHandlers().then(resolve);
+            }
+        });
     });
+}
 
-    if (!lwm2m.serverInfo) {
-        var error = "Can't stop server. Not running";
-        logger.error(error);
-        return callback(error);
-    }
 
-    lwm2m.server.stop(lwm2m.serverInfo, function (error) {
-        callback(error);
+lwm2m.stop = function () {
+    return new Promise(function (resolve, reject) {
+        database.disconnect()
+            .catch(function (error) {
+                logger.error(error);
+                reject();
+            });
+
+        if (!lwm2m.serverInfo) {
+            var error = "Can't stop m2m server. Not running";
+            logger.error(error);
+            reject(error);
+        }
+
+        lwm2m.server.stop(lwm2m.serverInfo, function (error) {
+            if (error) {
+                reject(error);
+            }
+            else {
+                resolve();
+            }
+        });
     });
 };
 
@@ -121,10 +141,13 @@ function unregistrationHandler(device, callback) {
     });
 }
 
-function setHandlers(callback) {
-    lwm2m.server.setHandler(lwm2m.serverInfo, 'registration', registrationHandler);
-    lwm2m.server.setHandler(lwm2m.serverInfo, 'unregistration', unregistrationHandler);
-    callback();
+function setHandlers() {
+    return new Promise(function (resolve) {
+        lwm2m.server.setHandler(lwm2m.serverInfo, 'registration', registrationHandler);
+        lwm2m.server.setHandler(lwm2m.serverInfo, 'unregistration', unregistrationHandler);
+        logger.debug("Set registration handlers.");
+        resolve();
+    });
 }
 
 export default lwm2m;

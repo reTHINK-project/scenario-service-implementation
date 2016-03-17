@@ -21,19 +21,20 @@ describe('Test module', function () {
         });
 
         it('should start and stop lwm2m server', function (done) {
-            lwm2m.start(function (error) {
-                expect(error).to.not.exist;
-                expect(lwm2m.server.isRunning()).to.be.true;
-
-                setTimeout(function () {
-                    lwm2m.stop(function (error) {
-                        expect(error).to.not.exist;
-                        expect(lwm2m.server.isRunning()).to.be.false;
-                        done();
-                    }, 1000);
+            lwm2m.start()
+                .catch(function (error) {
+                    expect(error).to.not.exist;
+                })
+                .then(function () {
+                    lwm2m.stop()
+                        .catch(function (error) {
+                            expect(error).to.not.exist;
+                        })
+                        .then(function () {
+                            expect(lwm2m.server.isRunning()).to.be.false;
+                            done();
+                        });
                 });
-
-            });
         });
 
         //TODO: Add tests utilising client-script from lwm2m-module (https://github.com/telefonicaid/lwm2m-node-lib/blob/master/bin/iotagent-lwm2m-client.js)
