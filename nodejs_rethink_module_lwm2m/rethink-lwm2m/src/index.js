@@ -1,10 +1,25 @@
-import logger from 'logops';
-import lwm2mlib from 'lwm2m-node-lib';
-import Database from './Database';
-import Hotel from './models/Hotel';
-import Device from './models/Device';
+/*
+ * Copyright [2015-2017] Fraunhofer Gesellschaft e.V., Institute for
+ * Open Communication Systems (FOKUS)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
 
 'use strict';
+import logger from "logops";
+import lwm2mlib from "lwm2m-node-lib";
+import Database from "./Database";
 
 let lwm2m = {};
 lwm2m.server = lwm2mlib.server; //Enables use of all native lwm2m-lib methods
@@ -115,7 +130,7 @@ lwm2m.stop = function () {
 
 function registrationHandler(endpoint, lifetime, version, binding, payload, callback) {
     logger.info('\nDevice registration:\n----------------------------\n');
-    logger.info('Endpoint name: %s\nLifetime: %s\nBinding: %s', endpoint, lifetime, binding);
+    logger.info('Endpoint name: %s\nLifetime: %s\nBinding: %s\n Payload: %s', endpoint, lifetime, binding, payload);
 
     database.registerDevice(endpoint, true)
         .catch(function (error) {

@@ -2,12 +2,12 @@
   "name": "rethink-lwm2m",
   "version": "0.1.0",
   "description": "",
-  "main": "lib/index.js",
+  "main": "index.js",
   "scripts": {
     "test": "mocha --compilers js:babel-register"
   },
   "author": "Paul Zühlcke",
-  "license": "",
+  "license": "Apache-2.0",
   "dependencies": {
     "async": "^1.5.2",
     "babel-cli": "^6.6.4",
