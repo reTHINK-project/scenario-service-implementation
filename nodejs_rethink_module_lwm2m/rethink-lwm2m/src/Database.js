@@ -305,7 +305,7 @@ class Database {
     /*
      register type:Boolean - Register or de-register device
      */
-    registerDevice(deviceName, register) {
+    registerDevice(deviceName, register, payload) {
         return new Promise(function (resolve, reject) {
             if (typeof register !== 'boolean') {
                 reject(new Error("Invalid param. register, boolean expected."));
@@ -325,12 +325,67 @@ class Database {
                     device.registration.registered = register;
                     if (register) device.registration.timestamp = Date.now();
 
+                    //Set / remove payload if given
+                    if (register === true) {
+                        if (typeof payload !== 'undefined' && payload !== null)
+                            device.registration.payload = payload;
+                    }
+                    else {
+                        device.registration.payload = null;
+                    }
+
                     device.save(function (error) {
                         if (error) {
                             reject(error);
                         }
                         resolve();
                     });
+                }
+            });
+        });
+    }
+
+    storeValue(deviceName, uri, value) {
+        return new Promise(function (resolve, reject) {
+            Device.model.findOne({name: deviceName}, function (error, device) {
+                if (error) {
+                    reject(error);
+                }
+                else {
+                    if (!device) {
+                        reject(new Error("Can't store value in db for device '" + deviceName + "'! Device not found!"));
+                    }
+                    else {
+                        var data = {};
+                        var pushNew = true;
+
+                        data.timestamp = Date.now();
+                        data.uri = uri;
+                        data.value = value;
+
+                        if (device.lastValues.length > 0) {
+                            device.lastValues.forEach(function (currValue) {
+                                if (currValue.uri == uri) {
+                                    currValue.value = data.value;
+                                    currValue.timestamp = data.timestamp;
+                                    pushNew = false;
+                                    //TODO: Exit loop, we're done
+                                }
+                            });
+                        }
+                        if (pushNew) {
+                            device.lastValues.push(data);
+                        }
+
+                        device.save(function (error) {
+                            if (error) {
+                                reject(error);
+                            }
+                            else {
+                                resolve();
+                            }
+                        })
+                    }
                 }
             });
         });

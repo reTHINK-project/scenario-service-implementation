@@ -28,12 +28,16 @@ device.schema = new Schema({
 
     registration: {
         registered: {type: Boolean, default: false},
-        timestamp: {type: Date, default: Date.now}
+        timestamp: {type: Date, default: Date.now},
+        payload: String
     },
-    lastValue: {
-        value: Object,
-        timestamp: {type: Date, default: Date.now}
-    }
+    lastValues: [
+        {
+            uri: String,
+            value: String,
+            timestamp: {type: Date, default: Date.now}
+        }
+    ]
 });
 
 device.load = function (connection) {

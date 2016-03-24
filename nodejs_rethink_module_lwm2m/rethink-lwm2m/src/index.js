@@ -132,22 +132,66 @@ function registrationHandler(endpoint, lifetime, version, binding, payload, call
     logger.info('\nDevice registration:\n----------------------------\n');
     logger.info('Endpoint name: %s\nLifetime: %s\nBinding: %s\n Payload: %s', endpoint, lifetime, binding, payload);
 
-    database.registerDevice(endpoint, true)
+    database.registerDevice(endpoint, true, payload)
         .catch(function (error) {
             logger.error("Error while updating device-data", error);
         })
-        .then(callback);
+        .then(function () {
+            observeDeviceData(endpoint, 3303, 0, 5700); //Temperature
+            observeDeviceData(endpoint, 3304, 0, 5700); //Humidity
+            callback();
+        });
 }
 
 function unregistrationHandler(device, callback) {
     logger.info('\nDevice unregistration:\n----------------------------\n');
     logger.info('Device location: %s', device.name);
 
-    database.registerDevice(device.name, true)
+    database.registerDevice(device.name, false)
         .catch(function (error) {
             logger.error("Error while updating device-data", error);
         })
         .then(callback);
+}
+
+
+function observeHandler(objectType, objectId, resourceId, deviceId, value) {
+    lwm2m.server.getRegistry().get(deviceId, function (error, device) {
+        database.storeValue(device.name, ('/' + objectType + '/' + objectId + '/' + resourceId), value)
+            .catch(function (error) {
+                logger.error("Error while storing observe-data in db! Device: %s", device.name, error);
+            })
+            .then(function () {
+                logger.debug("Stored observe-data for device '%s' in db!", device.name);
+            });
+    });
+    logger.debug("Observe-handler device [" + deviceId + ", objectType " + objectType + ", objectId " + objectId + ", resourceId: " + resourceId + "] => " + value);
+}
+
+function observeDeviceData(deviceName, objectType, objectId, resourceId) {
+    lwm2m.server.getRegistry().getByName(deviceName, function (error, device) {
+        if (error) {
+            logger.error(error);
+        }
+        else {
+            lwm2m.server.observe(device.id, objectType, objectId, resourceId, observeHandler, function (error, value) {
+                if (error) {
+                    logger.error("Error while starting observe!", error)
+                }
+                else {
+                    logger.debug("Started observe for %s. First value: ", deviceName, value);
+                    database.storeValue(deviceName, ('/' + objectType + '/' + objectId + '/' + resourceId), value)
+                        .catch(function (error) {
+                            logger.error("Error while storing initial read-data!", error);
+                        })
+                        .then(function () {
+                            logger.debug("Stored initial read-data from observe.");
+                        });
+                }
+            });
+        }
+    });
+
 }
 
 function setHandlers() {

@@ -18,13 +18,11 @@ config.hotel = {
         {
             name: 'room1',
             isBooked: false,
-            devices: [],
             members: []
         },
         {
             name: 'room2',
             isBooked: true,
-            devices: [],
             members: []
         }
     ],
