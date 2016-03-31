@@ -179,14 +179,22 @@ function observeDeviceData(deviceName, objectType, objectId, resourceId) {
                     logger.error("Error while starting observe!", error)
                 }
                 else {
-                    logger.debug("Started observe for %s. First value: ", deviceName, value);
-                    database.storeValue(deviceName, ('/' + objectType + '/' + objectId + '/' + resourceId), value)
-                        .catch(function (error) {
-                            logger.error("Error while storing initial read-data!", error);
-                        })
-                        .then(function () {
-                            logger.debug("Stored initial read-data from observe.");
+                    logger.debug("Started observe for '%s'. First value: ", deviceName, value);
+                    if (value === '') { //No data => Device does not set data
+                        logger.debug("Device '" + deviceName + "' does not set /" + objectType + "/" + objectId + "/" + resourceId + "! Canceling observe.");
+                        lwm2m.server.cancelObserver(device.id, objectType, objectId, resourceId, function () {
+                            logger.debug("Observe for '%s' canceled!", device.name);
                         });
+                    }
+                    else {
+                        database.storeValue(deviceName, ('/' + objectType + '/' + objectId + '/' + resourceId), value)
+                            .catch(function (error) {
+                                logger.error("Error while storing initial read-data!", error);
+                            })
+                            .then(function () {
+                                logger.debug("Stored initial read-data from observe.");
+                            });
+                    }
                 }
             });
         }
