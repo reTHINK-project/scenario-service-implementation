@@ -27,6 +27,8 @@ lwm2m.serverInfo = {};
 let config = {};
 let database;
 
+logger.format = logger.formatters.dev;
+
 lwm2m.setConfig = function (c) {
     config = c;
 
