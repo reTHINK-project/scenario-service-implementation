@@ -52,7 +52,7 @@ Finally, it is needed to configure the protostub descriptors to connect to Quobi
      
 ### Using your own environment
 
-The last but not the least is setup all the environment in your own server. 
+The last but not the least is setup all the environment in your own server. We used an updated Ubuntu 14.04.4 LTS Server to install all the services.
 
 #### Dev registry domain
 
