@@ -14,7 +14,7 @@ This is the most straightforward way to start. You only need to link rethink.js 
 Then you can use rethink global variable in window object to install the runtime:
 
     let domain = "rethink-app.quobis.com"
-    let runtimeLoader = window.rethink.install(domain);
+    let runtimeLoader = window.rethink.default.install(domain);
 
 Once the runtime is installed you can require hyperties and protostubs through the runtime instance.
 
