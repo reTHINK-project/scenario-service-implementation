@@ -1,8 +1,7 @@
+#[Developer Welcome Page](https://github.com/reTHINK-project/scenario-service-implementation/blob/master/docs/startup-guide/index.md)
+
 # scenario-service-implementation
 This repository will gather all the work done in WP5 (Scenario/Service implementation)
-
-##[Developer Welcome Page](https://github.com/reTHINK-project/scenario-service-implementation/blob/master/docs/startup-guide/index.md)
-
 
 The work package will take the reTHINK use cases and user scenarios of WP1 as a starting point to design and develop use-cases that embed combinations of the service components (real time communication, Web application, content management). All the tasks will be divided in two iterative phases. Scenarios and hyperties defined in phase 1 will be less complex and all the feedback derived from their design and implementation will be used in the phase 2 to enrich the scenarios and fix any conceptual or technical gap detected.  
 
