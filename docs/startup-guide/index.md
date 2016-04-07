@@ -1,76 +1,36 @@
-# Getting Started
+#Developer welcome page
 
-## Scenarios
+##Introduction
+The goal of this page is to be a starting point for developers of hyperties and applications from WP5. There is a lot of documentation generated and updated by other WPs so this guide just points to the right documentation and makes some clarifications which can be welcome for begginers.
 
-### Using rethink hosted on Quobis
+We encourage the developers to read the [dev-service-framework](https://github.com/reTHINK-project/dev-service-framework#getting-started) documentation, specially the [Getting started pages](https://github.com/reTHINK-project/dev-service-framework#getting-started).
 
-This is the most straightforward way to start. You only need to link rethink.js from Quobis server:
-    
-    <script src="https://rethink-app.quobis.com/.well-known/runtime/rethink.js"
-    ></script>
+##Developing hyperties
 
-> We need to discuss others ways to deploy Rethink module.
+This  document released by **WP3 [Hyperty Development Toolkit](https://github.com/reTHINK-project/dev-hyperty-toolkit/tree/develop)** explains how to start programming a new hyperty. With this guide you an start now to develop the code of your hyperties using the core runtime in a browser.
+However guides to use the hyperties in the  the definitive runtimes: [browser runtime](https://github.com/reTHINK-project/dev-runtime-browser), [standalone Apps runtime](https://github.com/reTHINK-project/dev-standalone-apps) and NodeJS runtimes will be released as soon as there is a stable runtime usable (browser runtime will be available very soon). The code of the hyperties should remain unchanged to be executed in the definitive runtimes (this is one of goals of reTHINK!) however the Web App may change a little bit to be adapted to the final runtime. All the hyperties should be usable in any runtime (Browser, Nodejs and Standalone App) however the developer should use the one the hyperty being developed is aimed to. 
 
-Then you can use rethink global variable in window object to install the runtime:
+##The enviroment to develop and test my hyperties and Apps 
+To develop and test the hyperties is necessary to use an enviroment with the main elements of the reTHINK architecture (namely Message Node, Registry Domain and Catalogue Server). 
+The [Hyperty Development Toolkit](https://github.com/reTHINK-project/dev-hyperty-toolkit/tree/develop) explains how to use the [**Message Node**](https://github.com/reTHINK-project/core-framework/tree/master/docs/specs/msg-node) and the [**Registry Domain**](https://github.com/reTHINK-project/dev-registry-domain/tree/master/docs) hosted in a PT's public server. 
 
-    let domain = "rethink-app.quobis.com"
-    let runtimeLoader = window.rethink.install(domain);
+The [**Catalogue server**](https://github.com/reTHINK-project/dev-catalogue/tree/master/doc) (the other essential service) in the reTHINK architecture is being "simulated" right now by a Local-catalogue which is just a NodeJS based web-server which serves the files which has to be provided by the Catalogue Server developed by Fokus. The core-runtime is expected to  use the Catalogue Server soon but it shouldn't affect the development of the hyperties. 
 
-Once the runtime is installed you can require hyperties and protostubs through the runtime instance.
+###Using external hosted servers
+The hosted enviroment allows the developer to save time getting a working environment form the begining. In the [Hyperty Development Toolkit](https://github.com/reTHINK-project/dev-hyperty-toolkit/tree/develop) is explained how to use PTs server to test your hyperties. Quobis also explains how to use its public server to test hyperties and Apps in its [guide](https://github.com/reTHINK-project/dev-runtime-browser/blob/master/startup_guide.md)
 
-    runtimeLoader.requireHyperty(hyperty)
-        .then(hypertyDeployed)
-        .catch(function(reason) {
-          errorMessage(reason);
-        });
+###Using your own servers
+The developer can also deploy her own server with Message Node and Registry Domain (and soon Catalogue server). Quobis created [this guide](https://github.com/reTHINK-project/dev-runtime-browser/blob/master/startup_guide.md) based on our experience to get the services working to develop the browser runtime.  
 
+##Informal explanation of reTHINK servers. 
 
-In order to test your app you can server it locally using http-server:
+Please refer to the official doc to understand perfectly the role and functions of a each element of the reTHINK architecture. However we consider helpful to provide an informal overview of the elements:
 
-    sudo http-server --cors -S -p 443 -C rethink-certificate.cert -K rethink-certificate.key 
+**Message Node:**  it is the element in charge of exchanging the messages between hyperties and between hyperties an other of elements of the reTHINK architecture (for example the Registry Domain). There are three reTHINK standard compliant Message Nodes available implemented with different technologies: [Vertx](https://github.com/reTHINK-project/dev-msg-node-vertx), [NodeJS](https://github.com/reTHINK-project/dev-msg-node-nodejs) and [Matrix](https://github.com/reTHINK-project/dev-msg-node-matrix). The Message Node functions and messages are defined [here](https://github.com/reTHINK-project/core-framework/tree/master/docs/specs/msg-nod).
 
-### Using rethink hosted on your own server
+**Registry Domain:** it is the element in charge of registering the hyperties and making them publicly accessible to the rest of hyperties. You can find all the doc [here](https://github.com/reTHINK-project/dev-registry-domain/tree/master/docs)
 
-You have the option to host runtime files on your own server. In this scenario the steps are pretty similar than before but changing the URIs to the right place.
-
-The distribution files are on dev-runtime-server repo, on .well-known/runtime:
-
-* rethink.js
-* index.html
-* core.js
-* context-service.js
-
-One thing to take into account is the domain parameter in installation process. Runtime will look for index.html|core.js|context-service.js using this convention https://*domain*/.well-known/runtime/*distribution-file*.
-
-Addiotionally you need to place the resources folder on the root path. The resource folder conteins hyperties and protostubs descriptors.
-
-Finally, it is needed to configure the protostub descriptors to connect to Quobis Server:
-    
-    "configuration": {
-       "url": "wss://rethink-app.quobis.com:9090/ws"
-     },
-     
-### Using your own environment
-
-The last but not the least is setup all the environment in your own server. We used an updated Ubuntu 14.04.4 LTS Server to install all the services.
-
-#### Dev registry domain
-
-1. Clone dev-registry-domain@master repo on your server and run it:
-
-        mvn compile exec:java
-    
-#### Dev msg node vertx
-
-1. Clone dev-msg-node-vertx@dev-0.4 repo on the same server.
-2. **(Optional)** Generate your own server-keystore.jks.
-3. Set your configuration in node.config.json.
-4. Run it:
-
-        mvn compile exec:java -Dexec.args="9090"
-
-#### Configure Runtime
-
-From here you can follow the second scenario to configure the runtime to connect to your own server.
+**Catalogue server:** is the element in charge of serving the re-usable pieces of code (hyperties, protostubs, core runtime files) in reTHINK. You can find all the doc [here](https://github.com/reTHINK-project/dev-catalogue/tree/master/doc
+).
 
 
