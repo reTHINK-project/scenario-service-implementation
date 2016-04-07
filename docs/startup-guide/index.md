@@ -1,10 +1,12 @@
 # Getting Started
 
+**Note:** Quobis will keep this guide updated and we will try to keep as much stable as possible. However it is a work on progress so we recommend to check it periodically and in the event you find any error when deploying the environment.   
+
 ## Scenarios
 
 ### Using rethink hosted on Quobis
 
-This is the most straightforward way to start. You only need to link rethink.js from Quobis server:
+This is the most straightforward way to start. This server is public and can be used by the rest of partners . You only need to link rethink.js from Quobis server:
     
     <script src="https://rethink-app.quobis.com/.well-known/runtime/rethink.js"
     ></script>
@@ -33,7 +35,7 @@ In order to test your app you can server it locally using http-server:
 
 You have the option to host runtime files on your own server. In this scenario the steps are pretty similar than before but changing the URIs to the right place.
 
-The distribution files are on dev-runtime-server repo, on .well-known/runtime:
+The distribution files are on dev-registry-browser@master repo, on .well-known/runtime:
 
 * rethink.js
 * index.html
