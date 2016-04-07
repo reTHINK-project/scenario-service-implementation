@@ -7,7 +7,7 @@ We encourage the developers to read the [dev-service-framework](https://github.c
 
 ##Developing hyperties
 
-This  document released by WP3 [Hyperty Development Toolkit](https://github.com/reTHINK-project/dev-hyperty-toolkit/tree/develop) explains how to start programming a new hyperty. With this guide you an start now to develop the code of your hyperties using the core runtime in a browser.
+This  document released by **WP3 [Hyperty Development Toolkit](https://github.com/reTHINK-project/dev-hyperty-toolkit/tree/develop)** explains how to start programming a new hyperty. With this guide you an start now to develop the code of your hyperties using the core runtime in a browser.
 However guides to use the hyperties in the  the definitive runtimes: [browser runtime](https://github.com/reTHINK-project/dev-runtime-browser), [standalone Apps runtime](https://github.com/reTHINK-project/dev-standalone-apps) and NodeJS runtimes will be released as soon as there is a stable runtime usable (browser runtime will be available very soon). The code of the hyperties should remain unchanged to be executed in the definitive runtimes (this is one of goals of reTHINK!) however the Web App may change a little bit to be adapted to the final runtime. All the hyperties should be usable in any runtime (Browser, Nodejs and Standalone App) however the developer should use the one the hyperty being developed is aimed to. 
 
 ##The enviroment to develop and test my hyperties and Apps 
