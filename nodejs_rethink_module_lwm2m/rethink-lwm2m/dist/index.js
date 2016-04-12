@@ -34,15 +34,18 @@ var _Database = require("./Database");
 
 var _Database2 = _interopRequireDefault(_Database);
 
-function _interopRequireDefault(obj) {
-    return obj && obj.__esModule ? obj : {default: obj};
-}
+var _HTTPInterface = require("./HTTPInterface");
+
+var _HTTPInterface2 = _interopRequireDefault(_HTTPInterface);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var lwm2m = {};
 lwm2m.server = _lwm2mNodeLib2.default.server; //Enables use of all native lwm2m-lib methods
 lwm2m.serverInfo = {};
 var config = {};
 var database = void 0;
+var httpInterface = void 0;
 
 _logops2.default.format = _logops2.default.formatters.dev;
 
@@ -64,6 +67,19 @@ lwm2m.start = function () {
             _logops2.default.error("Missing configuration!");
             reject();
         }
+        //DATABASE
+        initdb().catch(reject).then(function () {
+            //M2M
+            startm2m().catch(reject).then(function () {
+                //HTTP
+                initHTTP().catch(reject).then(resolve);
+            });
+        });
+    });
+};
+
+function initdb() {
+    return new Promise(function (resolve, reject) {
         database = new _Database2.default(config);
         database.connect().catch(function (error) {
             _logops2.default.error(error);
@@ -83,16 +99,16 @@ lwm2m.start = function () {
                         } else {
                             _logops2.default.info("Database initialised with config-data!");
                         }
-                        startm2m().catch(reject).then(resolve);
+                        resolve();
                     });
                 } else {
                     _logops2.default.info("Database already initialised. Using existing data.");
-                    startm2m().catch(reject).then(resolve);
+                    resolve();
                 }
             });
         });
     });
-};
+}
 
 function startm2m() {
     return new Promise(function (resolve, reject) {
@@ -110,21 +126,28 @@ function startm2m() {
 
 lwm2m.stop = function () {
     return new Promise(function (resolve, reject) {
-        database.disconnect().catch(function (error) {
-            _logops2.default.error(error);
-            reject();
-        });
-
         if (!lwm2m.serverInfo) {
-            var error = "Can't stop m2m server. Not running";
-            _logops2.default.error(error);
+            //If server not running, abort. TODO: Check for state of other components like db and http individually
             reject(error);
         }
+
+        httpInterface.close().catch(function (error) {
+            _logops2.default.error("Error while closing httpInterface!", error);
+        }).then(function () {
+            _logops2.default.debug("Closed http-interface");
+        });
+
+        database.disconnect().catch(function (error) {
+            _logops2.default.error("Error while disconnecting from db!", error);
+        }).then(function () {
+            _logops2.default.debug("Disconnected from db");
+        });
 
         lwm2m.server.stop(lwm2m.serverInfo, function (error) {
             if (error) {
                 reject(error);
             } else {
+                _logops2.default.debug("Stopped lwm2m");
                 resolve();
             }
         });
@@ -199,6 +222,23 @@ function setHandlers() {
         lwm2m.server.setHandler(lwm2m.serverInfo, 'unregistration', unregistrationHandler);
         _logops2.default.debug("Set registration handlers.");
         resolve();
+    });
+}
+
+function initHTTP() {
+    return new Promise(function (resolve, reject) {
+        if (!config.http.enabled) {
+            _logops2.default.debug("httpInterface not enabled");
+        } else {
+            _logops2.default.debug("Starting HTTP-interface");
+            httpInterface = new _HTTPInterface2.default(config.http.key, config.http.cert, database);
+            httpInterface.open().catch(function (error) {
+                _logops2.default.error("Error while starting HTTP-interface", error);
+            }).then(function () {
+                _logops2.default.info("Started HTTP-interface");
+                resolve();
+            });
+        }
     });
 }
 

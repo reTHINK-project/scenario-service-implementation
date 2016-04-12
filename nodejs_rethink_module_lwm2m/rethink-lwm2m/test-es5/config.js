@@ -2,6 +2,14 @@
 
 var config = {};
 
+//Configuration of HTTP-interface
+//--------------------------------------------------
+config.http = {
+    enabled: true,
+    key: './test/cert/key.pem',
+    cert: './test/cert/cert.pem'
+};
+
 //Configuration of the database (mongodb)
 //--------------------------------------------------
 config.db = {

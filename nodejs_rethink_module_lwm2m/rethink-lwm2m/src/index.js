@@ -20,12 +20,14 @@
 import logger from "logops";
 import lwm2mlib from "lwm2m-node-lib";
 import Database from "./Database";
+import HTTPInterface from "./HTTPInterface";
 
 let lwm2m = {};
 lwm2m.server = lwm2mlib.server; //Enables use of all native lwm2m-lib methods
 lwm2m.serverInfo = {};
 let config = {};
 let database;
+let httpInterface;
 
 logger.format = logger.formatters.dev;
 
@@ -47,6 +49,25 @@ lwm2m.start = function () {
             logger.error("Missing configuration!");
             reject();
         }
+        //DATABASE
+        initdb()
+            .catch(reject)
+            .then(function () {
+                //M2M
+                startm2m()
+                    .catch(reject)
+                    .then(function () {
+                        //HTTP
+                        initHTTP()
+                            .catch(reject)
+                            .then(resolve);
+                    });
+            })
+    });
+};
+
+function initdb() {
+    return new Promise((resolve, reject) => {
         database = new Database(config);
         database.connect()
             .catch(function (error) {
@@ -73,21 +94,17 @@ lwm2m.start = function () {
                                     else {
                                         logger.info("Database initialised with config-data!");
                                     }
-                                    startm2m()
-                                        .catch(reject)
-                                        .then(resolve);
+                                    resolve();
                                 });
                         }
                         else {
                             logger.info("Database already initialised. Using existing data.");
-                            startm2m()
-                                .catch(reject)
-                                .then(resolve);
+                            resolve();
                         }
                     });
             });
     });
-};
+}
 
 function startm2m() {
     return new Promise(function (resolve, reject) {
@@ -107,23 +124,34 @@ function startm2m() {
 
 lwm2m.stop = function () {
     return new Promise(function (resolve, reject) {
-        database.disconnect()
-            .catch(function (error) {
-                logger.error(error);
-                reject();
-            });
-
-        if (!lwm2m.serverInfo) {
-            var error = "Can't stop m2m server. Not running";
-            logger.error(error);
+        if (!lwm2m.serverInfo) { //If server not running, abort. TODO: Check for state of other components like db and http individually
             reject(error);
         }
+
+        httpInterface.close()
+            .catch((error) => {
+                logger.error("Error while closing httpInterface!", error);
+            })
+            .then(function () {
+                logger.debug("Closed http-interface");
+            });
+
+
+        database.disconnect()
+            .catch((error) => {
+                logger.error("Error while disconnecting from db!", error);
+            })
+            .then(function () {
+                logger.debug("Disconnected from db");
+            });
+
 
         lwm2m.server.stop(lwm2m.serverInfo, function (error) {
             if (error) {
                 reject(error);
             }
             else {
+                logger.debug("Stopped lwm2m");
                 resolve();
             }
         });
@@ -211,6 +239,27 @@ function setHandlers() {
         logger.debug("Set registration handlers.");
         resolve();
     });
+}
+
+function initHTTP() {
+    return new Promise((resolve, reject) => {
+        if (!config.http.enabled) {
+            logger.debug("httpInterface not enabled");
+        }
+        else {
+            logger.debug("Starting HTTP-interface");
+            httpInterface = new HTTPInterface(config.http.key, config.http.cert, database);
+            httpInterface.open()
+                .catch(error => {
+                    logger.error("Error while starting HTTP-interface", error);
+                })
+                .then(function () {
+                    logger.info("Started HTTP-interface");
+                    resolve();
+                });
+        }
+    });
+
 }
 
 export default lwm2m;

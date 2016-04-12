@@ -44,6 +44,7 @@ To install dependencies run npm in the module-directory:
 ```bash
 npm install
 ```
+If you want to use the http-interface please provide ssl-certificates and set the file-paths in the configuration.
 
 Mocha-tests (npm test) for the module are still under construction so I recommend manual testing using the interactive console:
 ```bash

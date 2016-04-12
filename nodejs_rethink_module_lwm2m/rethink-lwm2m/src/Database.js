@@ -41,7 +41,7 @@ class Database {
         return this._connection;
     }
 
-    connect() {//Assuming Hotel is singleton (in db scope)
+    connect() {
         var that = this;
         return new Promise(function (resolve, reject) {
             if (that.connected()) {
@@ -346,6 +346,28 @@ class Database {
                     }
                 }
             });
+        });
+    }
+
+    getRoom(roomName) {
+        var that = this;
+        return new Promise((resolve, reject) => {
+            if (typeof roomName === "undefined") {
+                reject(new Error("Invalid room-name!"));
+            }
+            else {
+                if (!that.connected()) {
+                    reject(new Error("Not connected to db!"));
+                }
+            }
+            Room.model.findOne({name: roomName})
+                .populate('devices')
+                .exec((error, room) => {
+                    if (error) {
+                        reject(error);
+                    }
+                    resolve(room);
+                });
         });
     }
 }
