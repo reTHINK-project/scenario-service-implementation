@@ -43,10 +43,6 @@ var _mongoose = require("mongoose");
 
 var _mongoose2 = _interopRequireDefault(_mongoose);
 
-var _Hotel = require("./models/Hotel");
-
-var _Hotel2 = _interopRequireDefault(_Hotel);
-
 var _Room = require("./models/Room");
 
 var _Room2 = _interopRequireDefault(_Room);
@@ -106,7 +102,6 @@ var Database = function () {
                 that.connection.once('open', function () {
                     _logops2.default.debug('Database.js: connected to mongodb!');
                     _Device2.default.load(that.connection);
-                    _Hotel2.default.load(that.connection);
                     _Room2.default.load(that.connection);
                     resolve();
                 });
@@ -143,7 +138,7 @@ var Database = function () {
                 if (!that.connected()) {
                     reject(new Error("Not connected to db!"));
                 } else {
-                    that.connection.db.listCollections({name: 'hotels'}) //appended 's' is mongoose-behavior, see: http://bit.ly/1Lq65AJ)
+                    that.connection.db.listCollections({name: 'rooms'}) //appended 's' is mongoose-behavior, see: http://bit.ly/1Lq65AJ)
                         .next(function (err, collinfo) {
                             if (err) {
                                 reject(err);
@@ -167,9 +162,7 @@ var Database = function () {
                     } else {
                         var errors = [];
 
-                        that._parseHotel(errors).then(function (errors) {
-                            return that._parseRooms(errors);
-                        }).then(function (errors) {
+                        that._parseRooms(errors).then(function (errors) {
                             return that._parseDevices(errors);
                         }).then(function (errors) {
                             return that._setReferences(errors);
@@ -184,21 +177,6 @@ var Database = function () {
             });
         }
     }, {
-        key: "_parseHotel",
-        value: function _parseHotel(errors) {
-            var that = this;
-            return new Promise(function (resolve) {
-                var newHotel = _Hotel2.default.model();
-                newHotel.name = that.config.hotel.name;
-                newHotel.save(function (error) {
-                    if (error) {
-                        errors.push(error);
-                    }
-                    resolve(errors);
-                });
-            });
-        }
-    }, {
         key: "_parseRooms",
         value: function _parseRooms(errors) {
             var that = this;
@@ -209,44 +187,20 @@ var Database = function () {
                     _logops2.default.debug("Room-cfg existing, adding to db.");
                     var hotel;
 
-                    _Hotel2.default.model.findOne({name: that.config.hotel.name}, function (error, result) {
-                        if (error) {
-                            errors.push(error);
-                        }
-                        hotel = result;
-
-                        if (!hotel) {
-                            errors.push(new Error("Hotel missing in db. Inconsistent data. Not able to link hotel->rooms."));
-                        }
-
-                        _async2.default.each(that.config.hotel.rooms, function (cfg_room, callback2) {
-                            var room = _Room2.default.model();
-                            room.name = cfg_room.name;
-                            room.isBooked = cfg_room.isBooked;
-                            room.members = cfg_room.members;
-                            room.save(function (error) {
-                                if (error) {
-                                    errors.push(error);
-                                }
-                                _logops2.default.debug("Added room '%s'", cfg_room.name);
-                                if (hotel) {
-                                    hotel.rooms.push(room); //Add room to hotel-list
-                                    _logops2.default.debug("Added %s to %s.rooms[]", room.name, hotel.name);
-                                }
-                                callback2();
-                            });
-                        }, function () {
-                            if (hotel) {
-                                hotel.save(function (error) {
-                                    if (error) {
-                                        errors.push(error);
-                                    }
-                                    resolve(errors);
-                                });
-                            } else {
-                                resolve(errors);
+                    _async2.default.each(that.config.hotel.rooms, function (cfg_room, callback2) {
+                        var room = _Room2.default.model();
+                        room.name = cfg_room.name;
+                        room.isBooked = cfg_room.isBooked;
+                        room.members = cfg_room.members;
+                        room.save(function (error) {
+                            if (error) {
+                                errors.push(error);
                             }
+                            _logops2.default.debug("Added room '%s'", cfg_room.name);
+                            callback2();
                         });
+                    }, function () {
+                        resolve(errors);
                     });
                 }
             });
@@ -292,10 +246,11 @@ var Database = function () {
                         if (error) {
                             errors.push(new Error("Error while querying db", error));
                             return callback();
-                        }
-                        if (!room) {
-                            errors.push(new Error("Invalid reference '" + cfg_device.name + "." + cfg_device.room + "'! Room '" + cfg_device.room + "' not found."));
-                            return callback();
+                        } else {
+                            if (!room) {
+                                errors.push(new Error("Invalid reference '" + cfg_device.name + "." + cfg_device.room + "'! Room '" + cfg_device.room + "' not found."));
+                                return callback();
+                            }
                         }
                         _Device2.default.model.findOne({name: cfg_device.name}, function (error, device) {
                             if (error) {

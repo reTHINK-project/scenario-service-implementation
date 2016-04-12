@@ -17,7 +17,6 @@
  */
 
 import mongoose from "mongoose";
-import Hotel from "./models/Hotel";
 import Room from "./models/Room";
 import Device from "./models/Device";
 import async from "async";
@@ -65,7 +64,6 @@ class Database {
             that.connection.once('open', function () {
                 logger.debug('Database.js: connected to mongodb!');
                 Device.load(that.connection);
-                Hotel.load(that.connection);
                 Room.load(that.connection);
                 resolve();
             });
@@ -102,7 +100,7 @@ class Database {
                 reject(new Error("Not connected to db!"));
             }
             else {
-                that.connection.db.listCollections({name: 'hotels'}) //appended 's' is mongoose-behavior, see: http://bit.ly/1Lq65AJ)
+                that.connection.db.listCollections({name: 'rooms'}) //appended 's' is mongoose-behavior, see: http://bit.ly/1Lq65AJ)
                     .next(function (err, collinfo) {
                         if (err) {
                             reject(err);
@@ -129,10 +127,7 @@ class Database {
                 else {
                     var errors = [];
 
-                    that._parseHotel(errors)
-                        .then(function (errors) {
-                            return that._parseRooms(errors);
-                        })
+                    that._parseRooms(errors)
                         .then(function (errors) {
                             return that._parseDevices(errors);
                         })
@@ -150,20 +145,6 @@ class Database {
         });
     }
 
-    _parseHotel(errors) {
-        var that = this;
-        return new Promise(function (resolve) {
-            var newHotel = Hotel.model();
-            newHotel.name = that.config.hotel.name;
-            newHotel.save(function (error) {
-                if (error) {
-                    errors.push(error);
-                }
-                resolve(errors);
-            });
-        })
-    }
-
     _parseRooms(errors) {
         var that = this;
         return new Promise(function (resolve) {
@@ -174,49 +155,24 @@ class Database {
                 logger.debug("Room-cfg existing, adding to db.");
                 var hotel;
 
-                Hotel.model.findOne({name: that.config.hotel.name}, function (error, result) {
-                    if (error) {
-                        errors.push(error);
-                    }
-                    hotel = result;
-
-                    if (!hotel) {
-                        errors.push(new Error("Hotel missing in db. Inconsistent data. Not able to link hotel->rooms."));
-                    }
-
-                    async.each(that.config.hotel.rooms, function (cfg_room, callback2) {
-                            var room = Room.model();
-                            room.name = cfg_room.name;
-                            room.isBooked = cfg_room.isBooked;
-                            room.members = cfg_room.members;
-                            room.save(function (error) {
-                                if (error) {
-                                    errors.push(error);
-                                }
-                                logger.debug("Added room '%s'", cfg_room.name);
-                                if (hotel) {
-                                    hotel.rooms.push(room); //Add room to hotel-list
-                                    logger.debug("Added %s to %s.rooms[]", room.name, hotel.name);
-                                }
-                                callback2();
-                            });
-
-                        },
-                        function () {
-                            if (hotel) {
-                                hotel.save(function (error) {
-                                    if (error) {
-                                        errors.push(error);
-                                    }
-                                    resolve(errors);
-                                })
+                async.each(that.config.hotel.rooms, function (cfg_room, callback2) {
+                        var room = Room.model();
+                        room.name = cfg_room.name;
+                        room.isBooked = cfg_room.isBooked;
+                        room.members = cfg_room.members;
+                        room.save(function (error) {
+                            if (error) {
+                                errors.push(error);
                             }
-                            else {
-                                resolve(errors);
-                            }
-                        }
-                    );
-                });
+                            logger.debug("Added room '%s'", cfg_room.name);
+                            callback2();
+                        });
+
+                    },
+                    function () {
+                        resolve(errors);
+                    }
+                );
             }
         });
     }
@@ -262,9 +218,11 @@ class Database {
                         errors.push(new Error("Error while querying db", error));
                         return callback();
                     }
-                    if (!room) {
-                        errors.push(new Error("Invalid reference '" + cfg_device.name + "." + cfg_device.room + "'! Room '" + cfg_device.room + "' not found."));
-                        return callback();
+                    else {
+                        if (!room) {
+                            errors.push(new Error("Invalid reference '" + cfg_device.name + "." + cfg_device.room + "'! Room '" + cfg_device.room + "' not found."));
+                            return callback();
+                        }
                     }
                     Device.model.findOne({name: cfg_device.name}, function (error, device) {
                         if (error) {
