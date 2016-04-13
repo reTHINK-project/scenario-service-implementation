@@ -18,10 +18,13 @@
 'use strict';
 import https from "https";
 import fs from "fs";
+import logger from "logops";
 
 class HTTPInterface {
 
-    constructor(keyFile, certFile, database) {
+    constructor(host, port, keyFile, certFile, database) {
+        this._host = host;
+        this._port = port;
         this._keyFile = keyFile;
         this._certFile = certFile;
         this._database = database;
@@ -65,9 +68,7 @@ class HTTPInterface {
             that._getCertFiles(that._keyFile, that._certFile)
                 .catch(reject)
                 .then(options => {
-
                     that._server = https.createServer(options, (req, res) => {
-
                         that._database.getRoom("room1")
                             .catch((error) => {
                                 logger.error(error);
@@ -77,7 +78,10 @@ class HTTPInterface {
                                 res.writeHead(200);
                                 res.end(JSON.stringify(room));
                             });
-                    }).listen(8000);
+                    });
+
+                    that._server.listen(that._port, that._host);
+                    logger.debug("HTTPinterface: Listening at https://" + that._host + ":" + that._port);
                     resolve();
                 });
         });

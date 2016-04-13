@@ -231,9 +231,10 @@ function initHTTP() {
             _logops2.default.debug("httpInterface not enabled");
         } else {
             _logops2.default.debug("Starting HTTP-interface");
-            httpInterface = new _HTTPInterface2.default(config.http.key, config.http.cert, database);
+            httpInterface = new _HTTPInterface2.default(config.http.host, config.http.port, config.http.key, config.http.cert, database);
             httpInterface.open().catch(function (error) {
                 _logops2.default.error("Error while starting HTTP-interface", error);
+                reject(error);
             }).then(function () {
                 _logops2.default.info("Started HTTP-interface");
                 resolve();

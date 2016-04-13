@@ -248,10 +248,11 @@ function initHTTP() {
         }
         else {
             logger.debug("Starting HTTP-interface");
-            httpInterface = new HTTPInterface(config.http.key, config.http.cert, database);
+            httpInterface = new HTTPInterface(config.http.host, config.http.port, config.http.key, config.http.cert, database);
             httpInterface.open()
                 .catch(error => {
                     logger.error("Error while starting HTTP-interface", error);
+                    reject(error);
                 })
                 .then(function () {
                     logger.info("Started HTTP-interface");

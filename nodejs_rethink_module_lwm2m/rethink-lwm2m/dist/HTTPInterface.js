@@ -31,14 +31,20 @@ var _fs = require("fs");
 
 var _fs2 = _interopRequireDefault(_fs);
 
+var _logops = require("logops");
+
+var _logops2 = _interopRequireDefault(_logops);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var HTTPInterface = function () {
-    function HTTPInterface(keyFile, certFile, database) {
+    function HTTPInterface(host, port, keyFile, certFile, database) {
         _classCallCheck(this, HTTPInterface);
 
+        this._host = host;
+        this._port = port;
         this._keyFile = keyFile;
         this._certFile = certFile;
         this._database = database;
@@ -89,17 +95,18 @@ var HTTPInterface = function () {
             var that = this;
             return new Promise(function (resolve, reject) {
                 that._getCertFiles(that._keyFile, that._certFile).catch(reject).then(function (options) {
-
                     that._server = _https2.default.createServer(options, function (req, res) {
-
                         that._database.getRoom("room1").catch(function (error) {
-                            logger.error(error);
+                            _logops2.default.error(error);
                             res.writeHead(500); //Server error
                         }).then(function (room) {
                             res.writeHead(200);
                             res.end(JSON.stringify(room));
                         });
-                    }).listen(8000);
+                    });
+
+                    that._server.listen(that._port, that._host);
+                    _logops2.default.debug("HTTPinterface: Listening at https://" + that._host + ":" + that._port);
                     resolve();
                 });
             });

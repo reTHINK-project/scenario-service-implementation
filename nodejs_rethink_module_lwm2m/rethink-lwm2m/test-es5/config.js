@@ -6,6 +6,8 @@ var config = {};
 //--------------------------------------------------
 config.http = {
     enabled: true,
+    host: 'localhost',
+    port: 8000,
     key: './test/cert/key.pem',
     cert: './test/cert/cert.pem'
 };
@@ -29,7 +31,7 @@ config.hotel = {
         isBooked: false,
         members: []
     }, {
-        name: 'room2',
+        name: 'room3',
         isBooked: true,
         members: []
     }],
