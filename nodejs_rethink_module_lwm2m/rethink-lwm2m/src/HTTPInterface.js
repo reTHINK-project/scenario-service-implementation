@@ -61,29 +61,103 @@ class HTTPInterface {
         });
     }
 
+    static _getErrorReply(host, error, msg) {
+        var json = {};
+        switch (error) {
+            case "invalidBody":
+                json.error = "Invalid JSON-String!";
+                break;
+            case "invalidMethod":
+                json.error = "Method not supported";
+                break;
+            case "unsupportedParam":
+                json.error = "Unsupported parameter";
+                break;
+            default:
+                json.error = "Unknown";
+                break;
+        }
+        if (typeof msg !== "undefined" && msg !== null) {
+            json.error += ": " + msg;
+        }
+        logger.debug("HTTPInterface error [" + host + "]", json);
+        return JSON.stringify(json); //Convert to String for network
+    }
+
+    _processRequest(params) {
+        var that = this;
+        return new Promise((resolve) => {
+            var reply = {};
+            reply.data = null;
+            reply.error = null; //TODO: let _getErrorReply() handle errors
+
+            if (!params.hasOwnProperty("room")) {
+                reply.error = "Given parameters not supported!";
+            }
+            else {
+                that._database.getRoom(params.room)
+                    .catch((error) => {
+                        logger.error("Process POST-request: Error while querying room '" + params.room + "'!", error);
+                        reply.error = error;
+                        resolve(JSON.stringify(reply))
+                    })
+                    .then((room) => {
+                        reply.data = room;
+                        resolve(JSON.stringify(reply));
+                    })
+            }
+        });
+
+    }
+
+    _listen(options) {
+        var that = this;
+        return new Promise((resolve) => {
+            that._server = https.createServer(options, (req, res) => {
+                if (req.method != "POST") {
+                    res.writeHead(405, {'Content-Type': 'application/json'});
+                    res.end(HTTPInterface._getErrorReply(req.headers.host, "invalidMethod", "Use POST"));
+                }
+                else {
+                    logger.debug("POST");
+
+                    var body = "";
+                    req.on("data", (data) => {
+                        body += data;
+                    });
+                    req.on("end", () => {
+                        logger.debug("Received data", body);
+                        try {
+                            var params = JSON.parse(body);
+                        }
+                        catch (e) {
+                            res.writeHead(415, {'Content-Type': 'application/json'});
+                            res.end(HTTPInterface._getErrorReply(req.headers.host, "invalidBody", e));
+                        }
+                        res.writeHead(200, {'Content-Type': 'application/json'});
+                        that._processRequest(params) //Process request and ...
+                            .then((reply) => {
+                                res.end(reply);
+                            }); //... reply to client
+                    });
+                }
+            });
+
+            that._server.listen(that._port, that._host);
+            logger.debug("HTTPinterface: Listening at https://" + that._host + ":" + that._port);
+            resolve();
+        });
+    }
 
     open() { //TODO: Implement this with POST. Client (hyperty) will specify which data is needed
         var that = this;
         return new Promise((resolve, reject) => {
             that._getCertFiles(that._keyFile, that._certFile)
                 .catch(reject)
-                .then(options => {
-                    that._server = https.createServer(options, (req, res) => {
-                        that._database.getRoom("room1")
-                            .catch((error) => {
-                                logger.error(error);
-                                res.writeHead(500); //Server error
-                            })
-                            .then((room) => {
-                                res.writeHead(200);
-                                res.end(JSON.stringify(room));
-                            });
-                    });
-
-                    that._server.listen(that._port, that._host);
-                    logger.debug("HTTPinterface: Listening at https://" + that._host + ":" + that._port);
-                    resolve();
-                });
+                .then((options) => {
+                    return that._listen(options);
+                })
+                .then(resolve());
         });
     }
 
