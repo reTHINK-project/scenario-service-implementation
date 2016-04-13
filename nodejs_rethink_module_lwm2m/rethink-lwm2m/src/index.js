@@ -49,21 +49,19 @@ lwm2m.start = function () {
             logger.error("Missing configuration!");
             reject();
         }
-        //DATABASE
         initdb()
             .catch(reject)
-            .then(function () {
-                //M2M
-                startm2m()
-                    .catch(reject)
-                    .then(function () {
-                        //HTTP
-                        initHTTP()
-                            .catch(reject)
-                            .then(resolve);
-                    });
+            .then(() => {
+                return startm2m();
             })
+            .catch(reject)
+            .then(() => {
+                return initHTTP();
+            })
+            .catch(reject)
+            .then(resolve);
     });
+
 };
 
 function initdb() {

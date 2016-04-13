@@ -67,14 +67,11 @@ lwm2m.start = function () {
             _logops2.default.error("Missing configuration!");
             reject();
         }
-        //DATABASE
         initdb().catch(reject).then(function () {
-            //M2M
-            startm2m().catch(reject).then(function () {
-                //HTTP
-                initHTTP().catch(reject).then(resolve);
-            });
-        });
+            return startm2m();
+        }).catch(reject).then(function () {
+            return initHTTP();
+        }).catch(reject).then(resolve);
     });
 };
 
