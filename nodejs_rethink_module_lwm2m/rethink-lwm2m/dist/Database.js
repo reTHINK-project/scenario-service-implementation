@@ -161,7 +161,6 @@ var Database = function () {
                     resolve(errors);
                 } else {
                     _logops2.default.debug("Room-cfg existing, adding to db.");
-                    var hotel;
 
                     _async2.default.each(that.config.hotel.rooms, function (cfg_room, callback2) {
                         var room = _Room2.default.model();

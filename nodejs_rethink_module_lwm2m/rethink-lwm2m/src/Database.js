@@ -43,7 +43,7 @@ class Database {
 
     connect() {
         var that = this;
-        return new Promise(function (resolve, reject) {
+        return new Promise((resolve, reject) => {
             if (that.connected()) {
                 reject(new Error("Already connected or connection pending!"));
             }
@@ -55,13 +55,13 @@ class Database {
 
     _init() {
         var that = this;
-        return new Promise(function (resolve) {
+        return new Promise((resolve) => {
             that._connection = mongoose.createConnection(that.config.db.host, that.config.db.database);
             that.connection.on('error', function mongodbErrorHandler(error) {
                 logger.fatal('Could not establish connection to mongodb!', error);
                 throw new Error(error);
             });
-            that.connection.once('open', function () {
+            that.connection.once('open', () => {
                 logger.debug('Database.js: connected to mongodb!');
                 Device.load(that.connection);
                 Room.load(that.connection);
@@ -72,9 +72,9 @@ class Database {
 
     disconnect() {
         var that = this;
-        return new Promise(function (resolve, reject) {
+        return new Promise((resolve, reject) => {
             if (that.connected()) {
-                that.connection.close(function () {
+                that.connection.close(() => {
                     resolve();
                 })
             }
@@ -95,13 +95,13 @@ class Database {
 
     isInitialised() {
         var that = this;
-        return new Promise(function (resolve, reject) {
+        return new Promise((resolve, reject) => {
             if (!that.connected()) {
                 reject(new Error("Not connected to db!"));
             }
             else {
                 that.connection.db.listCollections({name: 'rooms'}) //appended 's' is mongoose-behavior, see: http://bit.ly/1Lq65AJ)
-                    .next(function (err, collinfo) {
+                    .next((err, collinfo) => {
                         if (err) {
                             reject(err);
                         }
@@ -116,7 +116,7 @@ class Database {
 
     createHotel() {
         var that = this;
-        return new Promise(function (resolve, reject) {
+        return new Promise((resolve, reject) => {
             if (typeof that.config === 'undefined') {
                 reject(new Error("Missing config!"));
             }
@@ -128,13 +128,13 @@ class Database {
                     var errors = [];
 
                     that._parseRooms(errors)
-                        .then(function (errors) {
+                        .then((errors) => {
                             return that._parseDevices(errors);
                         })
-                        .then(function (errors) {
+                        .then((errors) => {
                             return that._setReferences(errors);
                         })
-                        .then(function (errors) {
+                        .then((errors) => {
                             if (errors.length === 0) {
                                 errors = null;
                             }
@@ -147,20 +147,19 @@ class Database {
 
     _parseRooms(errors) {
         var that = this;
-        return new Promise(function (resolve) {
+        return new Promise((resolve) => {
             if (!that.config.hotel.hasOwnProperty('rooms')) {
                 resolve(errors);
             }
             else {
                 logger.debug("Room-cfg existing, adding to db.");
-                var hotel;
 
-                async.each(that.config.hotel.rooms, function (cfg_room, callback2) {
+                async.each(that.config.hotel.rooms, (cfg_room, callback2) => {
                         var room = Room.model();
                         room.name = cfg_room.name;
                         room.isBooked = cfg_room.isBooked;
                         room.members = cfg_room.members;
-                        room.save(function (error) {
+                        room.save((error) => {
                             if (error) {
                                 errors.push(error);
                             }
@@ -169,7 +168,7 @@ class Database {
                         });
 
                     },
-                    function () {
+                    () => {
                         resolve(errors);
                     }
                 );
@@ -179,24 +178,24 @@ class Database {
 
     _parseDevices(errors) {
         var that = this;
-        return new Promise(function (resolve) {
+        return new Promise((resolve) => {
             if (!that.config.hotel.hasOwnProperty('devices')) {
                 resolve(errors);
             }
             else {
                 logger.debug("Device-cfg existing, adding to db.");
 
-                async.each(that.config.hotel.devices, function (cfg_device, callback2) {
+                async.each(that.config.hotel.devices, (cfg_device, callback2) => {
                     var device = Device.model();
                     device.name = cfg_device.name;
-                    device.save(function (error) {
+                    device.save((error) => {
                         if (error) {
                             errors.push(error);
                         }
                         logger.debug("Added device '%s'", cfg_device.name);
                         callback2();
                     });
-                }, function () {
+                }, () => {
                     resolve(errors);
                 });
             }
@@ -206,14 +205,14 @@ class Database {
 
     _setReferences(errors) {
         var that = this;
-        return new Promise(function (resolve) {
+        return new Promise((resolve) => {
             logger.debug("Establishing db-references");
-            async.each(that.config.hotel.devices, function (cfg_device, callback) {
+            async.each(that.config.hotel.devices, (cfg_device, callback) => {
                 if (!cfg_device.hasOwnProperty('room')) {
                     logger.debug("Device '%s' has no room-reference. Skipping...", cfg_device.name);
                     return callback();
                 }
-                Room.model.findOne({name: cfg_device.room}, function (error, room) {
+                Room.model.findOne({name: cfg_device.room}, (error, room) => {
                     if (error) {
                         errors.push(new Error("Error while querying db", error));
                         return callback();
@@ -224,7 +223,7 @@ class Database {
                             return callback();
                         }
                     }
-                    Device.model.findOne({name: cfg_device.name}, function (error, device) {
+                    Device.model.findOne({name: cfg_device.name}, (error, device) => {
                         if (error) {
                             errors.push(new Error("Error while querying db", error));
                             return callback();
@@ -237,12 +236,12 @@ class Database {
                         device.room = room;
                         room.devices.push(device);
 
-                        device.save(function (error) {
+                        device.save((error) => {
                             if (error) {
                                 errors.push(error);
                                 return callback();
                             }
-                            room.save(function (error) {
+                            room.save((error) => {
                                 if (error) {
                                     errors.push(error);
                                     return callback();
@@ -253,7 +252,7 @@ class Database {
                         });
                     });
                 });
-            }, function () {
+            }, () => {
                 resolve(errors);
             });
         });
@@ -264,11 +263,11 @@ class Database {
      register type:Boolean - Register or de-register device
      */
     registerDevice(deviceName, register, payload) {
-        return new Promise(function (resolve, reject) {
+        return new Promise((resolve, reject) => {
             if (typeof register !== 'boolean') {
                 reject(new Error("Invalid param. register, boolean expected."));
             }
-            Device.model.findOne({name: deviceName}, function (error, device) { //Get device by name
+            Device.model.findOne({name: deviceName}, (error, device) => { //Get device by name
                 if (error) {
                     reject(error);
                 }
@@ -292,7 +291,7 @@ class Database {
                         device.registration.payload = null;
                     }
 
-                    device.save(function (error) {
+                    device.save((error) => {
                         if (error) {
                             reject(error);
                         }
@@ -304,8 +303,8 @@ class Database {
     }
 
     storeValue(deviceName, uri, value) {
-        return new Promise(function (resolve, reject) {
-            Device.model.findOne({name: deviceName}, function (error, device) {
+        return new Promise((resolve, reject) => {
+            Device.model.findOne({name: deviceName}, (error, device) => {
                 if (error) {
                     reject(error);
                 }
@@ -322,7 +321,7 @@ class Database {
                         data.value = value;
 
                         if (device.lastValues.length > 0) {
-                            device.lastValues.forEach(function (currValue) {
+                            device.lastValues.forEach((currValue) => {
                                 if (currValue.uri == uri) {
                                     currValue.value = data.value;
                                     currValue.timestamp = data.timestamp;
@@ -335,7 +334,7 @@ class Database {
                             device.lastValues.push(data);
                         }
 
-                        device.save(function (error) {
+                        device.save((error) => {
                             if (error) {
                                 reject(error);
                             }

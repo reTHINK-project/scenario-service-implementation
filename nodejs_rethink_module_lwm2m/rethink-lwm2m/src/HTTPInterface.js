@@ -32,7 +32,7 @@ class HTTPInterface {
     }
 
     _getCertFiles(keyFile, certFile) {
-        return new Promise(function (resolve, reject) {
+        return new Promise((resolve, reject) => {
 
             if (typeof keyFile === "undefined" || typeof certFile === "undefined") {
                 reject(new Error("Invalid path to cert-files!"));
@@ -149,7 +149,7 @@ class HTTPInterface {
         });
     }
 
-    open() { //TODO: Implement this with POST. Client (hyperty) will specify which data is needed
+    open() {
         var that = this;
         return new Promise((resolve, reject) => {
             that._getCertFiles(that._keyFile, that._certFile)
@@ -164,7 +164,7 @@ class HTTPInterface {
     close() {
         var that = this;
         return new Promise((resolve, reject) => {
-            that._server.close(function (error) {
+            that._server.close((error) => {
                 if (error) {
                     reject(error);
                 }

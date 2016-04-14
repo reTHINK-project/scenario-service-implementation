@@ -31,7 +31,7 @@ let httpInterface;
 
 logger.format = logger.formatters.dev;
 
-lwm2m.setConfig = function (c) {
+lwm2m.setConfig = (c) => {
     config = c;
 
     if (config.server.logLevel) {
@@ -39,12 +39,12 @@ lwm2m.setConfig = function (c) {
     }
 };
 
-lwm2m.getConfig = function () {
+lwm2m.getConfig = () => {
     return config;
 };
 
-lwm2m.start = function () {
-    return new Promise(function (resolve, reject) {
+lwm2m.start = () => {
+    return new Promise((resolve, reject) => {
         if (typeof config === 'undefined') {
             logger.error("Missing configuration!");
             reject();
@@ -68,45 +68,45 @@ function initdb() {
     return new Promise((resolve, reject) => {
         database = new Database(config);
         database.connect()
-            .catch(function (error) {
+            .catch((error) => {
                 logger.error(error);
                 reject(error);
             })
-            .then(function () {
-                database.isInitialised()
-                    .catch(function (error) {
-                        logger.error(error);
-                        reject(error);
-                    })
-                    .then(function (initialised) {
-                        if (!initialised) {
-                            database.createHotel()
-                                .catch(function (error) {
-                                    logger.error(error);
-                                    reject(error);
-                                })
-                                .then(function (errors) {
-                                    if (errors) {
-                                        logger.error("Problems while initialising db: ", errors);
-                                    }
-                                    else {
-                                        logger.info("Database initialised with config-data!");
-                                    }
-                                    resolve();
-                                });
-                        }
-                        else {
-                            logger.info("Database already initialised. Using existing data.");
+            .then(() => {
+                return database.isInitialised()
+            })
+            .catch((error) => {
+                logger.error(error);
+                reject(error);
+            })
+            .then((initialised) => {
+                if (!initialised) {
+                    database.createHotel()
+                        .catch((error) => {
+                            logger.error(error);
+                            reject(error);
+                        })
+                        .then((errors) => {
+                            if (errors) {
+                                logger.error("Problems while initialising db: ", errors);
+                            }
+                            else {
+                                logger.info("Database initialised with config-data!");
+                            }
                             resolve();
-                        }
-                    });
+                        });
+                }
+                else {
+                    logger.info("Database already initialised. Using existing data.");
+                    resolve();
+                }
             });
     });
 }
 
 function startm2m() {
-    return new Promise(function (resolve, reject) {
-        lwm2m.server.start(config.server, function (error, results) {
+    return new Promise((resolve, reject) => {
+        lwm2m.server.start(config.server, (error, results) => {
             if (error) {
                 logger.error(error);
                 reject(error);
@@ -120,31 +120,26 @@ function startm2m() {
 }
 
 
-lwm2m.stop = function () {
-    return new Promise(function (resolve, reject) {
-        if (!lwm2m.serverInfo) { //If server not running, abort. TODO: Check for state of other components like db and http individually
+lwm2m.stop = () => {
+    return new Promise((resolve, reject) => {
+        if (!lwm2m.serverInfo) { //If server not running, abort.
             reject(error);
         }
-
         httpInterface.close()
             .catch((error) => {
                 logger.error("Error while closing httpInterface!", error);
             })
-            .then(function () {
+            .then(() => {
                 logger.debug("Closed http-interface");
             });
-
-
         database.disconnect()
             .catch((error) => {
                 logger.error("Error while disconnecting from db!", error);
             })
-            .then(function () {
+            .then(() => {
                 logger.debug("Disconnected from db");
             });
-
-
-        lwm2m.server.stop(lwm2m.serverInfo, function (error) {
+        lwm2m.server.stop(lwm2m.serverInfo, (error) => {
             if (error) {
                 reject(error);
             }
@@ -161,10 +156,10 @@ function registrationHandler(endpoint, lifetime, version, binding, payload, call
     logger.info('Endpoint name: %s\nLifetime: %s\nBinding: %s\n Payload: %s', endpoint, lifetime, binding, payload);
 
     database.registerDevice(endpoint, true, payload)
-        .catch(function (error) {
+        .catch((error) => {
             logger.error("Error while updating device-data", error);
         })
-        .then(function () {
+        .then(() => {
             observeDeviceData(endpoint, 3303, 0, 5700); //Temperature
             observeDeviceData(endpoint, 3304, 0, 5700); //Humidity
             callback();
@@ -176,7 +171,7 @@ function unregistrationHandler(device, callback) {
     logger.info('Device location: %s', device.name);
 
     database.registerDevice(device.name, false)
-        .catch(function (error) {
+        .catch((error) => {
             logger.error("Error while updating device-data", error);
         })
         .then(callback);
@@ -184,12 +179,12 @@ function unregistrationHandler(device, callback) {
 
 
 function observeHandler(objectType, objectId, resourceId, deviceId, value) {
-    lwm2m.server.getRegistry().get(deviceId, function (error, device) {
+    lwm2m.server.getRegistry().get(deviceId, (error, device) => {
         database.storeValue(device.name, ('/' + objectType + '/' + objectId + '/' + resourceId), value)
-            .catch(function (error) {
+            .catch((error) => {
                 logger.error("Error while storing observe-data in db! Device: %s", device.name, error);
             })
-            .then(function () {
+            .then(() => {
                 logger.debug("Stored observe-data for device '%s' in db!", device.name);
             });
     });
@@ -197,12 +192,12 @@ function observeHandler(objectType, objectId, resourceId, deviceId, value) {
 }
 
 function observeDeviceData(deviceName, objectType, objectId, resourceId) {
-    lwm2m.server.getRegistry().getByName(deviceName, function (error, device) {
+    lwm2m.server.getRegistry().getByName(deviceName, (error, device) => {
         if (error) {
             logger.error(error);
         }
         else {
-            lwm2m.server.observe(device.id, objectType, objectId, resourceId, observeHandler, function (error, value) {
+            lwm2m.server.observe(device.id, objectType, objectId, resourceId, observeHandler, (error, value) => {
                 if (error) {
                     logger.error("Error while starting observe!", error)
                 }
@@ -210,16 +205,16 @@ function observeDeviceData(deviceName, objectType, objectId, resourceId) {
                     logger.debug("Started observe for '%s'. First value: ", deviceName, value);
                     if (value === '') { //No data => Device does not set data
                         logger.debug("Device '" + deviceName + "' does not set /" + objectType + "/" + objectId + "/" + resourceId + "! Canceling observe.");
-                        lwm2m.server.cancelObserver(device.id, objectType, objectId, resourceId, function () {
+                        lwm2m.server.cancelObserver(device.id, objectType, objectId, resourceId, () => {
                             logger.debug("Observe for '%s' canceled!", device.name);
                         });
                     }
                     else {
                         database.storeValue(deviceName, ('/' + objectType + '/' + objectId + '/' + resourceId), value)
-                            .catch(function (error) {
+                            .catch((error) => {
                                 logger.error("Error while storing initial read-data!", error);
                             })
-                            .then(function () {
+                            .then(() => {
                                 logger.debug("Stored initial read-data from observe.");
                             });
                     }
@@ -231,7 +226,7 @@ function observeDeviceData(deviceName, objectType, objectId, resourceId) {
 }
 
 function setHandlers() {
-    return new Promise(function (resolve) {
+    return new Promise((resolve) => {
         lwm2m.server.setHandler(lwm2m.serverInfo, 'registration', registrationHandler);
         lwm2m.server.setHandler(lwm2m.serverInfo, 'unregistration', unregistrationHandler);
         logger.debug("Set registration handlers.");
@@ -252,7 +247,7 @@ function initHTTP() {
                     logger.error("Error while starting HTTP-interface", error);
                     reject(error);
                 })
-                .then(function () {
+                .then(() => {
                     logger.info("Started HTTP-interface");
                     resolve();
                 });

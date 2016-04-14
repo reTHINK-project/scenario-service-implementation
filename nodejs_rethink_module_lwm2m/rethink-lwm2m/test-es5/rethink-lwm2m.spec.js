@@ -26,7 +26,7 @@ _chai2.default.use(_chaiAsPromised2.default);
 describe('Test module', function () {
 
     describe('Server start and stop', function () {
-        this.timeout(0); //TODO
+        undefined.timeout(0); //TODO
 
         it('should set lwm2m-server configuration', function () {
             _index2.default.setConfig(_config2.default);

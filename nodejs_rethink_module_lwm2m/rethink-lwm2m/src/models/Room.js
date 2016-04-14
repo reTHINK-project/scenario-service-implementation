@@ -29,7 +29,7 @@ room.schema = new Schema({
     members: [String]
 });
 
-room.load = function (connection) {
+room.load = (connection) => {
     room.model = connection.model('Room', room.schema);
 };
 export default room;

@@ -40,7 +40,7 @@ device.schema = new Schema({
     ]
 });
 
-device.load = function (connection) {
+device.load = (connection) => {
     device.model = connection.model('Device', device.schema);
 };
 

@@ -33,11 +33,11 @@ function start() {
         console.log("Starting rethink-lwm2m...");
         lwm2m.setConfig(config);
         lwm2m.start()
-            .catch(function (error) {
+            .catch((error) => {
                 console.error("rethink-lwm2m start failed!", error);
                 cmd.prompt();
             })
-            .then(function () {
+            .then(() => {
                 console.log("rethink-lwm2m started!");
                 cmd.prompt();
             })
@@ -48,11 +48,11 @@ function stop() {
     if (lwm2m.server.isRunning()) {
         console.log("Stopping rethink-lwm2m...");
         lwm2m.stop()
-            .catch(function (error) {
+            .catch((error) => {
                 console.error("rethink-lwm2m stop failed!", error);
                 cmd.prompt();
             })
-            .then(function () {
+            .then(() => {
                 console.log("rethink-lwm2m stopped!");
                 cmd.prompt();
             });

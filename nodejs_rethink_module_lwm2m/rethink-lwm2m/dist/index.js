@@ -82,27 +82,27 @@ function initdb() {
             _logops2.default.error(error);
             reject(error);
         }).then(function () {
-            database.isInitialised().catch(function (error) {
-                _logops2.default.error(error);
-                reject(error);
-            }).then(function (initialised) {
-                if (!initialised) {
-                    database.createHotel().catch(function (error) {
-                        _logops2.default.error(error);
-                        reject(error);
-                    }).then(function (errors) {
-                        if (errors) {
-                            _logops2.default.error("Problems while initialising db: ", errors);
-                        } else {
-                            _logops2.default.info("Database initialised with config-data!");
-                        }
-                        resolve();
-                    });
-                } else {
-                    _logops2.default.info("Database already initialised. Using existing data.");
+            return database.isInitialised();
+        }).catch(function (error) {
+            _logops2.default.error(error);
+            reject(error);
+        }).then(function (initialised) {
+            if (!initialised) {
+                database.createHotel().catch(function (error) {
+                    _logops2.default.error(error);
+                    reject(error);
+                }).then(function (errors) {
+                    if (errors) {
+                        _logops2.default.error("Problems while initialising db: ", errors);
+                    } else {
+                        _logops2.default.info("Database initialised with config-data!");
+                    }
                     resolve();
-                }
-            });
+                });
+            } else {
+                _logops2.default.info("Database already initialised. Using existing data.");
+                resolve();
+            }
         });
     });
 }
@@ -124,22 +124,19 @@ function startm2m() {
 lwm2m.stop = function () {
     return new Promise(function (resolve, reject) {
         if (!lwm2m.serverInfo) {
-            //If server not running, abort. TODO: Check for state of other components like db and http individually
+            //If server not running, abort.
             reject(error);
         }
-
         httpInterface.close().catch(function (error) {
             _logops2.default.error("Error while closing httpInterface!", error);
         }).then(function () {
             _logops2.default.debug("Closed http-interface");
         });
-
         database.disconnect().catch(function (error) {
             _logops2.default.error("Error while disconnecting from db!", error);
         }).then(function () {
             _logops2.default.debug("Disconnected from db");
         });
-
         lwm2m.server.stop(lwm2m.serverInfo, function (error) {
             if (error) {
                 reject(error);

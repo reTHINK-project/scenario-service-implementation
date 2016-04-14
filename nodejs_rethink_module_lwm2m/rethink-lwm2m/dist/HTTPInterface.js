@@ -153,7 +153,6 @@ var HTTPInterface = function () {
     }, {
         key: "open",
         value: function open() {
-            //TODO: Implement this with POST. Client (hyperty) will specify which data is needed
             var that = this;
             return new Promise(function (resolve, reject) {
                 that._getCertFiles(that._keyFile, that._certFile).catch(reject).then(function (options) {
