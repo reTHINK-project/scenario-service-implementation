@@ -350,23 +350,39 @@ var Database = function () {
             });
         }
     }, {
-        key: "getRoom",
-        value: function getRoom(roomName) {
-            var that = this;
+        key: "getObject",
+        value: function getObject(objName, type) {
             return new Promise(function (resolve, reject) {
-                if (typeof roomName === "undefined") {
-                    reject(new Error("Invalid room-name!"));
+                if (typeof objName === "undefined" || typeof type === "undefined") {
+                    reject(new Error("Database.getObject(): Invalid parameters!"));
                 } else {
-                    if (!that.connected()) {
-                        reject(new Error("Not connected to db!"));
+                    var model = {};
+                    switch (type) {
+                        case "device":
+                            model = _Device2.default.model;
+                            break;
+                        case "room":
+                            model = _Room2.default.model;
+                            break;
+                        default:
+                            reject(new Error("Invalid type"));
+                            break;
                     }
+
+                    var query = model.findOne({name: objName});
+
+                    if (type === "room") {
+                        //Check if we need to populate
+                        query.populate("devices");
+                    }
+
+                    query.exec(function (error, result) {
+                        if (error) {
+                            reject(error);
+                        }
+                        resolve(result);
+                    });
                 }
-                _Room2.default.model.findOne({ name: roomName }).populate('devices').exec(function (error, room) {
-                    if (error) {
-                        reject(error);
-                    }
-                    resolve(room);
-                });
             });
         }
     }, {

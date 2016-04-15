@@ -96,18 +96,31 @@ var HTTPInterface = function () {
             return new Promise(function (resolve) {
                 var reply = {};
                 reply.data = null;
-                reply.error = null; //TODO: let _getErrorReply() handle errors
+                reply.error = null;
+                var objectType = null;
+                var objectName = null;
 
-                if (!params.hasOwnProperty("room")) {
-                    reply.error = "Given parameters not supported!";
+                if (params.hasOwnProperty("room")) {
+                    objectType = "room";
+                    objectName = params.room;
                 } else {
-                    that._database.getRoom(params.room).catch(function (error) {
-                        _logops2.default.error("Process POST-request: Error while querying room '" + params.room + "'!", error);
+                    if (params.hasOwnProperty("device")) {
+                        objectType = "device";
+                        objectName = params.device;
+                    }
+                }
+
+                if (objectType === null) {
+                    reply.error = HTTPInterface._getErrorReply("unsupportedParam");
+                    resolve(JSON.stringify(reply));
+                } else {
+                    that._database.getObject(objectName, objectType).catch(function (error) {
+                        reply.error = HTTPInterface._getErrorReply(null, error);
                         reply.error = error;
-                        resolve(JSON.stringify(reply));
-                    }).then(function (room) {
-                        reply.data = room;
-                        resolve(JSON.stringify(reply));
+                        resolve(reply);
+                    }).then(function (queriedObject) {
+                        reply.data = queriedObject;
+                        resolve(JSON.stringify(reply)); //Convert to string for network
                     });
                 }
             });
@@ -119,34 +132,34 @@ var HTTPInterface = function () {
             return new Promise(function (resolve) {
                 that._server = _https2.default.createServer(options, function (req, res) {
                     if (req.method != "POST") {
+                        _logops2.default.debug("HTTPInterface: Invalid method from [" + req.headers.host + "]: " + req.method);
                         res.writeHead(405, {'Content-Type': 'application/json'});
-                        res.end(HTTPInterface._getErrorReply(req.headers.host, "invalidMethod", "Use POST"));
+                        res.end(HTTPInterface._getErrorReply("invalidMethod", "Use POST"));
                     } else {
-                        _logops2.default.debug("POST");
-
                         var body = "";
                         req.on("data", function (data) {
                             body += data;
                         });
                         req.on("end", function () {
-                            _logops2.default.debug("Received data", body);
+                            _logops2.default.debug("HTTPInterface: Received data from [" + req.headers.host + "]", body);
                             try {
                                 var params = JSON.parse(body);
                             } catch (e) {
                                 res.writeHead(415, {'Content-Type': 'application/json'});
-                                res.end(HTTPInterface._getErrorReply(req.headers.host, "invalidBody", e));
+                                res.end(HTTPInterface._getErrorReply("invalidBody", e));
                             }
-                            res.writeHead(200, {'Content-Type': 'application/json'});
                             that._processRequest(params) //Process request and ...
                                 .then(function (reply) {
-                                    res.end(reply);
-                                }); //... reply to client
+                                    _logops2.default.debug("HTTPInterface: Sending data to [" + req.headers.host + "]", reply);
+                                    res.writeHead(200, {'Content-Type': 'application/json'});
+                                    res.end(reply); //... reply to client
+                                });
                         });
                     }
                 });
 
                 that._server.listen(that._port, that._host);
-                _logops2.default.debug("HTTPinterface: Listening at https://" + that._host + ":" + that._port);
+                _logops2.default.debug("HTTPInterface: Listening at https://" + that._host + ":" + that._port);
                 resolve();
             });
         }
@@ -175,7 +188,7 @@ var HTTPInterface = function () {
         }
     }], [{
         key: "_getErrorReply",
-        value: function _getErrorReply(host, error, msg) {
+        value: function _getErrorReply(error, msg) {
             var json = {};
             switch (error) {
                 case "invalidBody":
@@ -194,7 +207,6 @@ var HTTPInterface = function () {
             if (typeof msg !== "undefined" && msg !== null) {
                 json.error += ": " + msg;
             }
-            _logops2.default.debug("HTTPInterface error [" + host + "]", json);
             return JSON.stringify(json);
         }
     }]);

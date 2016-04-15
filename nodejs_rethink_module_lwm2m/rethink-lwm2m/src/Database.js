@@ -348,25 +348,39 @@ class Database {
         });
     }
 
-    getRoom(roomName) {
-        var that = this;
+
+    getObject(objName, type) {
         return new Promise((resolve, reject) => {
-            if (typeof roomName === "undefined") {
-                reject(new Error("Invalid room-name!"));
+            if (typeof objName === "undefined" || typeof type === "undefined") {
+                reject(new Error("Database.getObject(): Invalid parameters!"));
             }
             else {
-                if (!that.connected()) {
-                    reject(new Error("Not connected to db!"));
+                var model = {};
+                switch (type) {
+                    case "device":
+                        model = Device.model;
+                        break;
+                    case "room":
+                        model = Room.model;
+                        break;
+                    default:
+                        reject(new Error("Invalid type"));
+                        break;
                 }
-            }
-            Room.model.findOne({name: roomName})
-                .populate('devices')
-                .exec((error, room) => {
+
+                var query = model.findOne({name: objName});
+
+                if (type === "room") { //Check if we need to populate
+                    query.populate("devices");
+                }
+
+                query.exec((error, result) => {
                     if (error) {
                         reject(error);
                     }
-                    resolve(room);
+                    resolve(result);
                 });
+            }
         });
     }
 }
