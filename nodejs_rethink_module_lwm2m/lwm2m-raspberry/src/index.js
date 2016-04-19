@@ -17,12 +17,12 @@
  */
 'use strict';
 
-//TODO: Sensor-code
 
 import lwm2mlib from "lwm2m-node-lib";
 import logger from "logops";
 import cmd from "command-node";
 import config from "./../config";
+import TempSensor from "./TempSensor";
 
 logger.format = logger.formatters.dev;
 logger.setLevel('INFO'); //Initial log-level, overwritten by config later
@@ -30,6 +30,7 @@ logger.setLevel('INFO'); //Initial log-level, overwritten by config later
 
 var client = lwm2mlib.client;
 var globalDeviceInfo = null;
+var tempSensor = null;
 
 logger.debug("Initialising from config");
 init(config)
@@ -59,9 +60,22 @@ function init(config) {
         else {
             logger.setLevel(config.client.logLevel);
             client.init(config);
+            initTempSensor(lwm2mlib.client, config.sensors.temperature.refreshInterval);
+
             resolve();
         }
     });
+}
+
+function initTempSensor(client, refreshInterval) {
+    tempSensor = new TempSensor(client, refreshInterval);
+    tempSensor.start()
+        .catch((error) => {
+            logger.error("Error while starting temperature-sensor!", error);
+        })
+        .then(() => {
+            logger.info("Reading temperature sensor/s", tempSensor.sensors);
+        });
 }
 
 
@@ -109,6 +123,11 @@ function cmd_showConfig() {
 
 function cmd_stop() {
     logger.info("Stopping client");
+
+    if (tempSensor) {
+        tempSensor.stop();
+    }
+
     unregister()
         .catch(function (error) {
             logger.error("Error while unregistering from server!");

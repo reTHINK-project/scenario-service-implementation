@@ -23,6 +23,11 @@ config.connection = {
     url: "/",
     endpoint: "myRaspberry"
 };
+config.sensors = {
+    temperature: {
+        refreshInterval: 10000
+    }
+};
 config.client = {
     lifetime: '85671',
     version: '1.0',

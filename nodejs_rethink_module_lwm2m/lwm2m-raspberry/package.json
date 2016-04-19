@@ -13,7 +13,9 @@
   "author": "Paul Zuehlcke",
   "license": "Apache-2.0",
   "dependencies": {
+    "async": "^2.0.0-rc.3",
     "command-node": "^0.1.1",
+    "ds18b20": "git+https://github.com/Trikolon/ds18b20.git",
     "logops": "^1.0.0-alpha.7",
     "lwm2m-node-lib": "^0.5.0"
   },

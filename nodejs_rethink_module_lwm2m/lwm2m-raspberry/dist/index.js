@@ -17,8 +17,6 @@
  */
 'use strict';
 
-//TODO: Sensor-code
-
 var _lwm2mNodeLib = require("lwm2m-node-lib");
 
 var _lwm2mNodeLib2 = _interopRequireDefault(_lwm2mNodeLib);
@@ -35,6 +33,10 @@ var _config = require("./../config");
 
 var _config2 = _interopRequireDefault(_config);
 
+var _TempSensor = require("./TempSensor");
+
+var _TempSensor2 = _interopRequireDefault(_TempSensor);
+
 function _interopRequireDefault(obj) {
     return obj && obj.__esModule ? obj : {default: obj};
 }
@@ -44,6 +46,7 @@ _logops2.default.setLevel('INFO'); //Initial log-level, overwritten by config la
 
 var client = _lwm2mNodeLib2.default.client;
 var globalDeviceInfo = null;
+var tempSensor = null;
 
 _logops2.default.debug("Initialising from config");
 init(_config2.default).catch(function (error) {
@@ -69,8 +72,19 @@ function init(config) {
         } else {
             _logops2.default.setLevel(config.client.logLevel);
             client.init(config);
+            initTempSensor(_lwm2mNodeLib2.default.client, config.sensors.temperature.refreshInterval);
+
             resolve();
         }
+    });
+}
+
+function initTempSensor(client, refreshInterval) {
+    tempSensor = new _TempSensor2.default(client, refreshInterval);
+    tempSensor.start().catch(function (error) {
+        _logops2.default.error("Error while starting temperature-sensor!", error);
+    }).then(function () {
+        _logops2.default.info("Reading temperature sensor/s", tempSensor.sensors);
     });
 }
 
@@ -114,6 +128,11 @@ function cmd_showConfig() {
 
 function cmd_stop() {
     _logops2.default.info("Stopping client");
+
+    if (tempSensor) {
+        tempSensor.stop();
+    }
+
     unregister().catch(function (error) {
         _logops2.default.error("Error while unregistering from server!");
         if (error) {
