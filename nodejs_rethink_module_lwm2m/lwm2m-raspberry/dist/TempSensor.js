@@ -134,8 +134,9 @@ var TempSensor = function () {
     }, {
         key: "_setClientTemp",
         value: function _setClientTemp(that) {
-            //Query values
-            //Set values (according to ipso spec)
+            //1. Query values
+            //2. Set values (according to ipso spec)
+
             var index = 0;
             var errors = [];
 
@@ -148,13 +149,15 @@ var TempSensor = function () {
                         _logops2.default.debug("Sensor '" + id + "': " + value);
                         _logops2.default.debug("Setting values in lwm2m-client");
 
-                        //TODO: Set other fields needed (unit etc.)
-
-                        that._client.registry.setResource("/3303/" + index, 5700, value, function (error, result) {
+                        Promise.all([that._setClientResource("/3303/" + index, 5700, value), //Temperature value
+                            that._setClientResource("/3303/" + index, 5701, "Cel") //Temperature unit
+                        ]).then(function (results) {
+                            _logops2.default.debug("Set values", results);
+                            index++;
+                            callback();
+                        }, function (error) {
                             if (error) {
                                 errors.push(error);
-                            } else {
-                                _logops2.default.debug("Set", result);
                             }
                             index++;
                             callback();
@@ -165,6 +168,20 @@ var TempSensor = function () {
                 if (errors.length > 0) {
                     _logops2.default.error("Error/s while storing temperature!", errors);
                 }
+            });
+        }
+    }, {
+        key: "_setClientResource",
+        value: function _setClientResource(objectUri, resourceId, value) {
+            var that = this;
+            return new Promise(function (resolve, reject) {
+                that._client.registry.setResource(objectUri, resourceId, value, function (error, result) {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        resolve(result);
+                    }
+                });
             });
         }
     }, {

@@ -91,8 +91,9 @@ class TempSensor {
     }
 
     _setClientTemp(that) {
-        //Query values
-        //Set values (according to ipso spec)
+        //1. Query values
+        //2. Set values (according to ipso spec)
+        
         var index = 0;
         var errors = [];
 
@@ -106,24 +107,41 @@ class TempSensor {
                     logger.debug("Sensor '" + id + "': " + value);
                     logger.debug("Setting values in lwm2m-client");
 
-                    //TODO: Set other fields needed (unit etc.)
-
-                    that._client.registry.setResource("/3303/" + index, 5700, value, (error, result) => {
-                        if (error) {
-                            errors.push(error);
-                        }
-                        else {
-                            logger.debug("Set", result);
-                        }
-                        index++;
-                        callback();
-                    });
+                    Promise.all([
+                            that._setClientResource("/3303/" + index, 5700, value), //Temperature value
+                            that._setClientResource("/3303/" + index, 5701, "Cel") //Temperature unit
+                        ])
+                        .then((results) => {
+                            logger.debug("Set values", results);
+                            index++;
+                            callback();
+                        }, (error) => {
+                            if (error) {
+                                errors.push(error);
+                            }
+                            index++;
+                            callback();
+                        });
                 }
             });
         }, () => {
             if (errors.length > 0) {
                 logger.error("Error/s while storing temperature!", errors);
             }
+        });
+    }
+
+    _setClientResource(objectUri, resourceId, value) {
+        var that = this;
+        return new Promise((resolve, reject) => {
+            that._client.registry.setResource(objectUri, resourceId, value, (error, result) => {
+                if (error) {
+                    reject(error);
+                }
+                else {
+                    resolve(result);
+                }
+            });
         });
     }
 }
