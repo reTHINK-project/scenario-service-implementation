@@ -79,6 +79,30 @@ function initTempSensor(client, refreshInterval) {
 }
 
 
+function execute(objectType, objectId, resourceId, value, callback) {
+    logger.debug("Received 'execute'\n" + objectType + "/" + objectId + " " + resourceId + " " + value);
+    cmd.prompt();
+    callback(null);
+}
+
+function read(objectType, objectId, resourceId, value, callback) {
+    logger.debug("Received 'read'\n" + objectType + "/" + objectId + " " + resourceId + " " + value);
+    cmd.prompt();
+    callback(null);
+}
+
+function write(objectType, objectId, resourceId, value, callback) {
+    logger.debug("Received 'write'\n" + objectType + "/" + objectId + " " + resourceId + " " + value);
+    cmd.prompt();
+    callback(null);
+}
+
+function setHandlers(deviceInfo) {
+    client.setHandler(deviceInfo.serverInfo, 'write', write);
+    client.setHandler(deviceInfo.serverInfo, 'execute', execute);
+    client.setHandler(deviceInfo.serverInfo, 'read', read);
+}
+
 function register() {
     return new Promise(function (resolve, reject) {
         if (globalDeviceInfo) {
@@ -91,6 +115,7 @@ function register() {
                 }
                 else {
                     globalDeviceInfo = deviceInfo;
+                    setHandlers(deviceInfo);
                     resolve();
                 }
             })
@@ -134,13 +159,17 @@ function cmd_stop() {
             if (error) {
                 logger.error(error);
             }
+            cmd_exit();
         })
         .then(function () { //TODO: Fix: Also runs on .catch above
             logger.info("Unregistered from '" + config.connection.host + ":" + config.connection.port + "'!");
-        })
-        .then(function () { //Always
-            process.exit(0);
+            cmd_exit();
         });
+}
+
+function cmd_exit() {
+    logger.info("Stopping cmd...");
+    process.exit(0);
 }
 
 var commands = {
@@ -148,6 +177,11 @@ var commands = {
         parameters: [],
         description: '\tStop client',
         handler: cmd_stop
+    },
+    'exit': {
+        parameters: [],
+        description: '\tExit cmd, forces running threads to stop.',
+        handler: cmd_exit
     },
     'config': {
         parameters: [],
