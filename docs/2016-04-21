@@ -1,0 +1,44 @@
+# WP-5 Telco 2016-04-21
+
+## Agenda
+
+1. Hyperties and apps development status
+2. Apps interfaces
+3. AOB
+
+##Participants
+
+* Mark (FOKUS)
+* Paulo (PT)
+* Arnaud (Apizee)
+* Felix, Sebastian (TUB)
+* Jean-Michel (Orange)
+* Antón, Yudani (Quobis)
+* -- (DT)
+
+## Upcoming Milestones & Deliverables
+1. Phase 1 Hyperties 29/Apr/2016
+2. Phase 1 Applications 31/May/2016
+3. D5.2: 15/Jun/2016
+
+## Minutes
+
+###1. Status of hyperties and applications
+* FOKUS: working on its hyperties and interfaces
+* Quobis: working on Group Chat hyperty
+* PT: working on My bracelet hyperty
+* TUB: working on Address book app
+* Apizee: working on enterprise app, and offered to provide MyContact hyperty
+
+__We encourage all WP5 partners to provide first versions of the implementations for some integration test during next meeting in Paris__.
+Remenber that a *#dev-hyperty* channel has been created in slack to support hyperty developers.
+
+###2. App interfaces 
+DT is working on user interface design.
+Quobis provided an example of a GUI framework
+Paulo will create a dedicated repository for Participate Applications
+
+###3. Paris meeting
+* We plan to run interoperability tests. Please, provide first prototypes!!!
+* A doodle will be provided to select a slot for interaction between developers (both in situ and online)
+* An issue will be created to agree on the agenda for the WP5 slots
