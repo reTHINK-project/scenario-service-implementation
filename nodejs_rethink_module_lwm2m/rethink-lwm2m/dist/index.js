@@ -171,15 +171,19 @@ function unregistrationHandler(device, callback) {
     }).then(callback);
 }
 
-function observeHandler(objectType, objectId, resourceId, deviceId, value) {
+function observeHandler(value, objectType, objectId, resourceId, deviceId) {
     lwm2m.server.getRegistry().get(deviceId, function (error, device) {
-        database.storeValue(device.name, '/' + objectType + '/' + objectId + '/' + resourceId, value).catch(function (error) {
-            _logops2.default.error("Error while storing observe-data in db! Device: %s", device.name, error);
-        }).then(function () {
-            _logops2.default.debug("Stored observe-data for device '%s' in db!", device.name);
-        });
+        if (error) {
+            _logops2.default.error("Error while getting device by id", error);
+        } else {
+            database.storeValue(device.name, '/' + objectType + '/' + objectId + '/' + resourceId, value).catch(function (error) {
+                _logops2.default.error("Error while storing observe-data in db! Device: %s", device.name, error);
+            }).then(function () {
+                _logops2.default.debug("Stored observe-data for device '%s' in db!", device.name);
+            });
+        }
     });
-    _logops2.default.debug("Observe-handler device [" + deviceId + ", objectType " + objectType + ", objectId " + objectId + ", resourceId: " + resourceId + "] => " + value);
+    _logops2.default.debug("Observe-handler device [deviceId " + deviceId + ", objectType " + objectType + ", objectId " + objectId + ", resourceId: " + resourceId + "] => " + value);
 }
 
 function observeDeviceData(deviceName, objectType, objectId, resourceId) {
