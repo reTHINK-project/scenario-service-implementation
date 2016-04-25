@@ -7,8 +7,6 @@ When started the module will listen for new devices and store information on reg
 The reTHINK-lwm2m module provides access to all native lwm2m-node-lib functions.
 
 ## Usage
-**Note:** Until the [PR for lwm2m-node-lib](https://github.com/telefonicaid/lwm2m-node-lib/pull/97) is merged please apply this change manually in order for 'observe' to work.
-
 The module requires NodeJS version 4.4.1 or greater. This is usually not shipped with common linux distributions such as Ubuntu. Therefore I recommend using [Node Version Manager (nvm)](https://github.com/creationix/nvm) to install the latest stable version.
 A MongoDB-server is required for the module to store data. On Ubuntu you can install it like so:
 ```bash
