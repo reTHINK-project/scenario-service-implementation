@@ -37,9 +37,7 @@ var _TempSensor = require("./TempSensor");
 
 var _TempSensor2 = _interopRequireDefault(_TempSensor);
 
-function _interopRequireDefault(obj) {
-    return obj && obj.__esModule ? obj : {default: obj};
-}
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 _logops2.default.format = _logops2.default.formatters.dev;
 _logops2.default.setLevel('INFO'); //Initial log-level, overwritten by config later
@@ -58,9 +56,9 @@ init(_config2.default).catch(function (error) {
 }).then(function () {
     _logops2.default.info("Connecting to server");
     register() //TODO: add timeout
-        .catch(function (error) {
-            _logops2.default.error("Could not connect to server!", error);
-        }).then(function () {
+    .catch(function (error) {
+        _logops2.default.error("Could not connect to server!", error);
+    }).then(function () {
         _logops2.default.info("Registered at server '" + _config2.default.connection.host + ":" + _config2.default.connection.port + "' as '" + _config2.default.connection.endpoint + "'!");
     });
 });
@@ -72,19 +70,21 @@ function init(config) {
         } else {
             _logops2.default.setLevel(config.client.logLevel);
             client.init(config);
-            initTempSensor(_lwm2mNodeLib2.default.client, config.sensors.temperature.refreshInterval);
-
-            resolve();
+            initTempSensor(_lwm2mNodeLib2.default.client, config.sensors.temperature.refreshInterval).then(resolve); //Wait for temperature-sensor before registering to server
         }
     });
 }
 
 function initTempSensor(client, refreshInterval) {
-    tempSensor = new _TempSensor2.default(client, refreshInterval);
-    tempSensor.start().catch(function (error) {
-        _logops2.default.error("Error while starting temperature-sensor!", error);
-    }).then(function () {
-        _logops2.default.info("Reading temperature sensor/s", tempSensor.sensors);
+    return new Promise(function (resolve) {
+        tempSensor = new _TempSensor2.default(client, refreshInterval);
+        tempSensor.start().catch(function (error) {
+            _logops2.default.error("Error while starting temperature-sensor!", error);
+            resolve();
+        }).then(function () {
+            _logops2.default.info("Reading temperature sensor/s", tempSensor.sensors);
+            resolve();
+        });
     });
 }
 
@@ -165,7 +165,6 @@ function cmd_stop() {
         }
         cmd_exit();
     }).then(function () {
-        //TODO: Fix: Also runs on .catch above
         _logops2.default.info("Unregistered from '" + _config2.default.connection.host + ":" + _config2.default.connection.port + "'!");
         cmd_exit();
     });

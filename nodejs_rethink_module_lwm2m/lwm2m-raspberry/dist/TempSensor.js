@@ -21,23 +21,7 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _createClass = function () {
-    function defineProperties(target, props) {
-        for (var i = 0; i < props.length; i++) {
-            var descriptor = props[i];
-            descriptor.enumerable = descriptor.enumerable || false;
-            descriptor.configurable = true;
-            if ("value" in descriptor) descriptor.writable = true;
-            Object.defineProperty(target, descriptor.key, descriptor);
-        }
-    }
-
-    return function (Constructor, protoProps, staticProps) {
-        if (protoProps) defineProperties(Constructor.prototype, protoProps);
-        if (staticProps) defineProperties(Constructor, staticProps);
-        return Constructor;
-    };
-}();
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _ds18b = require("ds18b20");
 
@@ -51,15 +35,9 @@ var _async = require("async");
 
 var _async2 = _interopRequireDefault(_async);
 
-function _interopRequireDefault(obj) {
-    return obj && obj.__esModule ? obj : {default: obj};
-}
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _classCallCheck(instance, Constructor) {
-    if (!(instance instanceof Constructor)) {
-        throw new TypeError("Cannot call a class as a function");
-    }
-}
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var TempSensor = function () {
     function TempSensor(client) {
@@ -99,11 +77,20 @@ var TempSensor = function () {
                             var errors = [];
                             _async2.default.each(ids, function (id, callback) {
                                 that._client.registry.create("/3303/" + index, function (error) {
+                                    //Create temperature object
                                     if (error) {
                                         errors.push(error);
                                     }
-                                    index++;
-                                    callback();
+                                    that._setClientResource("/3303/" + index, 5701, "Cel") //Set temperature object unit
+                                    .catch(function (error) {
+                                        if (error) {
+                                            errors.push(error);
+                                        }
+                                    }).then(function (result) {
+                                        _logops2.default.debug("Set unit", result);
+                                        index++;
+                                        callback();
+                                    });
                                 });
                             }, function () {
                                 //When all sensor-objects have been created
@@ -134,9 +121,6 @@ var TempSensor = function () {
     }, {
         key: "_setClientTemp",
         value: function _setClientTemp(that) {
-            //1. Query values
-            //2. Set values (according to ipso spec)
-
             var index = 0;
             var errors = [];
 
@@ -149,8 +133,7 @@ var TempSensor = function () {
                         _logops2.default.debug("Sensor '" + id + "': " + value);
                         _logops2.default.debug("Setting values in lwm2m-client");
 
-                        Promise.all([that._setClientResource("/3303/" + index, 5700, value), //Temperature value
-                            that._setClientResource("/3303/" + index, 5701, "Cel") //Temperature unit
+                        Promise.all([that._setClientResource("/3303/" + index, 5700, value) //Temperature value
                         ]).then(function (results) {
                             _logops2.default.debug("Set values", results);
                             index++;

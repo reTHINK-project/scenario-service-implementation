@@ -60,22 +60,27 @@ function init(config) {
         else {
             logger.setLevel(config.client.logLevel);
             client.init(config);
-            initTempSensor(lwm2mlib.client, config.sensors.temperature.refreshInterval);
-
-            resolve();
+            initTempSensor(lwm2mlib.client, config.sensors.temperature.refreshInterval)
+                .then(resolve); //Wait for temperature-sensor before registering to server
         }
     });
 }
 
 function initTempSensor(client, refreshInterval) {
-    tempSensor = new TempSensor(client, refreshInterval);
-    tempSensor.start()
-        .catch((error) => {
-            logger.error("Error while starting temperature-sensor!", error);
-        })
-        .then(() => {
-            logger.info("Reading temperature sensor/s", tempSensor.sensors);
-        });
+    return new Promise((resolve) => {
+        tempSensor = new TempSensor(client, refreshInterval);
+        tempSensor.start()
+            .catch((error) => {
+                logger.error("Error while starting temperature-sensor!", error);
+                resolve();
+            })
+            .then(() => {
+                logger.info("Reading temperature sensor/s", tempSensor.sensors);
+                resolve();
+            });
+    });
+
+
 }
 
 
@@ -161,7 +166,7 @@ function cmd_stop() {
             }
             cmd_exit();
         })
-        .then(function () { //TODO: Fix: Also runs on .catch above
+        .then(function () {
             logger.info("Unregistered from '" + config.connection.host + ":" + config.connection.port + "'!");
             cmd_exit();
         });

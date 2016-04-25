@@ -56,12 +56,21 @@ class TempSensor {
                         var index = 0;
                         var errors = [];
                         async.each(ids, (id, callback) => {
-                            that._client.registry.create("/3303/" + index, (error) => {
+                            that._client.registry.create("/3303/" + index, (error) => { //Create temperature object
                                 if (error) {
                                     errors.push(error);
                                 }
-                                index++;
-                                callback();
+                                that._setClientResource("/3303/" + index, 5701, "Cel") //Set temperature object unit
+                                    .catch((error) => {
+                                        if (error) {
+                                            errors.push(error);
+                                        }
+                                    })
+                                    .then((result) => {
+                                        logger.debug("Set unit", result);
+                                        index++;
+                                        callback();
+                                    });
                             });
                         }, () => { //When all sensor-objects have been created
 
@@ -69,7 +78,6 @@ class TempSensor {
                             that._setClientTemp(that);
                             //Start timer for updating sensor-object with temperature-values
                             that._timer = setInterval(that._setClientTemp, that._refreshInterval, that);
-
 
                             if (errors.length > 0) {
                                 reject(errors);
@@ -91,9 +99,6 @@ class TempSensor {
     }
 
     _setClientTemp(that) {
-        //1. Query values
-        //2. Set values (according to ipso spec)
-        
         var index = 0;
         var errors = [];
 
@@ -108,8 +113,7 @@ class TempSensor {
                     logger.debug("Setting values in lwm2m-client");
 
                     Promise.all([
-                            that._setClientResource("/3303/" + index, 5700, value), //Temperature value
-                            that._setClientResource("/3303/" + index, 5701, "Cel") //Temperature unit
+                            that._setClientResource("/3303/" + index, 5700, value) //Temperature value
                         ])
                         .then((results) => {
                             logger.debug("Set values", results);
