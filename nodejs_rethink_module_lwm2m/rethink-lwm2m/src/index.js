@@ -139,7 +139,7 @@ lwm2m.stop = () => {
             .then(() => {
                 logger.debug("Disconnected from db");
             });
-        lwm2m.server.stop(lwm2m.serverInfo, (error) => {
+        lwm2m.server.stop(lwm2m.serverInfo, (error) => { //TODO: Observes somehow do not stop on lwm2m.server stop
             if (error) {
                 reject(error);
             }
@@ -238,6 +238,7 @@ function initHTTP() {
     return new Promise((resolve, reject) => {
         if (!config.http.enabled) {
             logger.debug("httpInterface not enabled");
+            resolve();
         }
         else {
             logger.debug("Starting HTTP-interface");

@@ -49,7 +49,7 @@ class HTTPInterface {
                     done(error);
                 });
                 //noinspection JSAnnotator
-                function done(error) {
+                function done(error) { //TODO: replace with promise.all (wrap file-read operations in promises)
                     if (error) {
                         reject(error);
                     }
@@ -156,33 +156,38 @@ class HTTPInterface {
                 }
             });
 
-            that._server.listen(that._port, that._host);
-            logger.debug("HTTPInterface: Listening at https://" + that._host + ":" + that._port);
-            resolve();
+            that._server.listen(that._port, that._host, () => {
+                logger.debug("HTTPInterface: Listening at https://" + that._host + ":" + that._port);
+                resolve();
+            });
         });
     }
 
     open() {
         var that = this;
-        return new Promise((resolve, reject) => {
+        this._opened = new Promise((resolve, reject) => {
             that._getCertFiles(that._keyFile, that._certFile)
                 .catch(reject)
                 .then((options) => {
-                    return that._listen(options);
+                    return that._listen(options)
                 })
-                .then(resolve());
+                .then(resolve);
         });
+        return this._opened;
     }
 
     close() {
         var that = this;
         return new Promise((resolve, reject) => {
-            that._server.close((error) => {
-                if (error) {
-                    reject(error);
-                }
-                resolve();
-            })
+            Promise.all([that._opened]) //Wait for start before stop
+                .then(() => {
+                    that._server.close((error) => {
+                        if (error) {
+                            reject(error);
+                        }
+                        resolve();
+                    });
+                });
         });
     }
 }

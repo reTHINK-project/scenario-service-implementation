@@ -138,6 +138,7 @@ lwm2m.stop = function () {
             _logops2.default.debug("Disconnected from db");
         });
         lwm2m.server.stop(lwm2m.serverInfo, function (error) {
+            //TODO: Observes somehow do not stop on lwm2m.server stop
             if (error) {
                 reject(error);
             } else {
@@ -223,6 +224,7 @@ function initHTTP() {
     return new Promise(function (resolve, reject) {
         if (!config.http.enabled) {
             _logops2.default.debug("httpInterface not enabled");
+            resolve();
         } else {
             _logops2.default.debug("Starting HTTP-interface");
             httpInterface = new _HTTPInterface2.default(config.http.host, config.http.port, config.http.key, config.http.cert, database);

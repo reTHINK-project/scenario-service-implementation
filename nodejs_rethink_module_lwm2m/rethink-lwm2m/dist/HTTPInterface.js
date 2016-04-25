@@ -65,6 +65,7 @@ var HTTPInterface = function () {
                         //noinspection JSAnnotator
 
                         var done = function done(error) {
+                            //TODO: replace with promise.all (wrap file-read operations in promises)
                             if (error) {
                                 reject(error);
                             }
@@ -158,31 +159,36 @@ var HTTPInterface = function () {
                     }
                 });
 
-                that._server.listen(that._port, that._host);
-                _logops2.default.debug("HTTPInterface: Listening at https://" + that._host + ":" + that._port);
-                resolve();
+                that._server.listen(that._port, that._host, function () {
+                    _logops2.default.debug("HTTPInterface: Listening at https://" + that._host + ":" + that._port);
+                    resolve();
+                });
             });
         }
     }, {
         key: "open",
         value: function open() {
             var that = this;
-            return new Promise(function (resolve, reject) {
+            this._opened = new Promise(function (resolve, reject) {
                 that._getCertFiles(that._keyFile, that._certFile).catch(reject).then(function (options) {
                     return that._listen(options);
-                }).then(resolve());
+                }).then(resolve);
             });
+            return this._opened;
         }
     }, {
         key: "close",
         value: function close() {
             var that = this;
             return new Promise(function (resolve, reject) {
-                that._server.close(function (error) {
-                    if (error) {
-                        reject(error);
-                    }
-                    resolve();
+                Promise.all([that._opened]) //Wait for start before stop
+                    .then(function () {
+                        that._server.close(function (error) {
+                            if (error) {
+                                reject(error);
+                            }
+                            resolve();
+                        });
                 });
             });
         }
