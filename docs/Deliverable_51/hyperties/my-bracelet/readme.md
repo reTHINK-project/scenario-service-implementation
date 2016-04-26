@@ -13,7 +13,7 @@ The My Bracelet Hyperty main functionality is to collect data from an individual
 
 ### Hyperty Data Objects schemas
 
-This Hyperty handles a standard [Context Data Object](https://github.com/reTHINK-project/architecture/tree/master/docs/datamodel/context) with:
+This Hyperty handles a standard [Context Data Object](https://github.com/reTHINK-project/dev-service-framework/blob/develop/docs/datamodel/data-objects/context/readme.md) with:
 
 **ContextType**
 
