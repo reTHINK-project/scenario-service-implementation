@@ -24,8 +24,14 @@ config.connection = {
     endpoint: "myRaspberry"
 };
 config.sensors = {
-    temperature: {
-        refreshInterval: 10000
+    temperature: { //ds18b20
+        enabled: true,
+        refreshInterval: 10000 //Polling-interval for temperature
+    },
+    hue: {
+        enabled: true,
+        hostname: "192.168.1.2", //hostname of bridge
+        username: "" //username acquired from registration via philipe-hue api
     }
 };
 config.client = {

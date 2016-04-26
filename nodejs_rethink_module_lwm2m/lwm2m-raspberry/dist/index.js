@@ -37,6 +37,10 @@ var _TempSensor = require("./TempSensor");
 
 var _TempSensor2 = _interopRequireDefault(_TempSensor);
 
+var _Hue = require("./Hue");
+
+var _Hue2 = _interopRequireDefault(_Hue);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 _logops2.default.format = _logops2.default.formatters.dev;
@@ -45,16 +49,17 @@ _logops2.default.setLevel('INFO'); //Initial log-level, overwritten by config la
 var client = _lwm2mNodeLib2.default.client;
 var globalDeviceInfo = null;
 var tempSensor = null;
+var hue = null;
 
 _logops2.default.debug("Initialising from config");
-init(_config2.default).catch(function (error) {
+init().catch(function (error) {
     _logops2.default.fatal("Error while initialising! Abort.");
     if (error) {
         _logops2.default.fatal(error);
     }
     process.exit(1);
 }).then(function () {
-    _logops2.default.info("Connecting to server");
+    _logops2.default.info("Connecting to lwm2m-server [" + _config2.default.connection.host + ":" + _config2.default.connection.port + "] as '" + _config2.default.connection.endpoint + "'");
     register() //TODO: add timeout
     .catch(function (error) {
         _logops2.default.error("Could not connect to server!", error);
@@ -63,26 +68,59 @@ init(_config2.default).catch(function (error) {
     });
 });
 
-function init(config) {
+function init() {
     return new Promise(function (resolve, reject) {
-        if (!config || !config.hasOwnProperty("client") || !config.hasOwnProperty("connection")) {
+        if (!_config2.default || !_config2.default.hasOwnProperty("client") || !_config2.default.hasOwnProperty("connection")) {
             reject(new Error("Invalid configuration! Can't start."));
         } else {
-            _logops2.default.setLevel(config.client.logLevel);
-            client.init(config);
-            initTempSensor(_lwm2mNodeLib2.default.client, config.sensors.temperature.refreshInterval).then(resolve); //Wait for temperature-sensor before registering to server
+            _logops2.default.setLevel(_config2.default.client.logLevel);
+
+            _logops2.default.info("Initialising client");
+            //Init lwm2m-client
+            client.init(_config2.default);
+
+            _logops2.default.info("Starting devices");
+            //Init devices attached and enabled
+            var devices = [];
+            if (_config2.default.sensors.hasOwnProperty("temperature") && _config2.default.sensors.temperature.enabled === true) {
+                devices.push(initTempSensor());
+            } else {
+                _logops2.default.debug("Device 'temperature' is disabled");
+            }
+            if (_config2.default.sensors.hasOwnProperty("hue") && _config2.default.sensors.hue.enabled === true) {
+                devices.push(initHue());
+            } else {
+                _logops2.default.debug("Device 'hue' is disabled");
+            }
+            Promise.all(devices) //Wait for devices before registering to server
+                .catch(function (errors) {
+                    _logops2.default.error("Error while initialising devices!", errors);
+                }).then(resolve);
         }
     });
 }
 
-function initTempSensor(client, refreshInterval) {
+function initHue() {
     return new Promise(function (resolve) {
-        tempSensor = new _TempSensor2.default(client, refreshInterval);
+        hue = new _Hue2.default(_lwm2mNodeLib2.default.client, _config2.default.sensors.hue.hostname, _config2.default.sensors.hue.username);
+
+        hue.start().catch(function (error) {
+            _logops2.default.error("Error while initialising philips-hue!", error);
+        }).then(function (lights) {
+            _logops2.default.info("Hue: Connected lights", Object.keys(lights));
+            resolve();
+        });
+    });
+}
+
+function initTempSensor() {
+    return new Promise(function (resolve) {
+        tempSensor = new _TempSensor2.default(_lwm2mNodeLib2.default.client, _config2.default.sensors.temperature.refreshInterval);
         tempSensor.start().catch(function (error) {
-            _logops2.default.error("Error while starting temperature-sensor!", error);
+            _logops2.default.error("Temperature: Error while starting temperature-sensor!", error);
             resolve();
         }).then(function () {
-            _logops2.default.info("Reading temperature sensor/s", tempSensor.sensors);
+            _logops2.default.info("Temperature: Found temperature sensor/s", tempSensor.sensors);
             resolve();
         });
     });
@@ -90,20 +128,28 @@ function initTempSensor(client, refreshInterval) {
 
 function execute(objectType, objectId, resourceId, value, callback) {
     _logops2.default.debug("Received 'execute'\n" + objectType + "/" + objectId + " " + resourceId + " " + value);
-    _commandNode2.default.prompt();
     callback(null);
 }
 
 function read(objectType, objectId, resourceId, value, callback) {
     _logops2.default.debug("Received 'read'\n" + objectType + "/" + objectId + " " + resourceId + " " + value);
-    _commandNode2.default.prompt();
     callback(null);
 }
 
 function write(objectType, objectId, resourceId, value, callback) {
     _logops2.default.debug("Received 'write'\n" + objectType + "/" + objectId + " " + resourceId + " " + value);
-    _commandNode2.default.prompt();
-    callback(null);
+
+    if (_config2.default.sensors.hue.enabled === true && hue !== null) {
+        if (objectType == "3311") {
+            hue.handleWrite(objectType, objectId, resourceId, value).catch(function (error) {
+                _logops2.default.error("Hue: Error while handling lwm2m-write", error);
+            }).then(function () {
+                callback(null);
+            });
+        }
+    } else {
+        callback(null);
+    }
 }
 
 function setHandlers(deviceInfo) {
@@ -123,6 +169,8 @@ function register() {
                 } else {
                     globalDeviceInfo = deviceInfo;
                     setHandlers(deviceInfo);
+
+                    _logops2.default.debug("Registration-info", deviceInfo);
                     resolve();
                 }
             });
@@ -152,11 +200,8 @@ function cmd_showConfig() {
 }
 
 function cmd_stop() {
+    //TODO: Make sure lwm2m is unregistered before stopping devices
     _logops2.default.info("Stopping client");
-
-    if (tempSensor) {
-        tempSensor.stop();
-    }
 
     unregister().catch(function (error) {
         _logops2.default.error("Error while unregistering from server!");
@@ -168,6 +213,16 @@ function cmd_stop() {
         _logops2.default.info("Unregistered from '" + _config2.default.connection.host + ":" + _config2.default.connection.port + "'!");
         cmd_exit();
     });
+
+    _logops2.default.info("Stopping devices");
+    if (tempSensor) {
+        _logops2.default.info("Stopping temperature-sensor");
+        tempSensor.stop();
+    }
+    if (hue) {
+        _logops2.default.info("Stopping hue");
+        hue.stop();
+    }
 }
 
 function cmd_exit() {

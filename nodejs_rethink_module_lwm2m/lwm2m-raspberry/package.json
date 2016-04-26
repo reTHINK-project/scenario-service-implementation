@@ -17,7 +17,8 @@
     "command-node": "^0.1.1",
     "ds18b20": "git+https://github.com/Trikolon/ds18b20.git",
     "logops": "^1.0.0-alpha.7",
-    "lwm2m-node-lib": "^0.5.0"
+    "lwm2m-node-lib": "^0.5.0",
+    "philips-hue": "^1.1.11"
   },
   "devDependencies": {
     "babel-cli": "^6.6.5",

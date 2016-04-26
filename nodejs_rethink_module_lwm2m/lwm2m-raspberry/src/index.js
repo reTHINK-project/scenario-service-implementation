@@ -23,6 +23,7 @@ import logger from "logops";
 import cmd from "command-node";
 import config from "./../config";
 import TempSensor from "./TempSensor";
+import Hue from "./Hue";
 
 logger.format = logger.formatters.dev;
 logger.setLevel('INFO'); //Initial log-level, overwritten by config later
@@ -31,9 +32,10 @@ logger.setLevel('INFO'); //Initial log-level, overwritten by config later
 var client = lwm2mlib.client;
 var globalDeviceInfo = null;
 var tempSensor = null;
+var hue = null;
 
 logger.debug("Initialising from config");
-init(config)
+init()
     .catch(function (error) {
         logger.fatal("Error while initialising! Abort.");
         if (error) {
@@ -42,64 +44,113 @@ init(config)
         process.exit(1);
     })
     .then(function () {
-        logger.info("Connecting to server");
+        logger.info("Connecting to lwm2m-server [" + config.connection.host + ":" + config.connection.port + "] as '" + config.connection.endpoint + "'");
         register() //TODO: add timeout
             .catch(function (error) {
                 logger.error("Could not connect to server!", error);
             })
             .then(function () {
-                logger.info("Registered at server '" + config.connection.host + ":" + config.connection.port + "' as '" + config.connection.endpoint + "'!");
+                logger.info("Registered at server '" + config.connection.host + ":" + config.connection.port + "' as '"
+                    + config.connection.endpoint + "'!");
             });
     });
 
-function init(config) {
+function init() {
     return new Promise(function (resolve, reject) {
         if (!config || !config.hasOwnProperty("client") || !config.hasOwnProperty("connection")) {
             reject(new Error("Invalid configuration! Can't start."));
         }
         else {
             logger.setLevel(config.client.logLevel);
+
+            logger.info("Initialising client");
+            //Init lwm2m-client
             client.init(config);
-            initTempSensor(lwm2mlib.client, config.sensors.temperature.refreshInterval)
-                .then(resolve); //Wait for temperature-sensor before registering to server
+
+            logger.info("Starting devices");
+            //Init devices attached and enabled
+            var devices = [];
+            if (config.sensors.hasOwnProperty("temperature") && config.sensors.temperature.enabled === true) {
+                devices.push(initTempSensor());
+            }
+            else {
+                logger.debug("Device 'temperature' is disabled");
+            }
+            if (config.sensors.hasOwnProperty("hue") && config.sensors.hue.enabled === true) {
+                devices.push(initHue());
+            }
+            else {
+                logger.debug("Device 'hue' is disabled");
+            }
+            Promise.all(devices) //Wait for devices before registering to server
+                .catch((errors) => {
+                    logger.error("Error while initialising devices!", errors);
+                })
+                .then(resolve);
         }
     });
 }
 
-function initTempSensor(client, refreshInterval) {
+function initHue() {
     return new Promise((resolve) => {
-        tempSensor = new TempSensor(client, refreshInterval);
+        hue = new Hue(lwm2mlib.client, config.sensors.hue.hostname, config.sensors.hue.username);
+
+        hue.start()
+            .catch((error) => {
+                logger.error("Error while initialising philips-hue!", error);
+            })
+            .then((lights) => {
+                logger.info("Hue: Connected lights", Object.keys(lights));
+                resolve();
+            });
+    })
+}
+
+function initTempSensor() {
+    return new Promise((resolve) => {
+        tempSensor = new TempSensor(lwm2mlib.client, config.sensors.temperature.refreshInterval);
         tempSensor.start()
             .catch((error) => {
-                logger.error("Error while starting temperature-sensor!", error);
+                logger.error("Temperature: Error while starting temperature-sensor!", error);
                 resolve();
             })
             .then(() => {
-                logger.info("Reading temperature sensor/s", tempSensor.sensors);
+                logger.info("Temperature: Found temperature sensor/s", tempSensor.sensors);
                 resolve();
             });
     });
-
-
 }
 
 
 function execute(objectType, objectId, resourceId, value, callback) {
     logger.debug("Received 'execute'\n" + objectType + "/" + objectId + " " + resourceId + " " + value);
-    cmd.prompt();
     callback(null);
 }
 
 function read(objectType, objectId, resourceId, value, callback) {
     logger.debug("Received 'read'\n" + objectType + "/" + objectId + " " + resourceId + " " + value);
-    cmd.prompt();
     callback(null);
 }
 
 function write(objectType, objectId, resourceId, value, callback) {
     logger.debug("Received 'write'\n" + objectType + "/" + objectId + " " + resourceId + " " + value);
-    cmd.prompt();
-    callback(null);
+
+    if (config.sensors.hue.enabled === true && hue !== null) {
+        if (objectType == "3311") {
+            hue.handleWrite(objectType, objectId, resourceId, value)
+                .catch((error) => {
+                    logger.error("Hue: Error while handling lwm2m-write", error);
+                })
+                .then(() => {
+                    callback(null);
+                });
+        }
+    }
+    else {
+        callback(null);
+    }
+
+
 }
 
 function setHandlers(deviceInfo) {
@@ -114,16 +165,19 @@ function register() {
             reject(new Error("Can not register, already registered!"));
         }
         else {
-            client.register(config.connection.host, config.connection.port, config.connection.url, config.connection.endpoint, function (error, deviceInfo) {
-                if (error) {
-                    reject(error);
-                }
-                else {
-                    globalDeviceInfo = deviceInfo;
-                    setHandlers(deviceInfo);
-                    resolve();
-                }
-            })
+            client.register(config.connection.host, config.connection.port, config.connection.url,
+                config.connection.endpoint, function (error, deviceInfo) {
+                    if (error) {
+                        reject(error);
+                    }
+                    else {
+                        globalDeviceInfo = deviceInfo;
+                        setHandlers(deviceInfo);
+
+                        logger.debug("Registration-info", deviceInfo);
+                        resolve();
+                    }
+                })
         }
     });
 }
@@ -151,12 +205,8 @@ function cmd_showConfig() {
     logger.info(config);
 }
 
-function cmd_stop() {
+function cmd_stop() {//TODO: Make sure lwm2m is unregistered before stopping devices
     logger.info("Stopping client");
-
-    if (tempSensor) {
-        tempSensor.stop();
-    }
 
     unregister()
         .catch(function (error) {
@@ -170,6 +220,16 @@ function cmd_stop() {
             logger.info("Unregistered from '" + config.connection.host + ":" + config.connection.port + "'!");
             cmd_exit();
         });
+
+    logger.info("Stopping devices");
+    if (tempSensor) {
+        logger.info("Stopping temperature-sensor");
+        tempSensor.stop();
+    }
+    if (hue) {
+        logger.info("Stopping hue");
+        hue.stop();
+    }
 }
 
 function cmd_exit() {
