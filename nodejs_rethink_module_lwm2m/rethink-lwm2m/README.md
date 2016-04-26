@@ -47,7 +47,7 @@ curl --insecure https://localhost:8000 --data '{"room": "room1"}'
 
 curl --insecure https://localhost:8000 --data '{"device": "myLight"}'
 ```
-The curl-flag '--insecure' is needed for if you're using an invalid certificate (for testing).
+The curl-flag '--insecure' is needed if you are using an untrusted certificate.
 
 A JSON-object in this format will be returned:
 ```javascript
