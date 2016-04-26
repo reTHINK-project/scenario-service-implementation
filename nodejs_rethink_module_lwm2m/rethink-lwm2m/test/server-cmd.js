@@ -21,7 +21,7 @@
 'use strict';
 
 import lwm2m from "../dist/index.js";
-import config from "./config.js";
+import config from "../config.js";
 import cmd from "command-node";
 
 function start() {

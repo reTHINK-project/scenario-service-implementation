@@ -24,7 +24,7 @@ var _index = require("../dist/index.js");
 
 var _index2 = _interopRequireDefault(_index);
 
-var _config = require("./config.js");
+var _config = require("../config.js");
 
 var _config2 = _interopRequireDefault(_config);
 

@@ -13,7 +13,7 @@ config.http = {
 //Configuration of the database (mongodb)
 //--------------------------------------------------
 config.db = {
-    host: 'localhost',
+    host: '192.168.121.128',
     port: '27017',
     database: 'rethink-lwm2m'
 };

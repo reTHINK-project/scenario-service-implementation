@@ -4,6 +4,7 @@
   "description": "lwm2m-server for reTHINK, extended to store and manage device-data",
   "main": "index.js",
   "scripts": {
+    "start": "node test-es5/server-cmd.js",
     "test": "mocha --compilers js:babel-register"
   },
   "author": "Paul Zühlcke",
