@@ -37,6 +37,27 @@ lwm2m.stop()
     })
 ```
 
+###HTTP-interface
+The HTTP-interface supports 'POST'. At this stage you can query information about a specific room or a specific device.
+In the future it could be extended to implement observe-functionality. Light-control will be added soon.
+
+Example with CURL:
+```bash
+curl --insecure https://localhost:8000 --data '{"room": "room1"}'
+
+curl --insecure https://localhost:8000 --data '{"device": "myLight"}'
+```
+The curl-flag '--insecure' is needed for if you're using an invalid certificate (for testing).
+
+A JSON-object in this format will be returned:
+```javascript
+{
+    "data": {},
+    "error": {}
+}
+```
+Data contains the requested data-set. Error contains the error message or 'null' if no error.
+
 ## Test
 To install dependencies run npm in the module-directory:
 ```bash
