@@ -19,6 +19,7 @@
 import HueControl from "philips-hue";
 import logger from "logops";
 import async from "async";
+import util from './Util';
 
 class Hue {
     constructor(lwm2m, bridge, username) {
@@ -58,6 +59,9 @@ class Hue {
                     }
                     else {
                         logger.debug("Hue: Created lwm2m-object for light '" + id + "' '/3311/" + id + "'");
+
+                        //Get initial light info and set resources
+                        //TODO
                     }
                     callback();
                 })
@@ -79,25 +83,30 @@ class Hue {
     handleWrite(objectType, objectId, resourceId, value) {
         var that = this;
         return new Promise((resolve, reject) => {
-            if (objectType != "3311") {
+            if (objectType !== "3311") {
                 reject(new Error("Invalid objectType for hue!"));
             }
             else {
                 switch (resourceId) {
                     case "5850": //On/off
-                        if (value == true) {
-                            that._hue.light(objectId).on()
-                                .catch(reject)
-                                .then(resolve);
-                        }
-                        else {
-                            that._hue.light(objectId).off()
-                                .catch(reject)
-                                .then(resolve);
-                        }
+                        that._setOnState(objectId, value)
+                            .catch(reject)
+                            .then(resolve);
                         break;
                     case "5851": //Dimmer (0-100)
-                        reject(new Error("Dimmer-control not yet supported"));
+                        if (value >= 1 && value <= 100) {
+                            var state = {};
+                            state.bri = Math.round((value * 253) / 101); //Convert from range '0-100' to '1-254' for hue api //TODO inaccurate
+                            that._hue.light(objectId).setState(state)
+                                .catch(reject)
+                                .then(() => {
+                                    logger.debug("Hue: Light " + objectId + ": BRI", state);
+                                    resolve();
+                                });
+                        }
+                        else {
+                            reject(new Error("Invalid value-range for brightness. Use 1-100"));
+                        }
                         break;
                     case "5706": //Colour
                         reject(new Error("Colour-control not yet supported"));
@@ -107,6 +116,25 @@ class Hue {
                         break;
                 }
             }
+        });
+    }
+
+    _setOnState(id, state) {
+        var that = this;
+        return new Promise((resolve, reject) => {
+            var done;
+            if (state == true) {
+                done = that._hue.light(id).on();
+            }
+            else {
+                done = that._hue.light(id).off();
+            }
+            done
+                .catch(reject)
+                .then(() => {
+                    logger.debug("Hue: Light " + id + " on: " + state);
+                    resolve();
+                });
         });
     }
 

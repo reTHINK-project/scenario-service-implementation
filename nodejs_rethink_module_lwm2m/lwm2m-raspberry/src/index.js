@@ -140,9 +140,10 @@ function write(objectType, objectId, resourceId, value, callback) {
             hue.handleWrite(objectType, objectId, resourceId, value)
                 .catch((error) => {
                     logger.error("Hue: Error while handling lwm2m-write", error);
+                    callback(error); //TODO: Set error code, not error-msg
                 })
                 .then(() => {
-                    callback(null);
+                    callback(null); //No error
                 });
         }
     }

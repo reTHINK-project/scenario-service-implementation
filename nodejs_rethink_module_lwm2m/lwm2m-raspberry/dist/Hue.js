@@ -4,40 +4,23 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _createClass = function () {
-    function defineProperties(target, props) {
-        for (var i = 0; i < props.length; i++) {
-            var descriptor = props[i];
-            descriptor.enumerable = descriptor.enumerable || false;
-            descriptor.configurable = true;
-            if ("value" in descriptor) descriptor.writable = true;
-            Object.defineProperty(target, descriptor.key, descriptor);
-        }
-    }
-
-    return function (Constructor, protoProps, staticProps) {
-        if (protoProps) defineProperties(Constructor.prototype, protoProps);
-        if (staticProps) defineProperties(Constructor, staticProps);
-        return Constructor;
-    };
-}();
-/*
- * Copyright [2015-2017] Fraunhofer Gesellschaft e.V., Institute for
- * Open Communication Systems (FOKUS)
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- */
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /*
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * Copyright [2015-2017] Fraunhofer Gesellschaft e.V., Institute for
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * Open Communication Systems (FOKUS)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      *
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * Licensed under the Apache License, Version 2.0 (the "License");
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * you may not use this file except in compliance with the License.
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * You may obtain a copy of the License at
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      *
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * http://www.apache.org/licenses/LICENSE-2.0
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      *
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * Unless required by applicable law or agreed to in writing, software
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * distributed under the License is distributed on an "AS IS" BASIS,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * See the License for the specific language governing permissions and
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * limitations under the License.
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      *
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      */
 
 var _philipsHue = require("philips-hue");
 
@@ -51,15 +34,13 @@ var _async = require("async");
 
 var _async2 = _interopRequireDefault(_async);
 
-function _interopRequireDefault(obj) {
-    return obj && obj.__esModule ? obj : {default: obj};
-}
+var _Util = require("./Util");
 
-function _classCallCheck(instance, Constructor) {
-    if (!(instance instanceof Constructor)) {
-        throw new TypeError("Cannot call a class as a function");
-    }
-}
+var _Util2 = _interopRequireDefault(_Util);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Hue = function () {
     function Hue(lwm2m, bridge, username) {
@@ -102,6 +83,9 @@ var Hue = function () {
                             errors.push(error);
                         } else {
                             _logops2.default.debug("Hue: Created lwm2m-object for light '" + id + "' '/3311/" + id + "'");
+
+                            //Get initial light info and set resources
+                            //TODO
                         }
                         callback();
                     });
@@ -116,28 +100,32 @@ var Hue = function () {
         }
     }, {
         key: "stop",
-        value: function stop() {
-        }
+        value: function stop() {}
     }, {
         key: "handleWrite",
         value: function handleWrite(objectType, objectId, resourceId, value) {
             var that = this;
             return new Promise(function (resolve, reject) {
-                if (objectType != "3311") {
+                if (objectType !== "3311") {
                     reject(new Error("Invalid objectType for hue!"));
                 } else {
                     switch (resourceId) {
                         case "5850":
                             //On/off
-                            if (value == true) {
-                                that._hue.light(objectId).on().catch(reject).then(resolve);
-                            } else {
-                                that._hue.light(objectId).off().catch(reject).then(resolve);
-                            }
+                            that._setOnState(objectId, value).catch(reject).then(resolve);
                             break;
                         case "5851":
                             //Dimmer (0-100)
-                            reject(new Error("Dimmer-control not yet supported"));
+                            if (value >= 1 && value <= 100) {
+                                var state = {};
+                                state.bri = Math.round(value * 253 / 101); //Convert from range '0-100' to '1-254' for hue api //TODO inaccurate
+                                that._hue.light(objectId).setState(state).catch(reject).then(function () {
+                                    _logops2.default.debug("Hue: Light " + objectId + ": BRI", state);
+                                    resolve();
+                                });
+                            } else {
+                                reject(new Error("Invalid value-range for brightness. Use 1-100"));
+                            }
                             break;
                         case "5706":
                             //Colour
@@ -148,6 +136,23 @@ var Hue = function () {
                             break;
                     }
                 }
+            });
+        }
+    }, {
+        key: "_setOnState",
+        value: function _setOnState(id, state) {
+            var that = this;
+            return new Promise(function (resolve, reject) {
+                var done;
+                if (state == true) {
+                    done = that._hue.light(id).on();
+                } else {
+                    done = that._hue.light(id).off();
+                }
+                done.catch(reject).then(function () {
+                    _logops2.default.debug("Hue: Light " + id + " on: " + state);
+                    resolve();
+                });
             });
         }
     }, {

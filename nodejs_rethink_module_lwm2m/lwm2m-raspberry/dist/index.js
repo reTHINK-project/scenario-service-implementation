@@ -93,9 +93,9 @@ function init() {
                 _logops2.default.debug("Device 'hue' is disabled");
             }
             Promise.all(devices) //Wait for devices before registering to server
-                .catch(function (errors) {
-                    _logops2.default.error("Error while initialising devices!", errors);
-                }).then(resolve);
+            .catch(function (errors) {
+                _logops2.default.error("Error while initialising devices!", errors);
+            }).then(resolve);
         }
     });
 }
@@ -143,13 +143,14 @@ function write(objectType, objectId, resourceId, value, callback) {
         if (objectType == "3311") {
             hue.handleWrite(objectType, objectId, resourceId, value).catch(function (error) {
                 _logops2.default.error("Hue: Error while handling lwm2m-write", error);
+                callback(error); //TODO: Set error code, not error-msg
             }).then(function () {
-                callback(null);
+                callback(null); //No error
             });
         }
     } else {
-        callback(null);
-    }
+            callback(null);
+        }
 }
 
 function setHandlers(deviceInfo) {
