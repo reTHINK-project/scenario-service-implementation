@@ -38,7 +38,7 @@ class Hue {
                 .catch(reject)
                 .then((result) => {
                     lights = result;
-                    return that._createObjects(lights);
+                    return that._initObjects(lights);
                 })
                 .catch(reject)
                 .then(() => {
@@ -47,24 +47,39 @@ class Hue {
         });
     }
 
-    _createObjects(lights) {
+    _initObjects(lights) {
         var that = this;
         return new Promise((resolve, reject) => {
             var errors = [];
 
             async.each(Object.keys(lights), (id, callback) => {
-                that._lwm2m.registry.create("/3311/" + id, (error) => {
-                    if (error) {
-                        errors.push(error);
-                    }
-                    else {
+                util.createClientObject(that._lwm2m, "/3311/" + id)
+                    .catch((error) => {
+                        if (error) {
+                            errors.push(error);
+                        }
+                    })
+                    .then(() => {
+                        var obj = "/3311/" + id;
+                        var state = lights[id].state;
+                        var setVal = [];
                         logger.debug("Hue: Created lwm2m-object for light '" + id + "' '/3311/" + id + "'");
 
                         //Get initial light info and set resources
-                        //TODO
-                    }
-                    callback();
-                })
+                        setVal.push(util.setClientResource(that._lwm2m, obj, 5850, state.on ? 1 : 0));
+                        setVal.push(util.setClientResource(that._lwm2m, obj, 5851, util.convertRangeRound(state.bri, [1, 254], [1, 100])));
+                        //TODO: setVal.push() for color...
+
+                        Promise.all(setVal) //TODO: replace with different structure, don't cancel on first reject
+                            .catch((error) => {
+                                errors.push(error);
+                                callback();
+                            })
+                            .then((results) => {
+                                logger.debug("Hue Set initial light-info: light '" + id + "'", results);
+                                callback();
+                            });
+                    });
             }, () => {
                 if (errors.length > 0) {
                     reject(errors);
@@ -93,10 +108,10 @@ class Hue {
                             .catch(reject)
                             .then(resolve);
                         break;
-                    case "5851": //Dimmer (0-100)
+                    case "5851": //Dimmer (1-100) //TODO: Support 0 as minimum. This should turn off the bulb?!
                         if (value >= 1 && value <= 100) {
                             var state = {};
-                            state.bri = Math.round((value * 253) / 101); //Convert from range '0-100' to '1-254' for hue api //TODO inaccurate
+                            state.bri = util.convertRangeRound(value, [1, 100], [1, 254]);
                             that._hue.light(objectId).setState(state)
                                 .catch(reject)
                                 .then(() => {
@@ -105,7 +120,7 @@ class Hue {
                                 });
                         }
                         else {
-                            reject(new Error("Invalid value-range for brightness. Use 1-100"));
+                            reject(new Error("Invalid value-range for brightness. Expected 1-100"));
                         }
                         break;
                     case "5706": //Colour

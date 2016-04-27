@@ -42,5 +42,14 @@ util.setClientResource = function (client, objectUri, resourceId, value) {
     });
 };
 
+//TODO: Range-convert not accurate enough yet. E.g.: 100 has to map to 254!
+util.convertRangeRound = function (value, r1, r2) {
+    return Math.round(util.convertRange(value, r1, r2));
+};
+
+util.convertRange = function (value, r1, r2) {
+    return (value - r1[0]) * (r2[1] - r2[0]) / (r1[1] - r1[0]) + r2[0];
+};
+
 exports.default = util;
 //# sourceMappingURL=Util.js.map

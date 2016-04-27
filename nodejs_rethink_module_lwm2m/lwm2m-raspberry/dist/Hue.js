@@ -64,30 +64,43 @@ var Hue = function () {
 
                 _this._hue.getLights().catch(reject).then(function (result) {
                     lights = result;
-                    return that._createObjects(lights);
+                    return that._initObjects(lights);
                 }).catch(reject).then(function () {
                     resolve(lights);
                 });
             });
         }
     }, {
-        key: "_createObjects",
-        value: function _createObjects(lights) {
+        key: "_initObjects",
+        value: function _initObjects(lights) {
             var that = this;
             return new Promise(function (resolve, reject) {
                 var errors = [];
 
                 _async2.default.each(Object.keys(lights), function (id, callback) {
-                    that._lwm2m.registry.create("/3311/" + id, function (error) {
+                    _Util2.default.createClientObject(that._lwm2m, "/3311/" + id).catch(function (error) {
                         if (error) {
                             errors.push(error);
-                        } else {
-                            _logops2.default.debug("Hue: Created lwm2m-object for light '" + id + "' '/3311/" + id + "'");
-
-                            //Get initial light info and set resources
-                            //TODO
                         }
-                        callback();
+                    }).then(function () {
+                        var obj = "/3311/" + id;
+                        var state = lights[id].state;
+                        var setVal = [];
+                        _logops2.default.debug("Hue: Created lwm2m-object for light '" + id + "' '/3311/" + id + "'");
+
+                        //Get initial light info and set resources
+                        setVal.push(_Util2.default.setClientResource(that._lwm2m, obj, 5850, state.on ? 1 : 0));
+                        setVal.push(_Util2.default.setClientResource(that._lwm2m, obj, 5851, _Util2.default.convertRangeRound(state.bri, [1, 254], [1, 100])));
+                        //TODO: setVal.push() for color...
+
+                        Promise.all(setVal) //TODO: replace with different structure, don't cancel on first reject
+                        .catch(function (error) {
+                            errors.push(error);
+                            callback();
+                        }).then(function (results) {
+                            _logops2.default.debug("Hue Set initial light-info: light '" + id + "'", results);
+                            callback();
+                        });
                     });
                 }, function () {
                     if (errors.length > 0) {
@@ -115,16 +128,16 @@ var Hue = function () {
                             that._setOnState(objectId, value).catch(reject).then(resolve);
                             break;
                         case "5851":
-                            //Dimmer (0-100)
+                            //Dimmer (1-100) //TODO: Support 0 as minimum. This should turn off the bulb?!
                             if (value >= 1 && value <= 100) {
                                 var state = {};
-                                state.bri = Math.round(value * 253 / 101); //Convert from range '0-100' to '1-254' for hue api //TODO inaccurate
+                                state.bri = _Util2.default.convertRangeRound(value, [1, 100], [1, 254]);
                                 that._hue.light(objectId).setState(state).catch(reject).then(function () {
                                     _logops2.default.debug("Hue: Light " + objectId + ": BRI", state);
                                     resolve();
                                 });
                             } else {
-                                reject(new Error("Invalid value-range for brightness. Use 1-100"));
+                                reject(new Error("Invalid value-range for brightness. Expected 1-100"));
                             }
                             break;
                         case "5706":

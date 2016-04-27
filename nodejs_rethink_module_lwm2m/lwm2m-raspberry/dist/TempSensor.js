@@ -80,21 +80,16 @@ var TempSensor = function () {
                             var index = 0;
                             var errors = [];
                             _async2.default.each(ids, function (id, callback) {
-                                that._client.registry.create("/3303/" + index, function (error) {
-                                    //Create temperature object
+                                _Util2.default.createClientObject("/3303/" + index).catch(reject).then(function () {
+                                    return _Util2.default.setClientResource(that._client, "/3303/" + index, 5701, "Cel"); //Set temperature object unit
+                                }).catch(function (error) {
                                     if (error) {
                                         errors.push(error);
                                     }
-                                    _Util2.default.setClientResource(that._client, "/3303/" + index, 5701, "Cel") //Set temperature object unit
-                                    .catch(function (error) {
-                                        if (error) {
-                                            errors.push(error);
-                                        }
-                                    }).then(function (result) {
-                                        _logops2.default.debug("Set unit", result);
-                                        index++;
-                                        callback();
-                                    });
+                                }).then(function (result) {
+                                    _logops2.default.debug("Set unit", result);
+                                    index++;
+                                    callback();
                                 });
                             }, function () {
                                 //When all sensor-objects have been created

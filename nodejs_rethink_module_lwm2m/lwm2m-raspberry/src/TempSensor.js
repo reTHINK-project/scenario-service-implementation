@@ -57,22 +57,21 @@ class TempSensor {
                         var index = 0;
                         var errors = [];
                         async.each(ids, (id, callback) => {
-                            that._client.registry.create("/3303/" + index, (error) => { //Create temperature object
-                                if (error) {
-                                    errors.push(error);
-                                }
-                                util.setClientResource(that._client, "/3303/" + index, 5701, "Cel") //Set temperature object unit
-                                    .catch((error) => {
-                                        if (error) {
-                                            errors.push(error);
-                                        }
-                                    })
-                                    .then((result) => {
-                                        logger.debug("Set unit", result);
-                                        index++;
-                                        callback();
-                                    });
-                            });
+                            util.createClientObject("/3303/" + index)
+                                .catch(reject)
+                                .then(() => {
+                                    return util.setClientResource(that._client, "/3303/" + index, 5701, "Cel"); //Set temperature object unit
+                                })
+                                .catch((error) => {
+                                    if (error) {
+                                        errors.push(error);
+                                    }
+                                })
+                                .then((result) => {
+                                    logger.debug("Set unit", result);
+                                    index++;
+                                    callback();
+                                });
                         }, () => { //When all sensor-objects have been created
 
                             //Initial temperature-read
