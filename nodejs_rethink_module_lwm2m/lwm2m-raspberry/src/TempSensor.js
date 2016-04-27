@@ -61,7 +61,7 @@ class TempSensor {
                                 if (error) {
                                     errors.push(error);
                                 }
-                                that._setClientResource("/3303/" + index, 5701, "Cel") //Set temperature object unit
+                                util.setClientResource(that._client, "/3303/" + index, 5701, "Cel") //Set temperature object unit
                                     .catch((error) => {
                                         if (error) {
                                             errors.push(error);
@@ -133,20 +133,6 @@ class TempSensor {
             if (errors.length > 0) {
                 logger.error("Error/s while storing temperature!", errors);
             }
-        });
-    }
-
-    _setClientResource(objectUri, resourceId, value) {
-        var that = this;
-        return new Promise((resolve, reject) => {
-            that._client.registry.setResource(objectUri, resourceId, value, (error, result) => {
-                if (error) {
-                    reject(error);
-                }
-                else {
-                    resolve(result);
-                }
-            });
         });
     }
 }

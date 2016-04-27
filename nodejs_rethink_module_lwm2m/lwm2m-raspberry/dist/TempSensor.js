@@ -85,7 +85,7 @@ var TempSensor = function () {
                                     if (error) {
                                         errors.push(error);
                                     }
-                                    that._setClientResource("/3303/" + index, 5701, "Cel") //Set temperature object unit
+                                    _Util2.default.setClientResource(that._client, "/3303/" + index, 5701, "Cel") //Set temperature object unit
                                     .catch(function (error) {
                                         if (error) {
                                             errors.push(error);
@@ -154,20 +154,6 @@ var TempSensor = function () {
                 if (errors.length > 0) {
                     _logops2.default.error("Error/s while storing temperature!", errors);
                 }
-            });
-        }
-    }, {
-        key: "_setClientResource",
-        value: function _setClientResource(objectUri, resourceId, value) {
-            var that = this;
-            return new Promise(function (resolve, reject) {
-                that._client.registry.setResource(objectUri, resourceId, value, function (error, result) {
-                    if (error) {
-                        reject(error);
-                    } else {
-                        resolve(result);
-                    }
-                });
             });
         }
     }, {
