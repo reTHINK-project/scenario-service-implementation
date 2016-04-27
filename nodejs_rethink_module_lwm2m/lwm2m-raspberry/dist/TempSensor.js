@@ -35,6 +35,10 @@ var _async = require("async");
 
 var _async2 = _interopRequireDefault(_async);
 
+var _Util = require("./Util");
+
+var _Util2 = _interopRequireDefault(_Util);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -133,8 +137,7 @@ var TempSensor = function () {
                         _logops2.default.debug("Sensor '" + id + "': " + value);
                         _logops2.default.debug("Setting values in lwm2m-client");
 
-                        Promise.all([that._setClientResource("/3303/" + index, 5700, value) //Temperature value
-                        ]).then(function (results) {
+                        Promise.all([_Util2.default.setClientResource(that._client, "/3303/" + index, 5700, value)]).then(function (results) {
                             _logops2.default.debug("Set values", results);
                             index++;
                             callback();

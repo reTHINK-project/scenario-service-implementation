@@ -19,6 +19,7 @@
 import ds18b20 from "ds18b20";
 import logger from "logops";
 import async from "async";
+import util from './Util';
 
 
 class TempSensor {
@@ -113,7 +114,7 @@ class TempSensor {
                     logger.debug("Setting values in lwm2m-client");
 
                     Promise.all([
-                            that._setClientResource("/3303/" + index, 5700, value) //Temperature value
+                            util.setClientResource(that._client, "/3303/" + index, 5700, value)
                         ])
                         .then((results) => {
                             logger.debug("Set values", results);
