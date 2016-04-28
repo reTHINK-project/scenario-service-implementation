@@ -136,11 +136,10 @@ class Hue {
                             reject(new Error("Invalid value-range for brightness. Expected 1-100"));
                         }
                         break;
-                    case "5706": //Colour
-                        try {
+                    case "5706":
                             var colorCoord = JSON.parse(value);
                             if (!(colorCoord.hasOwnProperty("length")) || !(colorCoord.length === 2)) { //Test if array [x,y]
-                                throw new Error("Invalid coordinate-array! Expected [x,y]");
+                                reject(new Error("Invalid coordinate-array! Expected [x,y]"));
                             }
                             var colorState = {};
                             colorState.xy = colorCoord;
@@ -151,10 +150,6 @@ class Hue {
                                     logger.debug("Hue: Light " + objectId + ": XY", colorState); //FIXME: Also runs on catch
                                     resolve();
                                 });
-                        }
-                        catch (e) {
-                            reject(new Error("Error while parsing CIE coordinates for colour: " + e));
-                        }
                         break;
                     case "5701": //Unit (Colour)
                         reject(new Error("Resource '5701' (Unit) is read only!"));

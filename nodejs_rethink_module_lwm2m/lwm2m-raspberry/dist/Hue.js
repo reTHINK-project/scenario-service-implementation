@@ -154,23 +154,18 @@ var Hue = function () {
                             }
                             break;
                         case "5706":
-                            //Colour
-                            try {
-                                var colorCoord = JSON.parse(value);
-                                if (!colorCoord.hasOwnProperty("length") || !(colorCoord.length === 2)) {
-                                    //Test if array [x,y]
-                                    throw new Error("Invalid coordinate-array! Expected [x,y]");
-                                }
-                                var colorState = {};
-                                colorState.xy = colorCoord;
-
-                                that._hue.light(objectId).setState(colorState).catch(reject).then(function () {
-                                    _logops2.default.debug("Hue: Light " + objectId + ": XY", colorState); //FIXME: Also runs on catch
-                                    resolve();
-                                });
-                            } catch (e) {
-                                reject(new Error("Error while parsing CIE coordinates for colour: " + e));
+                            var colorCoord = JSON.parse(value);
+                            if (!colorCoord.hasOwnProperty("length") || !(colorCoord.length === 2)) {
+                                //Test if array [x,y]
+                                reject(new Error("Invalid coordinate-array! Expected [x,y]"));
                             }
+                            var colorState = {};
+                            colorState.xy = colorCoord;
+
+                            that._hue.light(objectId).setState(colorState).catch(reject).then(function () {
+                                _logops2.default.debug("Hue: Light " + objectId + ": XY", colorState); //FIXME: Also runs on catch
+                                resolve();
+                            });
                             break;
                         case "5701":
                             //Unit (Colour)
