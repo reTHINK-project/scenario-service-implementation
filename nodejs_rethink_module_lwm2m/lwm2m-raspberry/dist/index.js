@@ -197,7 +197,7 @@ function unregister() {
 }
 
 function cmd_showConfig() {
-    _logops2.default.info(_config2.default);
+    _logops2.default.info("Loaded configuration", _config2.default);
 }
 
 function cmd_stop() {

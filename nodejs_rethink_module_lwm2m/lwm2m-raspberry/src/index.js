@@ -203,7 +203,7 @@ function unregister() {
 }
 
 function cmd_showConfig() {
-    logger.info(config);
+    logger.info("Loaded configuration", config);
 }
 
 function cmd_stop() {//TODO: Make sure lwm2m is unregistered before stopping devices
