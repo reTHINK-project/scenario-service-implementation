@@ -17,8 +17,8 @@
  */
 'use strict';
 import https from "https";
-import fs from "fs";
 import logger from "logops";
+import util from "./Util";
 
 class HTTPInterface {
 
@@ -33,30 +33,22 @@ class HTTPInterface {
 
     _getCertFiles(keyFile, certFile) {
         return new Promise((resolve, reject) => {
-
             if (typeof keyFile === "undefined" || typeof certFile === "undefined") {
                 reject(new Error("Invalid path to cert-files!"));
             }
             else {
                 var options = {};
-
-                fs.readFile(keyFile, (error, data) => {
-                    options.key = data;
-                    done(error);
-                });
-                fs.readFile(certFile, (error, data) => {
-                    options.cert = data;
-                    done(error);
-                });
-                //noinspection JSAnnotator
-                function done(error) { //TODO: replace with promise.all (wrap file-read operations in promises)
-                    if (error) {
-                        reject(error);
-                    }
-                    if (options.hasOwnProperty("cert") && options.hasOwnProperty("key")) {
+                util.readFile(keyFile)
+                    .catch(reject)
+                    .then((key) => {
+                        options.key = key;
+                        return util.readFile(certFile);
+                    })
+                    .catch(reject)
+                    .then((cert) => {
+                        options.cert = cert;
                         resolve(options);
-                    }
-                }
+                    });
             }
         });
     }

@@ -27,13 +27,13 @@ var _https = require("https");
 
 var _https2 = _interopRequireDefault(_https);
 
-var _fs = require("fs");
-
-var _fs2 = _interopRequireDefault(_fs);
-
 var _logops = require("logops");
 
 var _logops2 = _interopRequireDefault(_logops);
+
+var _Util = require("./Util");
+
+var _Util2 = _interopRequireDefault(_Util);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -55,37 +55,17 @@ var HTTPInterface = function () {
         key: "_getCertFiles",
         value: function _getCertFiles(keyFile, certFile) {
             return new Promise(function (resolve, reject) {
-
                 if (typeof keyFile === "undefined" || typeof certFile === "undefined") {
                     reject(new Error("Invalid path to cert-files!"));
                 } else {
-                    var options;
-
-                    (function () {
-                        //noinspection JSAnnotator
-
-                        var done = function done(error) {
-                            //TODO: replace with promise.all (wrap file-read operations in promises)
-                            if (error) {
-                                reject(error);
-                            }
-                            if (options.hasOwnProperty("cert") && options.hasOwnProperty("key")) {
-                                resolve(options);
-                            }
-                        };
-
-                        options = {};
-
-
-                        _fs2.default.readFile(keyFile, function (error, data) {
-                            options.key = data;
-                            done(error);
-                        });
-                        _fs2.default.readFile(certFile, function (error, data) {
-                            options.cert = data;
-                            done(error);
-                        });
-                    })();
+                    var options = {};
+                    _Util2.default.readFile(keyFile).catch(reject).then(function (key) {
+                        options.key = key;
+                        return _Util2.default.readFile(certFile);
+                    }).catch(reject).then(function (cert) {
+                        options.cert = cert;
+                        resolve(options);
+                    });
                 }
             });
         }
@@ -134,7 +114,7 @@ var HTTPInterface = function () {
                 that._server = _https2.default.createServer(options, function (req, res) {
                     if (req.method != "POST") {
                         _logops2.default.debug("HTTPInterface: Invalid method from [" + req.headers.host + "]: " + req.method);
-                        res.writeHead(405, {'Content-Type': 'application/json'});
+                        res.writeHead(405, { 'Content-Type': 'application/json' });
                         res.end(HTTPInterface._getErrorReply("invalidMethod", "Use POST"));
                     } else {
                         var body = "";
@@ -146,15 +126,15 @@ var HTTPInterface = function () {
                             try {
                                 var params = JSON.parse(body);
                             } catch (e) {
-                                res.writeHead(415, {'Content-Type': 'application/json'});
+                                res.writeHead(415, { 'Content-Type': 'application/json' });
                                 res.end(HTTPInterface._getErrorReply("invalidBody", e));
                             }
                             that._processRequest(params) //Process request and ...
-                                .then(function (reply) {
-                                    _logops2.default.debug("HTTPInterface: Sending data to [" + req.headers.host + "]", reply);
-                                    res.writeHead(200, {'Content-Type': 'application/json'});
-                                    res.end(reply); //... reply to client
-                                });
+                            .then(function (reply) {
+                                _logops2.default.debug("HTTPInterface: Sending data to [" + req.headers.host + "]", reply);
+                                res.writeHead(200, { 'Content-Type': 'application/json' });
+                                res.end(reply); //... reply to client
+                            });
                         });
                     }
                 });
@@ -182,13 +162,13 @@ var HTTPInterface = function () {
             var that = this;
             return new Promise(function (resolve, reject) {
                 Promise.all([that._opened]) //Wait for start before stop
-                    .then(function () {
-                        that._server.close(function (error) {
-                            if (error) {
-                                reject(error);
-                            }
-                            resolve();
-                        });
+                .then(function () {
+                    that._server.close(function (error) {
+                        if (error) {
+                            reject(error);
+                        }
+                        resolve();
+                    });
                 });
             });
         }
