@@ -40,11 +40,38 @@ device.schema = new Schema({
         timestamp: { type: Date, default: Date.now },
         payload: String
     },
-    lastValues: [{
-        uri: String,
-        value: String,
-        timestamp: { type: Date, default: Date.now }
-    }]
+    lastValues: {
+        temperature: [{
+            id: String,
+            value: String,
+            unit: String,
+            timestamp: { type: Date, default: Date.now }
+        }],
+        humidity: [{
+            id: String,
+            value: String,
+            unit: String,
+            timestamp: { type: Date, default: Date.now }
+        }],
+        light: [{
+            id: String,
+            isOn: Boolean,
+            dimmer: String,
+            color: {
+                value: {
+                    x: String,
+                    y: String
+                },
+                unit: String
+            },
+            timestamp: { type: Date, default: Date.now }
+        }],
+        misc: [{
+            uri: String,
+            value: String,
+            timestamp: { type: Date, default: Date.now }
+        }]
+    }
 });
 
 device.load = function (connection) {

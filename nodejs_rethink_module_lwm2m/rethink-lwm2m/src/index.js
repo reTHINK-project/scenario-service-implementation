@@ -160,8 +160,31 @@ function registrationHandler(endpoint, lifetime, version, binding, payload, call
             logger.error("Error while updating device-data", error);
         })
         .then(() => {
+            //TODO: Make list of objects/resources to observe configurable
             observeDeviceData(endpoint, 3303, 0, 5700); //Temperature
+            observeDeviceData(endpoint, 3303, 0, 5701); //Unit
+
             observeDeviceData(endpoint, 3304, 0, 5700); //Humidity
+            observeDeviceData(endpoint, 3304, 0, 5701); //Unit
+
+            //Get list of light-ids
+            var lightIdsMatch = new RegExp("<\/3311[\/]([0-9]+)>", "g");
+            var lightIds = [];
+            var result = null;
+            do {
+                result = lightIdsMatch.exec(payload);
+                if (result != null) {
+                    lightIds.push(result[1]);
+                }
+            }
+            while (result != null);
+            lightIds.forEach((id) => {
+                observeDeviceData(endpoint, 3311, id, 5850); //Light on/off state
+                observeDeviceData(endpoint, 3311, id, 5851); //Light dimmer
+                observeDeviceData(endpoint, 3311, id, 5706); //Light colour
+                observeDeviceData(endpoint, 3311, id, 5701); //Light colour unit
+            });
+
             callback();
         });
 }
@@ -184,7 +207,7 @@ function observeHandler(value, objectType, objectId, resourceId, deviceId) {
             logger.error("Error while getting device by id", error);
         }
         else {
-            database.storeValue(device.name, ('/' + objectType + '/' + objectId + '/' + resourceId), value)
+            database.storeValue(device.name, objectType, objectId, resourceId, value)
                 .catch((error) => {
                     logger.error("Error while storing observe-data in db! Device: %s", device.name, error);
                 })
@@ -215,7 +238,7 @@ function observeDeviceData(deviceName, objectType, objectId, resourceId) {
                         });
                     }
                     else {
-                        database.storeValue(deviceName, ('/' + objectType + '/' + objectId + '/' + resourceId), value)
+                        database.storeValue(deviceName, objectType, objectId, resourceId, value)
                             .catch((error) => {
                                 logger.error("Error while storing initial read-data!", error);
                             })

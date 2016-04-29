@@ -302,7 +302,7 @@ class Database {
         });
     }
 
-    storeValue(deviceName, uri, value) {
+    storeValue(deviceName, objectType, objectId, resourceId, value) {
         return new Promise((resolve, reject) => {
             Device.model.findOne({name: deviceName}, (error, device) => {
                 if (error) {
@@ -313,25 +313,83 @@ class Database {
                         reject(new Error("Can't store value in db for device '" + deviceName + "'! Device not found!"));
                     }
                     else {
-                        var data = {};
-                        var pushNew = true;
+                        var category;
+                        var location;
 
-                        data.timestamp = Date.now();
-                        data.uri = uri;
-                        data.value = value;
-
-                        if (device.lastValues.length > 0) {
-                            device.lastValues.forEach((currValue) => {
-                                if (currValue.uri == uri) {
-                                    currValue.value = data.value;
-                                    currValue.timestamp = data.timestamp;
-                                    pushNew = false;
-                                    //TODO: Exit loop, we're done
+                        switch (objectType) {
+                            case 3303:
+                                category = "temperature";
+                                switch (resourceId) {
+                                    case 5700: //Temp value
+                                        location = "value";
+                                        break;
+                                    case 5701: //Temp unit
+                                        location = "unit";
+                                        break;
+                                    default:
+                                        reject(new Error("Can't store value for '" + deviceName + "'! Temperature: Unknown resource-id."));
+                                        break;
                                 }
-                            });
+                                break;
+                            case 3304:
+                                category = "humidity";
+                                switch (resourceId) {
+                                    case 5700: //humidity value
+                                        location = "value";
+                                        break;
+                                    case 5701: //humidity unit
+                                        location = "unit";
+                                        break;
+                                    default:
+                                        reject(new Error("Can't store value for '" + deviceName + "'! Humidity: Unknown resource-id."));
+                                        break;
+                                }
+                                break;
+                            case 3311:
+                                category = "light";
+                                switch (resourceId) {
+                                    case 5850:
+                                        location = "isOn";
+                                        break;
+                                    case 5851:
+                                        location = "dimmer";
+                                        break;
+                                    case 5706:
+                                        location = "color.value";
+                                        break;
+                                    case 5701:
+                                        location = "color.unit";
+                                        break;
+                                    default:
+                                        reject(new Error("Can't store value for '" + deviceName + "'! Light: Unknown resource-id."));
+                                        break;
+                                }
+                                break;
+                            default:
+                                category = "misc";
+                                location = "value";
+                                break;
                         }
-                        if (pushNew) {
-                            device.lastValues.push(data);
+
+                        var found = false;
+
+                        device.lastValues[category].forEach((entry) => {
+                            if (entry.id == objectId) {
+                                entry[location] = value;
+                                if (location === "misc") {
+                                    entry.uri = '/' + objectType + '/' + objectId + '/' + resourceId;
+                                }
+                                entry.timestamp = Date.now();
+                                found = true;
+                            }
+                        });
+
+                        if (!found) {
+                            var obj = {};
+                            obj[location] = value;
+                            obj.id = objectId;
+                            obj.timestamp = Date.now();
+                            device.lastValues[category].push(obj);
                         }
 
                         device.save((error) => {
