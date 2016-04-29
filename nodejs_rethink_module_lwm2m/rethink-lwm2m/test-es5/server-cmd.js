@@ -32,9 +32,7 @@ var _commandNode = require("command-node");
 
 var _commandNode2 = _interopRequireDefault(_commandNode);
 
-function _interopRequireDefault(obj) {
-    return obj && obj.__esModule ? obj : {default: obj};
-}
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function start() {
     if (_index2.default.server.isRunning()) {
@@ -69,6 +67,17 @@ function stop() {
     }
 }
 
+//TODO: License
+function write(params) {
+    _index2.default.server.write(params[0], params[1], params[2], params[3], params[4], function (error) {
+        if (error) {
+            console.log("Error while writing resource!", error);
+        } else {
+            console.log("Written resource successfully!");
+        }
+    });
+}
+
 function showConfig() {
     console.log(_config2.default);
 }
@@ -87,6 +96,11 @@ var commands = {
         parameters: [],
         description: '\tStop reTHINK-lwm2m',
         handler: stop
+    },
+    'write': {
+        parameters: ['id', 'objectType', 'objectId', 'resourceId', 'value'],
+        description: '\tManual lwm2m-write for development-tests',
+        handler: write
     },
     'config': {
         parameters: [],

@@ -63,6 +63,24 @@ function stop() {
     }
 }
 
+//TODO: License
+function write(params) {
+    lwm2m.server.write(
+        params[0],
+        params[1],
+        params[2],
+        params[3],
+        params[4],
+        (error) => {
+            if (error) {
+                console.log("Error while writing resource!", error);
+            }
+            else {
+                console.log("Written resource successfully!");
+            }
+        })
+}
+
 function showConfig() {
     console.log(config);
 }
@@ -82,6 +100,11 @@ var commands = {
         parameters: [],
         description: '\tStop reTHINK-lwm2m',
         handler: stop
+    },
+    'write': {
+        parameters: ['id', 'objectType', 'objectId', 'resourceId', 'value'],
+        description: '\tManual lwm2m-write for development-tests',
+        handler: write
     },
     'config': {
         parameters: [],
