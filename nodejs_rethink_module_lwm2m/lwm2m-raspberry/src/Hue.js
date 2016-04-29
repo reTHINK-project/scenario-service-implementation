@@ -70,7 +70,7 @@ class Hue {
                         //Get initial light info and set resources
 
                         //On/off state
-                        setVal.push(util.setClientResource(that._lwm2m, obj, 5850, state.on ? 1 : 0));
+                        setVal.push(util.setClientResource(that._lwm2m, obj, 5850, state.on ? "true" : "false"));
 
                         //Brightness / Dimmer
                         setVal.push(util.setClientResource(that._lwm2m, obj, 5851, util.convertRangeRound(state.bri, [1, 254], [1, 100])));
