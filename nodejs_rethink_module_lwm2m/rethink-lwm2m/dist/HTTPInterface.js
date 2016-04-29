@@ -112,9 +112,13 @@ var HTTPInterface = function () {
             var that = this;
             return new Promise(function (resolve) {
                 that._server = _https2.default.createServer(options, function (req, res) {
+                    var head = {
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': '*'
+                    };
                     if (req.method != "POST") {
                         _logops2.default.debug("HTTPInterface: Invalid method from [" + req.headers.host + "]: " + req.method);
-                        res.writeHead(405, { 'Content-Type': 'application/json' });
+                        res.writeHead(405, head);
                         res.end(HTTPInterface._getErrorReply("invalidMethod", "Use POST"));
                     } else {
                         var body = "";
@@ -122,17 +126,18 @@ var HTTPInterface = function () {
                             body += data;
                         });
                         req.on("end", function () {
+                            _logops2.default.debug("REN WAS HERE2");
                             _logops2.default.debug("HTTPInterface: Received data from [" + req.headers.host + "]", body);
                             try {
                                 var params = JSON.parse(body);
                             } catch (e) {
-                                res.writeHead(415, { 'Content-Type': 'application/json' });
+                                res.writeHead(415, head);
                                 res.end(HTTPInterface._getErrorReply("invalidBody", e));
                             }
                             that._processRequest(params) //Process request and ...
                             .then(function (reply) {
                                 _logops2.default.debug("HTTPInterface: Sending data to [" + req.headers.host + "]", reply);
-                                res.writeHead(200, { 'Content-Type': 'application/json' });
+                                res.writeHead(200, head);
                                 res.end(reply); //... reply to client
                             });
                         });
@@ -201,4 +206,3 @@ var HTTPInterface = function () {
 }();
 
 exports.default = HTTPInterface;
-//# sourceMappingURL=HTTPInterface.js.map

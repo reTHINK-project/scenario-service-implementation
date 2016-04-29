@@ -6,8 +6,8 @@ config.http = {
     enabled: true,
     host: 'localhost',
     port: 8000,
-    key: './test/cert/key.pem',
-    cert: './test/cert/cert.pem'
+    key: './test/cert/rethink-certificate.key',
+    cert: './test/cert/rethink-certificate.cert'
 };
 
 //Configuration of the database (mongodb)

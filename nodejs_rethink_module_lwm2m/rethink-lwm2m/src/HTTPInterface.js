@@ -119,9 +119,13 @@ class HTTPInterface {
         var that = this;
         return new Promise((resolve) => {
             that._server = https.createServer(options, (req, res) => {
+                let head = {
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*'
+                };
                 if (req.method != "POST") {
                     logger.debug("HTTPInterface: Invalid method from [" + req.headers.host + "]: " + req.method);
-                    res.writeHead(405, {'Content-Type': 'application/json'});
+                    res.writeHead(405, head);
                     res.end(HTTPInterface._getErrorReply("invalidMethod", "Use POST"));
                 }
                 else {
@@ -135,13 +139,13 @@ class HTTPInterface {
                             var params = JSON.parse(body);
                         }
                         catch (e) {
-                            res.writeHead(415, {'Content-Type': 'application/json'});
+                            res.writeHead(415, head);
                             res.end(HTTPInterface._getErrorReply("invalidBody", e));
                         }
                         that._processRequest(params) //Process request and ...
                             .then((reply) => {
                                 logger.debug("HTTPInterface: Sending data to [" + req.headers.host + "]", reply);
-                                res.writeHead(200, {'Content-Type': 'application/json'});
+                                res.writeHead(200, head);
                                 res.end(reply); //... reply to client
                             });
                     });
