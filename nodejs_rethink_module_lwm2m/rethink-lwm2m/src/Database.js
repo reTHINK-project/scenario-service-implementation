@@ -303,6 +303,7 @@ class Database {
     }
 
     storeValue(deviceName, objectType, objectId, resourceId, value) {
+        var that = this;
         return new Promise((resolve, reject) => {
             Device.model.findOne({name: deviceName}, (error, device) => {
                 if (error) {
@@ -372,10 +373,10 @@ class Database {
                         }
 
                         var found = false;
-
                         device.lastValues[category].forEach((entry) => {
                             if (entry.id == objectId) {
-                                entry[location] = value;
+                                that._setNestedValue(entry, location, value);
+                                //entry[location] = value;
                                 if (location === "misc") {
                                     entry.uri = '/' + objectType + '/' + objectId + '/' + resourceId;
                                 }
@@ -386,7 +387,8 @@ class Database {
 
                         if (!found) {
                             var obj = {};
-                            obj[location] = value;
+                            that._setNestedValue(obj, location, value);
+                            //obj[location] = value;
                             obj.id = objectId;
                             obj.timestamp = Date.now();
                             device.lastValues[category].push(obj);
@@ -404,6 +406,18 @@ class Database {
                 }
             });
         });
+    }
+
+    _setNestedValue(obj, keystr, value) {
+        var dest = obj;
+        keystr.split(".").forEach((key) => {
+            if (!dest.hasOwnProperty(key)) {
+                dest[key] = {};
+            }
+            dest = dest[key];
+        });
+        dest = value;
+        return obj;
     }
 
 

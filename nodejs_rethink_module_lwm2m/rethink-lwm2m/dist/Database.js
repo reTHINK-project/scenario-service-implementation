@@ -308,6 +308,7 @@ var Database = function () {
     }, {
         key: "storeValue",
         value: function storeValue(deviceName, objectType, objectId, resourceId, value) {
+            var that = this;
             return new Promise(function (resolve, reject) {
                 _Device2.default.model.findOne({ name: deviceName }, function (error, device) {
                     if (error) {
@@ -379,10 +380,10 @@ var Database = function () {
                             }
 
                             var found = false;
-
                             device.lastValues[category].forEach(function (entry) {
                                 if (entry.id == objectId) {
-                                    entry[location] = value;
+                                    that._setNestedValue(entry, location, value);
+                                    //entry[location] = value;
                                     if (location === "misc") {
                                         entry.uri = '/' + objectType + '/' + objectId + '/' + resourceId;
                                     }
@@ -393,7 +394,8 @@ var Database = function () {
 
                             if (!found) {
                                 var obj = {};
-                                obj[location] = value;
+                                that._setNestedValue(obj, location, value);
+                                //obj[location] = value;
                                 obj.id = objectId;
                                 obj.timestamp = Date.now();
                                 device.lastValues[category].push(obj);
@@ -410,6 +412,19 @@ var Database = function () {
                     }
                 });
             });
+        }
+    }, {
+        key: "_setNestedValue",
+        value: function _setNestedValue(obj, keystr, value) {
+            var dest = obj;
+            keystr.split(".").forEach(function (key) {
+                if (!dest.hasOwnProperty(key)) {
+                    dest[key] = {};
+                }
+                dest = dest[key];
+            });
+            dest = value;
+            return obj;
         }
     }, {
         key: "getObject",
