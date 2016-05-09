@@ -42,19 +42,19 @@ device.schema = new Schema({
     },
     lastValues: {
         temperature: [{
-            id: String,
+            id: { type: Number, unique: true },
             value: Number,
             unit: String,
             timestamp: { type: Date, default: Date.now }
         }],
         humidity: [{
-            id: String,
+            id: { type: Number, unique: true },
             value: Number,
             unit: String,
             timestamp: { type: Date, default: Date.now }
         }],
         light: [{
-            id: String,
+            id: { type: Number, unique: true },
             isOn: Boolean,
             dimmer: Number,
             color: {

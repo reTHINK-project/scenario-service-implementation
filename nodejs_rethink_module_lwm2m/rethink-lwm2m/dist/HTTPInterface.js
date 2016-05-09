@@ -69,6 +69,9 @@ var HTTPInterface = function () {
                 }
             });
         }
+
+        //TODO: Refactor: use "enum"
+
     }, {
         key: "_processRequest",
         //Convert to String for network
@@ -126,7 +129,6 @@ var HTTPInterface = function () {
                             body += data;
                         });
                         req.on("end", function () {
-                            _logops2.default.debug("REN WAS HERE2");
                             _logops2.default.debug("HTTPInterface: Received data from [" + req.headers.host + "]", body);
                             try {
                                 var params = JSON.parse(body);
@@ -206,3 +208,4 @@ var HTTPInterface = function () {
 }();
 
 exports.default = HTTPInterface;
+//# sourceMappingURL=HTTPInterface.js.map

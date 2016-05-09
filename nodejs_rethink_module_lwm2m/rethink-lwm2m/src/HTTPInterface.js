@@ -53,6 +53,7 @@ class HTTPInterface {
         });
     }
 
+    //TODO: Refactor: use "enum"
     static _getErrorReply(error, msg) {
         var json = {};
         switch (error) {

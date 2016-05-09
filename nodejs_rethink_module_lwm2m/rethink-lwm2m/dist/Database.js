@@ -327,6 +327,7 @@ var Database = function () {
                                         case 5700:
                                             //Temp value
                                             location = "value";
+                                            value = parseFloat(value);
                                             break;
                                         case 5701:
                                             //Temp unit
@@ -343,6 +344,7 @@ var Database = function () {
                                         case 5700:
                                             //humidity value
                                             location = "value";
+                                            value = parseFloat(value);
                                             break;
                                         case 5701:
                                             //humidity unit
@@ -361,9 +363,16 @@ var Database = function () {
                                             break;
                                         case 5851:
                                             location = "dimmer";
+                                            value = parseFloat(value); //TODO: test
                                             break;
                                         case 5706:
                                             location = "color.value";
+                                            value = JSON.parse(value);
+                                            var x = value[0];
+                                            var y = value[1];
+                                            value = {};
+                                            value.x = x;
+                                            value.y = y;
                                             break;
                                         case 5701:
                                             location = "color.unit";
@@ -381,6 +390,7 @@ var Database = function () {
 
                             var found = false;
                             device.lastValues[category].forEach(function (entry) {
+                                //TODO: Broken, lastValues[category] seems broken
                                 if (entry.id == objectId) {
                                     that._setNestedValue(entry, location, value);
                                     //entry[location] = value;
@@ -401,6 +411,7 @@ var Database = function () {
                                 device.lastValues[category].push(obj);
                             }
 
+                            //TODO: Dimmer and color-unit can't parse. Empty!
                             device.save(function (error) {
                                 if (error) {
                                     reject(error);
