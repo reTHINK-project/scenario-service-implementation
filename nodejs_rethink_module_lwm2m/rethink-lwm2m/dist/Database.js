@@ -363,7 +363,7 @@ var Database = function () {
                                             break;
                                         case 5851:
                                             location = "dimmer";
-                                            value = parseFloat(value); //TODO: test
+                                            value = parseFloat(value);
                                             break;
                                         case 5706:
                                             location = "color.value";
@@ -390,10 +390,8 @@ var Database = function () {
 
                             var found = false;
                             device.lastValues[category].forEach(function (entry) {
-                                //TODO: Broken, lastValues[category] seems broken
                                 if (entry.id == objectId) {
                                     that._setNestedValue(entry, location, value);
-                                    //entry[location] = value;
                                     if (location === "misc") {
                                         entry.uri = '/' + objectType + '/' + objectId + '/' + resourceId;
                                     }
@@ -405,13 +403,11 @@ var Database = function () {
                             if (!found) {
                                 var obj = {};
                                 that._setNestedValue(obj, location, value);
-                                //obj[location] = value;
                                 obj.id = objectId;
                                 obj.timestamp = Date.now();
                                 device.lastValues[category].push(obj);
                             }
 
-                            //TODO: Dimmer and color-unit can't parse. Empty!
                             device.save(function (error) {
                                 if (error) {
                                     reject(error);
@@ -428,14 +424,15 @@ var Database = function () {
         key: "_setNestedValue",
         value: function _setNestedValue(obj, keystr, value) {
             var dest = obj;
-            keystr.split(".").forEach(function (key) {
-                if (!dest.hasOwnProperty(key)) {
-                    dest[key] = {};
+            var arr = keystr.split(".");
+            var i = 0;
+            for (; i < arr.length - 1; i++) {
+                if (!dest.hasOwnProperty(arr[i])) {
+                    dest[arr[i]] = {};
                 }
-                dest = dest[key];
-            });
-            dest = value;
-            return obj;
+                dest = dest[arr[i]];
+            }
+            dest[arr[i]] = value;
         }
     }, {
         key: "getObject",

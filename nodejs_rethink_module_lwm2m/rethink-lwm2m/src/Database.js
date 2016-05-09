@@ -356,16 +356,16 @@ class Database {
                                         break;
                                     case 5851:
                                         location = "dimmer";
-                                        value = parseFloat(value); //TODO: test
+                                        value = parseFloat(value);
                                         break;
                                     case 5706:
                                         location = "color.value";
-                                            value = JSON.parse(value);
-                                            var x = value[0];
-                                            var y = value[1];
-                                            value = {};
-                                            value.x = x;
-                                            value.y = y;
+                                        value = JSON.parse(value);
+                                        var x = value[0];
+                                        var y = value[1];
+                                        value = {};
+                                        value.x = x;
+                                        value.y = y;
                                         break;
                                     case 5701:
                                         location = "color.unit";
@@ -382,10 +382,9 @@ class Database {
                         }
 
                         var found = false;
-                        device.lastValues[category].forEach((entry) => { //TODO: Broken, lastValues[category] seems broken
+                        device.lastValues[category].forEach((entry) => {
                             if (entry.id == objectId) {
                                 that._setNestedValue(entry, location, value);
-                                //entry[location] = value;
                                 if (location === "misc") {
                                     entry.uri = '/' + objectType + '/' + objectId + '/' + resourceId;
                                 }
@@ -397,13 +396,11 @@ class Database {
                         if (!found) {
                             var obj = {};
                             that._setNestedValue(obj, location, value);
-                            //obj[location] = value;
                             obj.id = objectId;
                             obj.timestamp = Date.now();
                             device.lastValues[category].push(obj);
                         }
 
-                        //TODO: Dimmer and color-unit can't parse. Empty!
                         device.save((error) => {
                             if (error) {
                                 reject(error);
@@ -420,14 +417,15 @@ class Database {
 
     _setNestedValue(obj, keystr, value) {
         var dest = obj;
-        keystr.split(".").forEach((key) => {
-            if (!dest.hasOwnProperty(key)) {
-                dest[key] = {};
+        var arr = keystr.split(".");
+        var i = 0;
+        for (; i < arr.length - 1; i++) {
+            if (!dest.hasOwnProperty(arr[i])) {
+                dest[arr[i]] = {};
             }
-            dest = dest[key];
-        });
-        dest = value;
-        return obj;
+            dest = dest[arr[i]];
+        }
+        dest[arr[i]] = value;
     }
 
 
