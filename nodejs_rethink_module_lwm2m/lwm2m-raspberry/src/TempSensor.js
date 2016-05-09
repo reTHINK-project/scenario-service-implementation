@@ -19,7 +19,7 @@
 import ds18b20 from "ds18b20";
 import logger from "logops";
 import async from "async";
-import util from './Util';
+import util from "./Util";
 
 
 class TempSensor {
@@ -57,7 +57,7 @@ class TempSensor {
                         var index = 0;
                         var errors = [];
                         async.each(ids, (id, callback) => {
-                            util.createClientObject("/3303/" + index)
+                            util.createClientObject(that._client, "/3303/" + index)
                                 .catch(reject)
                                 .then(() => {
                                     return util.setClientResource(that._client, "/3303/" + index, 5701, "Cel"); //Set temperature object unit

@@ -80,7 +80,7 @@ var TempSensor = function () {
                             var index = 0;
                             var errors = [];
                             _async2.default.each(ids, function (id, callback) {
-                                _Util2.default.createClientObject("/3303/" + index).catch(reject).then(function () {
+                                _Util2.default.createClientObject(that._client, "/3303/" + index).catch(reject).then(function () {
                                     return _Util2.default.setClientResource(that._client, "/3303/" + index, 5701, "Cel"); //Set temperature object unit
                                 }).catch(function (error) {
                                     if (error) {
