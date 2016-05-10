@@ -68,10 +68,10 @@ init().catch(function (error) {
     _logops2.default.info("Connecting to lwm2m-server [" + _config2.default.connection.host + ":" + _config2.default.connection.port + "] as '" + _config2.default.connection.endpoint + "'");
     register().catch(function (error) {
         _logops2.default.error("Could not connect to server!", error);
-        clearInterval(timeout);
+        clearTimeout(timeout);
         cmd_stop();
     }).then(function () {
-        clearInterval(timeout);
+        clearTimeout(timeout);
         _logops2.default.info("Registered at server '" + _config2.default.connection.host + ":" + _config2.default.connection.port + "' as '" + _config2.default.connection.endpoint + "'!");
     });
 });

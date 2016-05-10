@@ -53,11 +53,11 @@ init()
         register()
             .catch(function (error) {
                 logger.error("Could not connect to server!", error);
-                clearInterval(timeout);
+                clearTimeout(timeout);
                 cmd_stop();
             })
             .then(function () {
-                clearInterval(timeout);
+                clearTimeout(timeout);
                 logger.info("Registered at server '" + config.connection.host + ":" + config.connection.port + "' as '"
                     + config.connection.endpoint + "'!");
             });
