@@ -16,7 +16,7 @@
  *
  */
 'use strict';
-import fs from 'fs';
+import fs from "fs";
 
 var util = {};
 
@@ -32,6 +32,5 @@ util.readFile = function(file) {
         });
     });
 };
-
 
 export default util;

@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 'use strict';
 import mongoose from "mongoose";
 

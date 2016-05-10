@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 'use strict';
 import logger from "logops";
 import lwm2mlib from "lwm2m-node-lib";

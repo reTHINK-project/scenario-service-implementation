@@ -67,7 +67,6 @@ function stop() {
     }
 }
 
-//TODO: License
 function write(params) {
     _index2.default.server.write(params[0], params[1], params[2], params[3], params[4], function (error) {
         if (error) {

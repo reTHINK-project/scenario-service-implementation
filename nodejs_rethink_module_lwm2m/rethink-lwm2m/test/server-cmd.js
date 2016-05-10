@@ -63,7 +63,6 @@ function stop() {
     }
 }
 
-//TODO: License
 function write(params) {
     lwm2m.server.write(
         params[0],
@@ -88,7 +87,6 @@ function showConfig() {
 function exit() {
     process.exit(0);
 }
-
 
 var commands = {
     'start': {

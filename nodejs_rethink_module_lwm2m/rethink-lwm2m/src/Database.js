@@ -15,13 +15,12 @@
  * limitations under the License.
  *
  */
-
+'use strict';
 import mongoose from "mongoose";
 import Room from "./models/Room";
 import Device from "./models/Device";
 import async from "async";
 import logger from "logops";
-
 
 class Database {
 
