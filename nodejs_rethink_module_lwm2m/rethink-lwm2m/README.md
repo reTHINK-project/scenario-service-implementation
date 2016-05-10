@@ -39,7 +39,7 @@ lwm2m.stop()
 
 ###HTTP-interface
 The HTTP-interface supports 'POST'. At this stage you can query information about a specific room or a specific device.
-In the future it could be extended to implement observe-functionality. Light-control will be added soon.
+In the future it could be extended to implement observe-functionality.
 
 Example with CURL:
 ```bash
@@ -67,7 +67,7 @@ If you want to use the http-interface please provide ssl-certificates and set th
 
 Mocha-tests (npm test) for the module are still under construction so I recommend manual testing using the interactive console:
 ```bash
-test-es5/server-cmd.js
+npm start
 ```
 Providing es5-sources because the current version of node does not fully support ES6 yet. You can also compile the ES6-code yourself with [babel](https://www.npmjs.com/package/babel-cli)
 
