@@ -203,19 +203,33 @@ function cmd_showConfig() {
 function cmd_stop() {
     //TODO: Make sure lwm2m is unregistered before stopping devices
     _logops2.default.info("Stopping client");
+    var timeout_ms = 3000;
+
+    var timeout = setTimeout(function () {
+        _logops2.default.info("Timeout: Unable to unregister from server within " + timeout_ms + "ms!");
+        stopDevices();
+        cmd_exit();
+    }, timeout_ms);
 
     unregister().catch(function (error) {
         _logops2.default.error("Error while unregistering from server!");
         if (error) {
             _logops2.default.error(error);
         }
+        clearTimeout(timeout);
+        stopDevices();
         cmd_exit();
     }).then(function () {
+        clearTimeout(timeout);
         _logops2.default.info("Unregistered from '" + _config2.default.connection.host + ":" + _config2.default.connection.port + "'!");
+        _logops2.default.info("Stopping devices");
+        stopDevices();
+
         cmd_exit();
     });
+}
 
-    _logops2.default.info("Stopping devices");
+function stopDevices() {
     if (tempSensor) {
         _logops2.default.info("Stopping temperature-sensor");
         tempSensor.stop();

@@ -208,6 +208,13 @@ function cmd_showConfig() {
 
 function cmd_stop() {//TODO: Make sure lwm2m is unregistered before stopping devices
     logger.info("Stopping client");
+    const timeout_ms = 3000;
+
+    var timeout = setTimeout(() => {
+        logger.info("Timeout: Unable to unregister from server within " + timeout_ms + "ms!");
+        stopDevices();
+        cmd_exit();
+    }, timeout_ms);
 
     unregister()
         .catch(function (error) {
@@ -215,14 +222,21 @@ function cmd_stop() {//TODO: Make sure lwm2m is unregistered before stopping dev
             if (error) {
                 logger.error(error);
             }
+            clearTimeout(timeout);
+            stopDevices();
             cmd_exit();
         })
         .then(function () {
+            clearTimeout(timeout);
             logger.info("Unregistered from '" + config.connection.host + ":" + config.connection.port + "'!");
+            logger.info("Stopping devices");
+            stopDevices();
+
             cmd_exit();
         });
+}
 
-    logger.info("Stopping devices");
+function stopDevices() {
     if (tempSensor) {
         logger.info("Stopping temperature-sensor");
         tempSensor.stop();
