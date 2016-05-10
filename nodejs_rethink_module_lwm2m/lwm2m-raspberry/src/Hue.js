@@ -15,11 +15,12 @@
  * limitations under the License.
  *
  */
+'use strict';
 
 import HueControl from "philips-hue";
 import logger from "logops";
 import async from "async";
-import util from './Util';
+import util from "./Util";
 
 class Hue {
     constructor(lwm2m, bridge, username) {
@@ -121,7 +122,7 @@ class Hue {
                             .catch(reject)
                             .then(resolve);
                         break;
-                    case "5851": //Dimmer (1-100) //TODO: Support 0 as minimum. This should turn off the bulb
+                    case "5851": //Dimmer (1-100)
                         if (value >= 1 && value <= 100) {
                             var briState = {};
                             briState.bri = util.convertRangeRound(value, [1, 100], [1, 254]);

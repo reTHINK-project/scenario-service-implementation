@@ -61,7 +61,6 @@ var TempSensor = function () {
             var that = this;
             return new Promise(function (resolve, reject) {
                 if (!that._client || typeof that._client === "undefined") {
-                    //TODO: Check if client is initialised
                     reject(new Error("lwm2m-client object not set"));
                 } else {
                     //Get sensors
