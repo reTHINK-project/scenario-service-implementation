@@ -25,12 +25,12 @@ config.connection = {
 };
 config.sensors = {
     temperature: { //ds18b20
-        enabled: true,
+        enabled: false,
         refreshInterval: 10000 //Polling-interval for temperature
     },
     hue: {
-        enabled: true,
-        hostname: "192.168.1.2", //hostname of bridge
+        enabled: false,
+        hostname: "", //hostname of bridge
         username: "" //username acquired from registration via philipe-hue api
     }
 };
