@@ -17,7 +17,6 @@
  */
 'use strict';
 
-
 import lwm2mlib from "lwm2m-node-lib";
 import logger from "logops";
 import cmd from "command-node";
@@ -44,12 +43,21 @@ init()
         process.exit(1);
     })
     .then(function () {
+        var timeout_ms = 10000;
+        var timeout = setTimeout(() => {
+            logger.info("Timeout: Unable to register to server within " + timeout_ms + "ms!");
+            cmd_stop();
+        }, timeout_ms);
+
         logger.info("Connecting to lwm2m-server [" + config.connection.host + ":" + config.connection.port + "] as '" + config.connection.endpoint + "'");
-        register() //TODO: add timeout
+        register()
             .catch(function (error) {
                 logger.error("Could not connect to server!", error);
+                clearInterval(timeout);
+                cmd_stop();
             })
             .then(function () {
+                clearInterval(timeout);
                 logger.info("Registered at server '" + config.connection.host + ":" + config.connection.port + "' as '"
                     + config.connection.endpoint + "'!");
             });
@@ -206,7 +214,7 @@ function cmd_showConfig() {
     logger.info("Loaded configuration", config);
 }
 
-function cmd_stop() {//TODO: Make sure lwm2m is unregistered before stopping devices
+function cmd_stop() {
     logger.info("Stopping client");
     const timeout_ms = 3000;
 

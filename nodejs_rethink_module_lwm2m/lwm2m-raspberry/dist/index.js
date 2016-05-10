@@ -59,11 +59,19 @@ init().catch(function (error) {
     }
     process.exit(1);
 }).then(function () {
+    var timeout_ms = 10000;
+    var timeout = setTimeout(function () {
+        _logops2.default.info("Timeout: Unable to register to server within " + timeout_ms + "ms!");
+        cmd_stop();
+    }, timeout_ms);
+
     _logops2.default.info("Connecting to lwm2m-server [" + _config2.default.connection.host + ":" + _config2.default.connection.port + "] as '" + _config2.default.connection.endpoint + "'");
-    register() //TODO: add timeout
-    .catch(function (error) {
+    register().catch(function (error) {
         _logops2.default.error("Could not connect to server!", error);
+        clearInterval(timeout);
+        cmd_stop();
     }).then(function () {
+        clearInterval(timeout);
         _logops2.default.info("Registered at server '" + _config2.default.connection.host + ":" + _config2.default.connection.port + "' as '" + _config2.default.connection.endpoint + "'!");
     });
 });
@@ -201,7 +209,6 @@ function cmd_showConfig() {
 }
 
 function cmd_stop() {
-    //TODO: Make sure lwm2m is unregistered before stopping devices
     _logops2.default.info("Stopping client");
     var timeout_ms = 3000;
 
