@@ -43,6 +43,10 @@ var _logops = require("logops");
 
 var _logops2 = _interopRequireDefault(_logops);
 
+var _Util = require("./Util");
+
+var _Util2 = _interopRequireDefault(_Util);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -415,7 +419,7 @@ var Database = function () {
                             var found = false;
                             device.lastValues[category].forEach(function (entry) {
                                 if (entry.id === parseInt(objectId)) {
-                                    that._setNestedValue(entry, location, value);
+                                    _Util2.default.setNestedValue(entry, location, value);
                                     if (location === "misc") {
                                         entry.uri = '/' + objectType + '/' + objectId + '/' + resourceId;
                                     }
@@ -426,7 +430,7 @@ var Database = function () {
 
                             if (!found) {
                                 var obj = {};
-                                that._setNestedValue(obj, location, value);
+                                _Util2.default.setNestedValue(obj, location, value);
                                 if (location === "misc") {
                                     obj.uri = '/' + objectType + '/' + objectId + '/' + resourceId;
                                 }
@@ -446,20 +450,6 @@ var Database = function () {
                     }
                 });
             });
-        }
-    }, {
-        key: "_setNestedValue",
-        value: function _setNestedValue(obj, keystr, value) {
-            var dest = obj;
-            var arr = keystr.split(".");
-            var i = 0;
-            for (; i < arr.length - 1; i++) {
-                if (!dest.hasOwnProperty(arr[i])) {
-                    dest[arr[i]] = {};
-                }
-                dest = dest[arr[i]];
-            }
-            dest[arr[i]] = value;
         }
     }, {
         key: "getObject",

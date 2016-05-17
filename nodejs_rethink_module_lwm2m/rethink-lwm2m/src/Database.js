@@ -21,7 +21,7 @@ import Room from "./models/Room";
 import Device from "./models/Device";
 import async from "async";
 import logger from "logops";
-
+import util from "./Util";
 class Database {
 
     constructor(config) {
@@ -409,7 +409,7 @@ class Database {
                         var found = false;
                         device.lastValues[category].forEach((entry) => {
                             if (entry.id === parseInt(objectId)) {
-                                that._setNestedValue(entry, location, value);
+                                util.setNestedValue(entry, location, value);
                                 if (location === "misc") {
                                     entry.uri = '/' + objectType + '/' + objectId + '/' + resourceId;
                                 }
@@ -420,7 +420,7 @@ class Database {
 
                         if (!found) {
                             var obj = {};
-                            that._setNestedValue(obj, location, value);
+                            util.setNestedValue(obj, location, value);
                             if (location === "misc") {
                                 obj.uri = '/' + objectType + '/' + objectId + '/' + resourceId;
                             }
@@ -442,20 +442,6 @@ class Database {
             });
         });
     }
-
-    _setNestedValue(obj, keystr, value) {
-        var dest = obj;
-        var arr = keystr.split(".");
-        var i = 0;
-        for (; i < arr.length - 1; i++) {
-            if (!dest.hasOwnProperty(arr[i])) {
-                dest[arr[i]] = {};
-            }
-            dest = dest[arr[i]];
-        }
-        dest[arr[i]] = value;
-    }
-
 
     getObject(objName, type) {
         return new Promise((resolve, reject) => {

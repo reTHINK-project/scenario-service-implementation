@@ -33,4 +33,17 @@ util.readFile = function(file) {
     });
 };
 
+util.setNestedValue = function (obj, keystr, value) {
+    var dest = obj;
+    var arr = keystr.split(".");
+    var i = 0;
+    for (; i < arr.length - 1; i++) {
+        if (!dest.hasOwnProperty(arr[i])) {
+            dest[arr[i]] = {};
+        }
+        dest = dest[arr[i]];
+    }
+    dest[arr[i]] = value;
+};
+
 export default util;
