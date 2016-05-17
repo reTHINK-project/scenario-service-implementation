@@ -237,12 +237,13 @@ function observeDeviceData(deviceName, objectType, objectId, resourceId) {
                         });
                     }
                     else {
+                        logger.debug("START: database.storeValue(" + deviceName + ", " + objectType + ", " + objectId + ", " + resourceId + ", " + value + ")");
                         database.storeValue(deviceName, objectType, objectId, resourceId, value)
                             .catch((error) => {
                                 logger.error("Error while storing initial read-data!", error);
                             })
                             .then(() => {
-                                logger.debug("Stored initial read-data from observe.");
+                                logger.debug("DONE: database.storeValue(" + deviceName + ", " + objectType + ", " + objectId + ", " + resourceId + ", " + value + ")");
                             });
                     }
                 }
@@ -281,7 +282,6 @@ function initHTTP() {
                 });
         }
     });
-
 }
 
 export default lwm2m;

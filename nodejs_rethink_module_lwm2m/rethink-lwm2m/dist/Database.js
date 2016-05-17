@@ -52,6 +52,8 @@ var Database = function () {
         _classCallCheck(this, Database);
 
         this._config = config;
+        this._lastStoreValue = null;
+        this.storeP = null;
     }
 
     _createClass(Database, [{
@@ -306,9 +308,30 @@ var Database = function () {
                 });
             });
         }
+
+        //Wait for other queries to finish
+
     }, {
         key: "storeValue",
         value: function storeValue(deviceName, objectType, objectId, resourceId, value) {
+            var that = this;
+            if (that._lastStoreValue === null) {
+                that._lastStoreValue = that._storeValueSynced(deviceName, objectType, objectId, resourceId, value);
+                return that._lastStoreValue;
+            } else {
+                that._lastStoreValue = new Promise(function (resolve, reject) {
+                    that._lastStoreValue.catch(reject).then(function () {
+                        that._storeValueSynced(deviceName, objectType, objectId, resourceId, value).catch(reject).then(function () {
+                            resolve();
+                        });
+                    });
+                });
+                return that._lastStoreValue;
+            }
+        }
+    }, {
+        key: "_storeValueSynced",
+        value: function _storeValueSynced(deviceName, objectType, objectId, resourceId, value) {
             var that = this;
             return new Promise(function (resolve, reject) {
                 _Device2.default.model.findOne({ name: deviceName }, function (error, device) {
@@ -391,7 +414,7 @@ var Database = function () {
 
                             var found = false;
                             device.lastValues[category].forEach(function (entry) {
-                                if (entry.id == objectId) {
+                                if (entry.id === parseInt(objectId)) {
                                     that._setNestedValue(entry, location, value);
                                     if (location === "misc") {
                                         entry.uri = '/' + objectType + '/' + objectId + '/' + resourceId;
@@ -404,6 +427,9 @@ var Database = function () {
                             if (!found) {
                                 var obj = {};
                                 that._setNestedValue(obj, location, value);
+                                if (location === "misc") {
+                                    obj.uri = '/' + objectType + '/' + objectId + '/' + resourceId;
+                                }
                                 obj.id = objectId;
                                 obj.timestamp = Date.now();
                                 device.lastValues[category].push(obj);

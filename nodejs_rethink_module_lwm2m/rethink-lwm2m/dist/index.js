@@ -224,10 +224,11 @@ function observeDeviceData(deviceName, objectType, objectId, resourceId) {
                             _logops2.default.debug("Observe for '%s' canceled!", device.name);
                         });
                     } else {
+                        _logops2.default.debug("START: database.storeValue(" + deviceName + ", " + objectType + ", " + objectId + ", " + resourceId + ", " + value + ")");
                         database.storeValue(deviceName, objectType, objectId, resourceId, value).catch(function (error) {
                             _logops2.default.error("Error while storing initial read-data!", error);
                         }).then(function () {
-                            _logops2.default.debug("Stored initial read-data from observe.");
+                            _logops2.default.debug("DONE: database.storeValue(" + deviceName + ", " + objectType + ", " + objectId + ", " + resourceId + ", " + value + ")");
                         });
                     }
                 }

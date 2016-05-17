@@ -26,6 +26,9 @@ class Database {
 
     constructor(config) {
         this._config = config;
+        this._lastStoreValue = null;
+        this.storeP = null;
+
     }
 
     set config(config) {
@@ -301,7 +304,30 @@ class Database {
         });
     }
 
+    //Wait for other queries to finish
     storeValue(deviceName, objectType, objectId, resourceId, value) {
+        var that = this;
+        if (that._lastStoreValue === null) {
+            that._lastStoreValue = that._storeValueSynced(deviceName, objectType, objectId, resourceId, value);
+            return that._lastStoreValue;
+        }
+        else {
+            that._lastStoreValue = new Promise((resolve, reject) => {
+                that._lastStoreValue
+                    .catch(reject)
+                    .then(() => {
+                        that._storeValueSynced(deviceName, objectType, objectId, resourceId, value)
+                            .catch(reject)
+                            .then(() => {
+                                resolve();
+                            });
+                    });
+            });
+            return that._lastStoreValue;
+        }
+    }
+
+    _storeValueSynced(deviceName, objectType, objectId, resourceId, value) {
         var that = this;
         return new Promise((resolve, reject) => {
             Device.model.findOne({name: deviceName}, (error, device) => {
@@ -382,7 +408,7 @@ class Database {
 
                         var found = false;
                         device.lastValues[category].forEach((entry) => {
-                            if (entry.id == objectId) {
+                            if (entry.id === parseInt(objectId)) {
                                 that._setNestedValue(entry, location, value);
                                 if (location === "misc") {
                                     entry.uri = '/' + objectType + '/' + objectId + '/' + resourceId;
@@ -395,6 +421,9 @@ class Database {
                         if (!found) {
                             var obj = {};
                             that._setNestedValue(obj, location, value);
+                            if (location === "misc") {
+                                obj.uri = '/' + objectType + '/' + objectId + '/' + resourceId;
+                            }
                             obj.id = objectId;
                             obj.timestamp = Date.now();
                             device.lastValues[category].push(obj);
