@@ -7,7 +7,7 @@ class ActivityContext {
   type = "activity"
   description ?: string
   time?: date
-  values: WorkTimeActivity[]
+  values: TimeActivity[]
   tag?: string
   children ?=["workrequests"]
   childUrls : URL.URL[]
