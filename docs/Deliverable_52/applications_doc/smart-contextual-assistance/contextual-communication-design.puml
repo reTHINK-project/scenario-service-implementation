@@ -1,0 +1,28 @@
+@startuml "contextual-communication-design.png"
+
+Package ContextualComm {
+
+	class ContextualComm {
+	}
+
+	class CompositeContextualComm {
+	}
+
+	class AtomicContextualComm {
+	}
+
+	class CompositeContextualComm {
+	}
+
+	CompositeContextualComm *-"0..*" CompositeContextualComm
+
+	ContextualComm -up-|> ActivityContext.ActivityContext
+
+	ContextualComm -up-|> Communication.Communication
+
+	CompositeContextualComm -up-|> ContextualComm
+
+	AtomicContextualComm -up-|> ContextualComm
+}
+
+@enduml

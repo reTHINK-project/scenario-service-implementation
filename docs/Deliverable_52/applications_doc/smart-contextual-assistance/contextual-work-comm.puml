@@ -1,0 +1,29 @@
+@startuml "work-context-design.png"
+
+  class WorkContext {
+  }
+
+  class WorkProjectContext {
+  }
+
+  class WorkTaskContext {
+  }
+
+  WorkContext -|> ContextualComm.CompositeContextualComm
+
+	WorkContext *-down- "0..*" WorkProjectContext
+	WorkProjectContext *-down- "0..*" WorkTaskContext
+
+
+  WorkProjectContext -|> ContextualComm.CompositeContextualComm
+  WorkTaskContext -|> ContextualComm.CompositeContextualComm
+
+	WorkTaskContext *-- "0..*" WorkTaskContextPeer
+	WorkProjectContext *-- "0..*" WorkProjectContextPeer
+	WorkContext *-- "0..*" WorkContextPeer
+
+	WorkTaskContextPeer -|> ContextualComm.AtomicContextualComm
+  WorkProjectContextPeer -|> ContextualComm.AtomicContextualComm
+  WorkContextPeer -|> ContextualComm.AtomicContextualComm
+
+@enduml
