@@ -109,6 +109,11 @@ var Hue = function () {
 
                         //Get initial light info and set resources
 
+                        //Name (Not IPSO compliant. IPSO does not provide field for descriptor)
+                        if (lights[id].hasOwnProperty("name")) {
+                            setVal.push(_Util2.default.setClientResource(that._lwm2m, obj, 5801, lights[id].name));
+                        }
+
                         //On/off state
                         setVal.push(_Util2.default.setClientResource(that._lwm2m, obj, 5850, state.on ? "true" : "false"));
 
@@ -153,6 +158,10 @@ var Hue = function () {
                     reject(new Error("Invalid objectType for hue!"));
                 } else {
                     switch (resourceId) {
+                        case "5801":
+                            //Name
+                            that._hue.light(objectId).setInfo({"name": value}).catch(reject).then(resolve);
+                            break;
                         case "5850":
                             //On/off
                             that._setOnState(objectId, value).catch(reject).then(resolve);

@@ -70,6 +70,11 @@ class Hue {
 
                         //Get initial light info and set resources
 
+                        //Name (Not IPSO compliant. IPSO does not provide field for descriptor)
+                        if (lights[id].hasOwnProperty("name")) {
+                            setVal.push(util.setClientResource(that._lwm2m, obj, 5801, lights[id].name));
+                        }
+
                         //On/off state
                         setVal.push(util.setClientResource(that._lwm2m, obj, 5850, state.on ? "true" : "false"));
 
@@ -117,6 +122,11 @@ class Hue {
             }
             else {
                 switch (resourceId) {
+                    case "5801": //Name
+                        that._hue.light(objectId).setInfo({"name": value})
+                            .catch(reject)
+                            .then(resolve);
+                        break;
                     case "5850": //On/off
                         that._setOnState(objectId, value)
                             .catch(reject)
@@ -138,19 +148,19 @@ class Hue {
                         }
                         break;
                     case "5706":
-                            var colorCoord = JSON.parse(value);
-                            if (!(colorCoord.hasOwnProperty("length")) || !(colorCoord.length === 2)) { //Test if array [x,y]
-                                reject(new Error("Invalid coordinate-array! Expected [x,y]"));
-                            }
-                            var colorState = {};
-                            colorState.xy = colorCoord;
+                        var colorCoord = JSON.parse(value);
+                        if (!(colorCoord.hasOwnProperty("length")) || !(colorCoord.length === 2)) { //Test if array [x,y]
+                            reject(new Error("Invalid coordinate-array! Expected [x,y]"));
+                        }
+                        var colorState = {};
+                        colorState.xy = colorCoord;
 
-                            that._hue.light(objectId).setState(colorState)
-                                .catch(reject)
-                                .then(() => {
-                                    logger.debug("Hue: Light " + objectId + ": XY", colorState); //FIXME: Also runs on catch
-                                    resolve();
-                                });
+                        that._hue.light(objectId).setState(colorState)
+                            .catch(reject)
+                            .then(() => {
+                                logger.debug("Hue: Light " + objectId + ": XY", colorState); //FIXME: Also runs on catch
+                                resolve();
+                            });
                         break;
                     case "5701": //Unit (Colour)
                         reject(new Error("Resource '5701' (Unit) is read only!"));
