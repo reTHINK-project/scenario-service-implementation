@@ -376,6 +376,9 @@ class Database {
                             case 3311:
                                 category = "light";
                                 switch (resourceId) {
+                                    case 5801:
+                                        location = "name";
+                                        break;
                                     case 5850:
                                         location = "isOn";
                                         break;

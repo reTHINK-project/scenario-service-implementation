@@ -173,6 +173,7 @@ function registrationHandler(endpoint, lifetime, version, binding, payload, call
             }
         } while (result != null);
         lightIds.forEach(function (id) {
+            observeDeviceData(endpoint, 3311, id, 5801); //Light name
             observeDeviceData(endpoint, 3311, id, 5850); //Light on/off state
             observeDeviceData(endpoint, 3311, id, 5851); //Light dimmer
             observeDeviceData(endpoint, 3311, id, 5706); //Light colour

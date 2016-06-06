@@ -54,6 +54,7 @@ device.schema = new Schema({
         }],
         light: [{
             id: { type: Number, unique: true },
+            name: String,
             isOn: Boolean,
             dimmer: Number,
             color: {
