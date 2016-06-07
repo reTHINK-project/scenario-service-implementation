@@ -446,9 +446,9 @@ class Database {
         });
     }
 
-    getObject(objName, type) {
+    getObject(type, objName) {
         return new Promise((resolve, reject) => {
-            if (typeof objName === "undefined" || typeof type === "undefined") {
+            if (typeof type === "undefined") {
                 reject(new Error("Database.getObject(): Invalid parameters!"));
             }
             else {
@@ -464,13 +464,16 @@ class Database {
                         reject(new Error("Invalid type"));
                         break;
                 }
-
-                var query = model.findOne({name: objName});
-
+                var query;
+                if (typeof objName === "undefined" || objName === null) {
+                    query = model.find();
+                }
+                else {
+                    query = model.findOne({name: objName});
+                }
                 if (type === "room") { //Check if we need to populate
                     query.populate("devices");
                 }
-
                 query.exec((error, result) => {
                     if (error) {
                         reject(error);

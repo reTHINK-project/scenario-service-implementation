@@ -456,9 +456,9 @@ var Database = function () {
         }
     }, {
         key: "getObject",
-        value: function getObject(objName, type) {
+        value: function getObject(type, objName) {
             return new Promise(function (resolve, reject) {
-                if (typeof objName === "undefined" || typeof type === "undefined") {
+                if (typeof type === "undefined") {
                     reject(new Error("Database.getObject(): Invalid parameters!"));
                 } else {
                     var model = {};
@@ -473,14 +473,16 @@ var Database = function () {
                             reject(new Error("Invalid type"));
                             break;
                     }
-
-                    var query = model.findOne({ name: objName });
-
+                    var query;
+                    if (typeof objName === "undefined" || objName === null) {
+                        query = model.find();
+                    } else {
+                        query = model.findOne({name: objName});
+                    }
                     if (type === "room") {
                         //Check if we need to populate
                         query.populate("devices");
                     }
-
                     query.exec(function (error, result) {
                         if (error) {
                             reject(error);
