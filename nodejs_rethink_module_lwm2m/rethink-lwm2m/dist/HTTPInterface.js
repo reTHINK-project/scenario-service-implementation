@@ -74,7 +74,6 @@ var HTTPInterface = function () {
 
     }, {
         key: "_processRequest",
-        //Convert to String for network
         value: function _processRequest(params) {
             var that = this;
             return new Promise(function (resolve) {
@@ -96,15 +95,15 @@ var HTTPInterface = function () {
 
                 if (objectType === null) {
                     reply.error = HTTPInterface._getErrorReply("unsupportedParam");
-                    resolve(JSON.stringify(reply));
+                    resolve(reply);
                 } else {
-                    that._database.getObject(objectName, objectType).catch(function (error) {
+                    that._database.getObject(objectType, objectName).catch(function (error) {
                         reply.error = HTTPInterface._getErrorReply(null, error);
                         reply.error = error;
                         resolve(reply);
                     }).then(function (queriedObject) {
                         reply.data = queriedObject;
-                        resolve(JSON.stringify(reply)); //Convert to string for network
+                        resolve(reply); //Convert to string for network
                     });
                 }
             });
@@ -134,10 +133,11 @@ var HTTPInterface = function () {
                                 var params = JSON.parse(body);
                             } catch (e) {
                                 res.writeHead(415, head);
-                                res.end(HTTPInterface._getErrorReply("invalidBody", e));
+                                res.end(JSON.stringify(HTTPInterface._getErrorReply("invalidBody", e)));
                             }
                             that._processRequest(params) //Process request and ...
                             .then(function (reply) {
+                                reply = JSON.stringify(reply);
                                 _logops2.default.debug("HTTPInterface: Sending data to [" + req.headers.host + "]", reply);
                                 res.writeHead(200, head);
                                 res.end(reply); //... reply to client
@@ -200,7 +200,7 @@ var HTTPInterface = function () {
             if (typeof msg !== "undefined" && msg !== null) {
                 json.error += ": " + msg;
             }
-            return JSON.stringify(json);
+            return json;
         }
     }]);
 

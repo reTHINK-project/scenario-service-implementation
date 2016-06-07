@@ -73,7 +73,7 @@ class HTTPInterface {
         if (typeof msg !== "undefined" && msg !== null) {
             json.error += ": " + msg;
         }
-        return JSON.stringify(json); //Convert to String for network
+        return json;
     }
 
     _processRequest(params) {
@@ -98,10 +98,10 @@ class HTTPInterface {
 
             if (objectType === null) {
                 reply.error = HTTPInterface._getErrorReply("unsupportedParam");
-                resolve(JSON.stringify(reply));
+                resolve(reply);
             }
             else {
-                that._database.getObject(objectName, objectType)
+                that._database.getObject(objectType, objectName)
                     .catch((error) => {
                         reply.error = HTTPInterface._getErrorReply(null, error);
                         reply.error = error;
@@ -109,7 +109,7 @@ class HTTPInterface {
                     })
                     .then((queriedObject) => {
                         reply.data = queriedObject;
-                        resolve(JSON.stringify(reply)); //Convert to string for network
+                        resolve(reply); //Convert to string for network
                     });
             }
 
@@ -141,10 +141,11 @@ class HTTPInterface {
                         }
                         catch (e) {
                             res.writeHead(415, head);
-                            res.end(HTTPInterface._getErrorReply("invalidBody", e));
+                            res.end(JSON.stringify(HTTPInterface._getErrorReply("invalidBody", e)));
                         }
                         that._processRequest(params) //Process request and ...
                             .then((reply) => {
+                                reply = JSON.stringify(reply);
                                 logger.debug("HTTPInterface: Sending data to [" + req.headers.host + "]", reply);
                                 res.writeHead(200, head);
                                 res.end(reply); //... reply to client
