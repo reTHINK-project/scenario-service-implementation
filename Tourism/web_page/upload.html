@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+      <meta name="author" content="ishan210788@gmail.com">
+      <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+      <title>reTHINK Project</title>
+      <link rel="stylesheet" type="text/css" href="css/style2.css">
+      <link rel="stylesheet" type="text/css" href="css/style.css">
+      <link href="http://hayageek.github.io/jQuery-Upload-File/4.0.10/uploadfile.css" rel="stylesheet">
+      <link rel="stylesheet" href="jquery-ui-1.11.4.custom/jquery-ui.min.css">
+   </head>
+   <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+   <!-- Include all compiled plugins (below), or include individual files as needed -->
+   <!-- Latest compiled and minified CSS -->
+   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+   <!-- Optional theme -->
+   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+   <!-- Latest compiled and minified JavaScript -->
+   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+   <!-- For Upload file -->
+   <script type="text/javascript" src="js/bootstrap-filestyle.min.js"> </script>
+   <!-- For Pop up window-->
+   <script src="jquery-ui-1.11.4.custom/external/jquery/jquery.js"></script>
+   <script src="jquery-ui-1.11.4.custom/jquery-ui.min.js"></script>
+   <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.9/jquery.validate.min.js"></script>
+
+   <script type="text/javascript">
+   //Uploading picture to the server
+      $('#pic').change(function(){
+          var frm = new FormData();
+          frm.append('pic', input.files[0]);
+          $.ajax({
+              method: 'POST',
+              address: 'localhost:8081/images',
+              data: frm,
+              contentType: false,
+              processData: false,
+              cache: false
+          });
+      });
+      
+      //validations
+      function checkLength( o, n, min, max ) {
+            if ( o.val().length > max || o.val().length < min ) {
+              return false;
+            } else {
+              return true;
+            }
+          }
+      function checkRegexp( o, regexp, n ) {
+            if ( !( regexp.test( o.val() ) ) ) {
+              return false;
+            } else {
+              return true;
+            }
+          }
+      
+      //cValidations
+      function checkDetails(){
+        var error_status = true;
+        $("#errormsg").html("");
+        if(checkLength( $("#fname"), "firstname", 1, 20 ) && checkRegexp( $("#fname"), /^[a-zA-Z]*$/, "firstname can consist of a-z only" )){
+        }
+        else{
+               error_status = false;
+               $("#errormsg").append("<br><h5> <span class='label label-danger'>* Firstname must be characters only<br> and cannot be blank</span></h5><br>");
+        }
+      
+        if(checkLength( $("#lname"), "Lastname", 1, 20 ) && checkRegexp( $("#lname"), /^[a-zA-Z]*$/, "Lastname can consist of a-z only" )){
+        }
+        else{
+              error_status = false;
+              $("#errormsg").append("<h5> <span class='label label-danger'>* Lastname must be characters only<br> and cannot be blank </span></h5><br>");
+        }
+      
+        /*if(checkRegexp( $("#guid"), /^[a-z0-9]+$/i, "GUID can consist of only alphanumeric characters" ) && checkLength( $("#guid"), "guid", 8, 32 )){
+        }
+        else{
+              error_status = false;
+              $("#errormsg").append("<h5><span class='label label-danger'>* GUID must be between 8 and 32 alphanumeric<br> characters and cannot be blank</span></h5><br>");
+        }*/
+      
+        if(checkRegexp( $("#age"), /^\d+$/, "Age cannot be more than 99 or less than 1 " ) && checkLength( $("#age"), "age", 1, 2 )){
+        }
+        else{
+              error_status = false;
+              $("#errormsg").append("<h5><span class='label label-danger'>* Age can only be two digit integer between 0 and 100</span></h5><br>");
+        }
+      
+        if(checkRegexp( $("#mnum"), /^[0-9]\d{9}$/, "Mobile Number can only be 10 digits long" )){
+        }  
+        else{
+              error_status = false;
+              $("#errormsg").append("<h5><span class='label label-danger'>* Mobile Number must be 10 digits long</span></h5><br>");
+        }
+        if(document.getElementById("pic").value != "") {
+        }
+        else{
+              error_status = false;
+              $("#errormsg").append("<h5><span class='label label-danger'>* Please upload picture</span></h5><br>");
+        }
+      
+        if (error_status){
+            console.log("Success");
+            return error_status;
+        } 
+        else{
+          return false;
+        } 
+      }
+   </script>
+   <body>
+      <!--CONTAINER-->
+      <div id="container" width="80%">
+         <!--HEADER-->
+         <!--div id="header">
+            <div id="logo"><img src="images/logo.jpg" alt="reTHINK logo" height="50" width="300"></div>
+            <div id="navbar">
+               <ul>
+                  <li>
+                     <a href="#">
+                        <h6>Link1</h6>
+                     </a>
+                  </li>
+                  <li>
+                     <a href="#">
+                        <h6>Link2</h6>
+                     </a>
+                  </li>
+                  <li>
+                     <a href="#">
+                        <h6>Link3</h6>
+                     </a>
+                  </li>
+               </ul>
+            </div>
+         </div-->
+         <!--CONTENT AREA-->
+         <div id="div1">
+            <div id="content_area" class="col-sm-12">
+               <h4 align='center'><b>Old Inn Smart Hotel - powered by reTHINK - Upload Your Profile</b></h4>
+            </div>
+            <br><br>
+         </div>
+         <div class="row" id="uploadForm">
+            <div class="col-sm-3" >
+            </div>
+            <br>
+            <div id="left-div" style=" border: 8px solid lightblue;padding-top: 2px; padding-bottom: 2px;" class="col-sm-6" >
+               <form action="http://localhost:8081/upload" enctype="multipart/form-data" method="post">
+                  <div class="form-group">
+                     <label for="exampleInputEmail1">First Name</label>
+                     <input type="text" class="form-control" id="fname" placeholder="First Name" name="fname">
+                  </div>
+                  <div class="form-group">
+                     <label for="exampleInputPassword1">Last Name</label>
+                     <input type="text" class="form-control" id="lname" placeholder="Last Name" name="lname">
+                  </div>
+                  <div class="form-group">
+                     <label for="exampleInputPassword1">GUID</label>
+                     <input type="text" class="form-control" id="guid" placeholder="GUID" name="guid">
+                  </div>
+                  <div class="form-group">
+                     <label for="exampleInputPassword1">Age</label>
+                     <input type="text" class="form-control" id="age" placeholder="Age" name="age">
+                  </div>
+                  <div class="form-group">
+                     <label for="exampleInputPassword1">Mobile Number</label>
+                     <input type="text" class="form-control" id="mnum" placeholder="Mobile Number" name="mnum">
+                  </div>
+                  <div class="form-group">
+                     <label for="exampleInputFile">Picture</label>
+                     <input type="file" id="pic" name="pic">
+                     <p class="help-block">please upload your picture</p>
+                  </div>
+                  <div id="err">
+                  </div>
+                  <button type="submit" class="btn btn-primary" onClick="return checkDetails()">Submit</button>
+               </form>
+            </div>
+            <!--Error Display Pane -->
+            <div class="col-sm-3" >
+               <div id="errormsg" style="max-width: 5px;">
+               </div>
+            </div>
+         </div>
+         <!--FOOTER-->
+         <div id='footer'></div>
+      </div>
+   </body>
+</html>
