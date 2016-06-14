@@ -38,17 +38,35 @@ lwm2m.stop()
 ```
 
 ###HTTP-interface
-The HTTP-interface supports 'POST'. At this stage you can query information about a specific room or a specific device.
-In the future it could be extended to implement observe-functionality.
+The HTTP-interface supports 'POST'. At this stage you can query information about a specific room or a specific device or write information (actuate).
 
-Example with CURL:
+####Examples with CURL:
+
+*Note: The curl-flag '--insecure' is needed if you are using an untrusted certificate.*
+
+#####Reading:
+Get all data for room 'room1':
 ```bash
-curl --insecure https://localhost:8000 --data '{"room": "room1"}'
-
-curl --insecure https://localhost:8000 --data '{"device": "myLight"}'
+curl --insecure https://localhost:8000 --data '{"mode": "read", "room": "room1"}'
 ```
-The curl-flag '--insecure' is needed if you are using an untrusted certificate.
+Get all data for device 'myRaspberry':
+```bash
+curl --insecure https://localhost:8000 --data '{"mode": "read", "device": "myRaspberry"}'
+```
+Get all room-data available:
+```bash
+curl --insecure https://localhost:8000 --data '{"mode": "read", "room": null}'
 
+```
+
+#####Writing:
+Turn on the light with ID 1 connected to device 'myRaspberry':
+```bash
+curl https://localhost:8000 --insecure --data '{"mode": "write", "deviceName": "myRaspberry", "objectType": "light", "objectId": "1", "resourceType": "isOn", "value": "true"}'
+```
+
+Reply schema:
+``` bash
 A JSON-object in this format will be returned:
 ```json
 {
