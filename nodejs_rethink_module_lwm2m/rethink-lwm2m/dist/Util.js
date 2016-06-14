@@ -25,6 +25,10 @@ var _fs = require("fs");
 
 var _fs2 = _interopRequireDefault(_fs);
 
+var _logops = require("logops");
+
+var _logops2 = _interopRequireDefault(_logops);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var util = {};
@@ -52,6 +56,28 @@ util.setNestedValue = function (obj, keystr, value) {
         dest = dest[arr[i]];
     }
     dest[arr[i]] = value;
+};
+
+util.write = function (lwm2m, deviceName, objectTypeId, objectId, resourceTypeId, value) {
+    return new Promise(function (resolve, reject) {
+        if (lwm2m === null || typeof lwm2m === "undefined") {
+            reject(new Error("lwm2m-object undefined!"));
+        } else {
+            lwm2m.server.getRegistry().getByName(deviceName, function (error, device) {
+                if (error) {
+                    reject(error);
+                } else {
+                    lwm2m.server.write(device.id, objectTypeId, objectId, resourceTypeId, value, function (error) {
+                        if (error) {
+                            reject(error);
+                        } else {
+                            resolve();
+                        }
+                    });
+                }
+            });
+        }
+    });
 };
 
 exports.default = util;
