@@ -47,6 +47,10 @@ var _Util = require("./Util");
 
 var _Util2 = _interopRequireDefault(_Util);
 
+var _lwm2mMapping = require("./lwm2m-mapping");
+
+var _lwm2mMapping2 = _interopRequireDefault(_lwm2mMapping);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -57,7 +61,6 @@ var Database = function () {
 
         this._config = config;
         this._lastStoreValue = null;
-        this.storeP = null;
     }
 
     _createClass(Database, [{
@@ -336,7 +339,6 @@ var Database = function () {
     }, {
         key: "_storeValueSynced",
         value: function _storeValueSynced(deviceName, objectType, objectId, resourceId, value) {
-            var that = this;
             return new Promise(function (resolve, reject) {
                 _Device2.default.model.findOne({ name: deviceName }, function (error, device) {
                     if (error) {
@@ -348,75 +350,25 @@ var Database = function () {
                             var category;
                             var location;
 
-                            switch (objectType) {
-                                case 3303:
-                                    category = "temperature";
-                                    switch (resourceId) {
-                                        case 5700:
-                                            //Temp value
-                                            location = "value";
-                                            value = parseFloat(value);
-                                            break;
-                                        case 5701:
-                                            //Temp unit
-                                            location = "unit";
-                                            break;
-                                        default:
-                                            reject(new Error("Can't store value for '" + deviceName + "'! Temperature: Unknown resource-id."));
-                                            break;
+                            var attr = _lwm2mMapping2.default.getAttrName(objectType, resourceId);
+                            if (attr === null) {
+                                category = "misc";
+                                location = "value";
+                            } else {
+                                category = attr.objectType;
+                                location = attr.resourceType;
+
+                                if ((category === "temperature" || category === "humidity") && location === "value" || category === "light" && location === "dimmer") {
+                                    value = parseFloat(value);
+                                } else {
+                                    if (category === "light" && location === "color.value") {
+                                        value = JSON.parse(value);
+                                        value = {
+                                            "x": value[0],
+                                            "y": value[1]
+                                        };
                                     }
-                                    break;
-                                case 3304:
-                                    category = "humidity";
-                                    switch (resourceId) {
-                                        case 5700:
-                                            //humidity value
-                                            location = "value";
-                                            value = parseFloat(value);
-                                            break;
-                                        case 5701:
-                                            //humidity unit
-                                            location = "unit";
-                                            break;
-                                        default:
-                                            reject(new Error("Can't store value for '" + deviceName + "'! Humidity: Unknown resource-id."));
-                                            break;
-                                    }
-                                    break;
-                                case 3311:
-                                    category = "light";
-                                    switch (resourceId) {
-                                        case 5801:
-                                            location = "name";
-                                            break;
-                                        case 5850:
-                                            location = "isOn";
-                                            break;
-                                        case 5851:
-                                            location = "dimmer";
-                                            value = parseFloat(value);
-                                            break;
-                                        case 5706:
-                                            location = "color.value";
-                                            value = JSON.parse(value);
-                                            var x = value[0];
-                                            var y = value[1];
-                                            value = {};
-                                            value.x = x;
-                                            value.y = y;
-                                            break;
-                                        case 5701:
-                                            location = "color.unit";
-                                            break;
-                                        default:
-                                            reject(new Error("Can't store value for '" + deviceName + "'! Light: Unknown resource-id."));
-                                            break;
-                                    }
-                                    break;
-                                default:
-                                    category = "misc";
-                                    location = "value";
-                                    break;
+                                }
                             }
 
                             var found = false;

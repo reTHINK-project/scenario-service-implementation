@@ -22,13 +22,13 @@ import Device from "./models/Device";
 import async from "async";
 import logger from "logops";
 import util from "./Util";
+import mapping from "./lwm2m-mapping";
+
 class Database {
 
     constructor(config) {
         this._config = config;
         this._lastStoreValue = null;
-        this.storeP = null;
-
     }
 
     set config(config) {
@@ -328,7 +328,6 @@ class Database {
     }
 
     _storeValueSynced(deviceName, objectType, objectId, resourceId, value) {
-        var that = this;
         return new Promise((resolve, reject) => {
             Device.model.findOne({name: deviceName}, (error, device) => {
                 if (error) {
@@ -342,71 +341,29 @@ class Database {
                         var category;
                         var location;
 
-                        switch (objectType) {
-                            case 3303:
-                                category = "temperature";
-                                switch (resourceId) {
-                                    case 5700: //Temp value
-                                        location = "value";
-                                        value = parseFloat(value);
-                                        break;
-                                    case 5701: //Temp unit
-                                        location = "unit";
-                                        break;
-                                    default:
-                                        reject(new Error("Can't store value for '" + deviceName + "'! Temperature: Unknown resource-id."));
-                                        break;
+                        var attr = mapping.getAttrName(objectType, resourceId);
+                        if (attr === null) {
+                            category = "misc";
+                            location = "value";
+                        }
+                        else {
+                            category = attr.objectType;
+                            location = attr.resourceType;
+
+                            if (((category === "temperature" || category === "humidity" ) && location === "value")
+                                || category === "light" && location === "dimmer"
+                            ) {
+                                value = parseFloat(value);
+                            }
+                            else {
+                                if (category === "light" && location === "color.value") {
+                                    value = JSON.parse(value);
+                                    value = {
+                                        "x": value[0],
+                                        "y": value[1]
+                                    };
                                 }
-                                break;
-                            case 3304:
-                                category = "humidity";
-                                switch (resourceId) {
-                                    case 5700: //humidity value
-                                        location = "value";
-                                        value = parseFloat(value);
-                                        break;
-                                    case 5701: //humidity unit
-                                        location = "unit";
-                                        break;
-                                    default:
-                                        reject(new Error("Can't store value for '" + deviceName + "'! Humidity: Unknown resource-id."));
-                                        break;
-                                }
-                                break;
-                            case 3311:
-                                category = "light";
-                                switch (resourceId) {
-                                    case 5801:
-                                        location = "name";
-                                        break;
-                                    case 5850:
-                                        location = "isOn";
-                                        break;
-                                    case 5851:
-                                        location = "dimmer";
-                                        value = parseFloat(value);
-                                        break;
-                                    case 5706:
-                                        location = "color.value";
-                                        value = JSON.parse(value);
-                                        var x = value[0];
-                                        var y = value[1];
-                                        value = {};
-                                        value.x = x;
-                                        value.y = y;
-                                        break;
-                                    case 5701:
-                                        location = "color.unit";
-                                        break;
-                                    default:
-                                        reject(new Error("Can't store value for '" + deviceName + "'! Light: Unknown resource-id."));
-                                        break;
-                                }
-                                break;
-                            default:
-                                category = "misc";
-                                location = "value";
-                                break;
+                            }
                         }
 
                         var found = false;
