@@ -17,70 +17,56 @@
  */
 'use strict';
 
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
 var mapping = {};
 
-let map = [
-    {
-        "objectTypeId": "3303",
-        "objectType": "temperature",
-        "resources": [
-            {
-                "resourceTypeId": "5700",
-                "resourceType": "value"
-            }, {
-                "resourceTypeId": "5701",
-                "resourceType": "unit"
-            }
-        ]
+var map = [{
+    "objectTypeId": "3303",
+    "objectType": "temperature",
+    "resources": [{
+        "resourceTypeId": "5700",
+        "resourceType": "value"
     }, {
-        "objectTypeId": "3304",
-        "objectType": "humidity",
-        "resources": [
-            {
-                "resourceTypeId": "5700",
-                "resourceType": "value"
-            }, {
-                "resourceTypeId": "5701",
-                "resourceType": "unit"
-            }
-        ]
+        "resourceTypeId": "5701",
+        "resourceType": "unit"
+    }]
+}, {
+    "objectTypeId": "3304",
+    "objectType": "humidity",
+    "resources": [{
+        "resourceTypeId": "5700",
+        "resourceType": "value"
     }, {
-        "objectTypeId": "3311",
-        "objectType": "light",
-        "resources": [
-            {
-                "resourceTypeId": "5801",
-                "resourceType": "name"
-            }, {
-                "resourceTypeId": "5850",
-                "resourceType": "isOn"
-            }, {
-                "resourceTypeId": "5851",
-                "resourceType": "dimmer"
-            }, {
-                "resourceTypeId": "5706",
-                "resourceType": "color.value"
-            }, {
-                "resourceTypeId": "5701",
-                "resourceType": "color.unit"
-            }, {
-                "resourceTypeId": "5852",
-                "resourceType": "onTime"
-            }, {
-                "resourceTypeId": "5805",
-                "resourceType": "cumulativeActivePower"
-            }, {
-                "resourceTypeId": "5820",
-                "resourceType": "powerFactor"
-            }
-        ]
-    }
-];
+        "resourceTypeId": "5701",
+        "resourceType": "unit"
+    }]
+}, {
+    "objectTypeId": "3311",
+    "objectType": "light",
+    "resources": [{
+        "resourceTypeId": "5801",
+        "resourceType": "name"
+    }, {
+        "resourceTypeId": "5850",
+        "resourceType": "isOn"
+    }, {
+        "resourceTypeId": "5851",
+        "resourceType": "dimmer"
+    }, {
+        "resourceTypeId": "5706",
+        "resourceType": "color.value"
+    }, {
+        "resourceTypeId": "5701",
+        "resourceType": "color.unit"
+    }]
+}];
 
 /*
  * If no resourceTypeId is provided, only objectType is returned
  */
-mapping.getAttrName = (objectTypeId, resourceTypeId) => {
+mapping.getAttrName = function (objectTypeId, resourceTypeId) {
     var objectType, resourceType;
     for (var i = 0; i < map.length; i++) {
         if (map[i].objectTypeId == objectTypeId) {
@@ -89,7 +75,7 @@ mapping.getAttrName = (objectTypeId, resourceTypeId) => {
             if (resourceTypeId === null || typeof resourceTypeId === "undefined") {
                 return {
                     "objectType": objectType
-                }
+                };
             }
             for (var j = 0; j < map[i].resources.length; j++) {
                 if (map[i].resources[j].resourceTypeId == resourceTypeId) {
@@ -97,7 +83,7 @@ mapping.getAttrName = (objectTypeId, resourceTypeId) => {
                     return {
                         "resourceType": resourceType,
                         "objectType": objectType
-                    }
+                    };
                 }
             }
         }
@@ -106,11 +92,10 @@ mapping.getAttrName = (objectTypeId, resourceTypeId) => {
     return null;
 };
 
-
 /*
  * If no resourceType is provided, only objectTypeId is returned
  */
-mapping.getAttrId = (objectType, resourceType) => {
+mapping.getAttrId = function (objectType, resourceType) {
     var objectTypeId, resourceTypeId;
 
     for (var i = 0; i < map.length; i++) {
@@ -120,7 +105,7 @@ mapping.getAttrId = (objectType, resourceType) => {
             if (resourceType === null || typeof resourceType === "undefined") {
                 return {
                     "objectTypeId": objectTypeId
-                }
+                };
             }
             for (var j = 0; j < map[i].resources.length; j++) {
                 if (map[i].resources[j].resourceType == resourceType) {
@@ -128,7 +113,7 @@ mapping.getAttrId = (objectType, resourceType) => {
                     return {
                         "resourceTypeId": resourceTypeId,
                         "objectTypeId": objectTypeId
-                    }
+                    };
                 }
             }
         }
@@ -137,4 +122,5 @@ mapping.getAttrId = (objectType, resourceType) => {
     return null;
 };
 
-export default mapping;
+exports.default = mapping;
+//# sourceMappingURL=lwm2m-mapping.js.map
