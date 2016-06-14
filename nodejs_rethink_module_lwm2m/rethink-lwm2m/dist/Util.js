@@ -25,6 +25,10 @@ var _fs = require("fs");
 
 var _fs2 = _interopRequireDefault(_fs);
 
+var _logops = require("logops");
+
+var _logops2 = _interopRequireDefault(_logops);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var util = {};
