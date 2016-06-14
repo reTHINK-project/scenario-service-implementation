@@ -1,0 +1,73 @@
+@startuml
+autonumber
+
+participant "App" as app
+
+participant "WRTC\nAPI" as wrtcAPI
+
+participant "Connector\nHyperty" as voiceH
+
+participant "Connection\nController" as connCtrl
+
+participant "Connection\nData Object" as ConnA
+
+participant "Bob Peer\nData Object" as ConnB
+
+participant "Syncher" as sync
+
+participant "Message BUS" as bus
+
+sync <- bus : onMessage( DeleteConnectionDataObjMessage )
+
+alt Alice disconnects
+
+sync ->x ConnA
+destroy ConnA
+
+connCtrl <- sync : onNotification( DeleteEvent)
+
+connCtrl -> ConnB : delete()
+
+sync ->x ConnB
+destroy ConnB
+
+sync -> bus : postMessage( DeleteBobPeerDataObjMessage )
+
+connCtrl -> wrtcAPI : close()
+
+connCtrl -> ConnA : unsubscribe()
+
+sync ->x ConnA
+destroy ConnA
+
+sync -> bus : postMessage( UnsubscribeBobPeerDataObjMessage )
+
+else Bob disconnects
+
+sync ->x ConnB
+destroy ConnB
+
+connCtrl <- sync : onNotification( DeleteEvent)
+
+connCtrl -> ConnA : delete()
+
+sync ->x ConnA
+destroy ConnA
+
+sync -> bus : postMessage( DeleteBobPeerDataObjMessage )
+
+connCtrl -> wrtcAPI : close()
+
+connCtrl -> ConnB : unsubscribe()
+
+sync ->x ConnB
+destroy ConnB
+
+sync -> bus : postMessage( UnsubscribeBobPeerDataObjMessage )
+
+end
+
+app <-  connCtrl : onDisconnect()
+
+
+@enduml

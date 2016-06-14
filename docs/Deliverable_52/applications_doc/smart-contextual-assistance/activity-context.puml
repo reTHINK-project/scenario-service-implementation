@@ -9,15 +9,15 @@ class ActivityContext {
   time?: date
   values: TimeActivity[]
   tag?: string
-  children ?=["workrequests"]
+  children ?=["activityrequests"]
   childUrls : URL.URL[]
 }
 
 
 class TimeActivity {
-  name = "ActivityDuration"
-  unit = "time_minutes"
-  value : integer
+  name = "s"
+  unit = "second"
+  value : float
 }
 
 class ActivityRequests <<Children>> {
