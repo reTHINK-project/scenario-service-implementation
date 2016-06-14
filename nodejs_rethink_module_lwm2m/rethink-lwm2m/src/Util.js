@@ -20,10 +20,10 @@ import fs from "fs";
 
 var util = {};
 
-util.readFile = function(file) {
+util.readFile = function (file) {
     return new Promise((resolve, reject) => {
         fs.readFile(file, (error, data) => {
-            if(error) {
+            if (error) {
                 reject(error);
             }
             else {
@@ -44,6 +44,32 @@ util.setNestedValue = function (obj, keystr, value) {
         dest = dest[arr[i]];
     }
     dest[arr[i]] = value;
+};
+
+util.write = function (lwm2m, deviceName, objectTypeId, objectId, resourceTypeId, value) {
+    return new Promise((resolve, reject) => {
+        if (lwm2m === null || typeof lwm2m === "undefined") {
+            reject(new Error("lwm2m-object undefined!"));
+        }
+        else {
+            lwm2m.server.getRegistry().getByName(deviceName, (error, device) => {
+                if (error) {
+                    reject(error);
+                }
+                else {
+                    lwm2m.server.write(device.id, objectTypeId, objectId, resourceTypeId, value, (error) => {
+                        if (error) {
+                            reject(error);
+                        }
+                        else {
+                            resolve();
+                        }
+                    })
+                }
+            });
+
+        }
+    });
 };
 
 export default util;

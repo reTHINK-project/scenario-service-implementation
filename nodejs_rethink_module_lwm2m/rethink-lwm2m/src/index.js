@@ -271,7 +271,7 @@ function initHTTP() {
         }
         else {
             logger.debug("Starting HTTP-interface");
-            httpInterface = new HTTPInterface(config.http.host, config.http.port, config.http.key, config.http.cert, database);
+            httpInterface = new HTTPInterface(config.http.host, config.http.port, config.http.key, config.http.cert, database, lwm2m);
             httpInterface.open()
                 .catch(error => {
                     logger.error("Error while starting HTTP-interface", error);
