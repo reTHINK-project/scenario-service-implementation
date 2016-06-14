@@ -1,0 +1,131 @@
+/*
+ * Copyright [2015-2017] Fraunhofer Gesellschaft e.V., Institute for
+ * Open Communication Systems (FOKUS)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+'use strict';
+
+var mapping = {};
+
+let map = [
+    {
+        "objectTypeId": "3303",
+        "objectType": "temperature",
+        "resources": [
+            {
+                "resourceTypeId": "5700",
+                "resourceType": "value"
+            }, {
+                "resourceTypeId": "5701",
+                "resourceType": "unit"
+            }
+        ]
+    }, {
+        "objectTypeId": "3304",
+        "objectType": "humidity",
+        "resources": [
+            {
+                "resourceTypeId": "5700",
+                "resourceType": "value"
+            }, {
+                "resourceTypeId": "5701",
+                "resourceType": "unit"
+            }
+        ]
+    }, {
+        "objectTypeId": "3311",
+        "objectType": "light",
+        "resources": [
+            {
+                "resourceTypeId": "5801",
+                "resourceType": "name"
+            }, {
+                "resourceTypeId": "5850",
+                "resourceType": "isOn"
+            }, {
+                "resourceTypeId": "5851",
+                "resourceType": "dimmer"
+            }, {
+                "resourceTypeId": "5706",
+                "resourceType": "color.value"
+            }, {
+                "resourceTypeId": "5701",
+                "resourceType": "color.unit"
+            }
+        ]
+    }
+];
+
+/*
+ * If no resourceTypeId is provided, only objectType is returned
+ */
+mapping.getAttrName = (objectTypeId, resourceTypeId) => {
+    var objectType, resourceType;
+    for (var i = 0; i < map.length; i++) {
+        if (map[i].objectTypeId == objectTypeId) {
+            objectType = map[i].objectType;
+            //If only objectType is set
+            if (resourceTypeId === null || typeof resourceTypeId === "undefined") {
+                return {
+                    "objectType": objectType
+                }
+            }
+            for (var j = 0; j < map[i].resources.length; j++) {
+                if (map[i].resources[j].resourceTypeId == resourceTypeId) {
+                    resourceType = map[i].resources[j].resourceType;
+                    return {
+                        "resourceType": resourceType,
+                        "objectType": objectType
+                    }
+                }
+            }
+        }
+    }
+    //Not found
+    return null;
+};
+
+
+/*
+ * If no resourceType is provided, only objectTypeId is returned
+ */
+mapping.getAttrId = (objectType, resourceType) => {
+    var objectTypeId, resourceTypeId;
+
+    for (var i = 0; i < map.length; i++) {
+        if (map[i].objectType == objectType) {
+            objectTypeId = map[i].objectTypeId;
+            //If only objectType is set
+            if (resourceType === null || typeof resourceType === "undefined") {
+                return {
+                    "objectTypeId": objectTypeId
+                }
+            }
+            for (var j = 0; j < map[i].resources.length; j++) {
+                if (map[i].resources[j].resourceType == resourceType) {
+                    resourceTypeId = map[i].resources[j].resourceTypeId;
+                    return {
+                        "resourceTypeId": resourceTypeId,
+                        "objectTypeId": objectTypeId
+                    }
+                }
+            }
+        }
+    }
+    //Not found
+    return null;
+};
+
+export default mapping;
