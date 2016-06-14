@@ -17,6 +17,8 @@
  */
 'use strict';
 
+//TODO: remove hard-coded ipso-ids, query with them mapping-object by name
+
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
@@ -54,6 +56,10 @@ var _async2 = _interopRequireDefault(_async);
 var _Util = require("./Util");
 
 var _Util2 = _interopRequireDefault(_Util);
+
+var _lwm2mMapping = require("./lwm2m-mapping");
+
+var _lwm2mMapping2 = _interopRequireDefault(_lwm2mMapping);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -157,55 +163,55 @@ var Hue = function () {
                 if (objectType !== "3311") {
                     reject(new Error("Invalid objectType for hue!"));
                 } else {
-                    switch (resourceId) {
-                        case "5801":
-                            //Name
-                            that._hue.light(objectId).setInfo({"name": value}).catch(reject).then(resolve);
-                            break;
-                        case "5850":
-                            //On/off
-                            that._setOnState(objectId, value).catch(reject).then(resolve);
-                            break;
-                        case "5851":
-                            //Dimmer (1-100)
-                            if (value >= 1 && value <= 100) {
-                                var briState = {};
-                                briState.bri = _Util2.default.convertRangeRound(value, [1, 100], [1, 254]);
-                                that._hue.light(objectId).setState(briState).catch(reject).then(function () {
-                                    _logops2.default.debug("Hue: Light " + objectId + ": BRI", briState);
+                    var attr = _lwm2mMapping2.default.getAttrName(objectType, resourceId);
+                    if (attr == null) {
+                        reject(new Error("Unknown operation for resourceId " + resourceId + ", objectType " + objectType));
+                    } else {
+                        switch (attr.resourceType) {
+                            case "name":
+                                that._hue.light(objectId).setInfo({"name": value}).catch(reject).then(resolve);
+                                break;
+                            case "isOn":
+                                that._setOnState(objectId, value).catch(reject).then(resolve);
+                                break;
+                            case "dimmer":
+                                //range: 1-100
+                                if (value >= 1 && value <= 100) {
+                                    var briState = {};
+                                    briState.bri = _Util2.default.convertRangeRound(value, [1, 100], [1, 254]);
+                                    that._hue.light(objectId).setState(briState).catch(reject).then(function () {
+                                        _logops2.default.debug("Hue: Light " + objectId + ": BRI", briState);
+                                        resolve();
+                                    });
+                                } else {
+                                    reject(new Error("Invalid value-range for brightness. Expected 1-100"));
+                                }
+                                break;
+                            case "color.value":
+                                var colorCoord = JSON.parse(value);
+                                if (!colorCoord.hasOwnProperty("length") || !(colorCoord.length === 2)) {
+                                    //Test if array [x,y]
+                                    reject(new Error("Invalid coordinate-array! Expected [x,y]"));
+                                }
+                                var colorState = {};
+                                colorState.xy = colorCoord;
+
+                                that._hue.light(objectId).setState(colorState).catch(reject).then(function () {
+                                    _logops2.default.debug("Hue: Light " + objectId + ": XY", colorState); //FIXME: Also runs on catch
                                     resolve();
                                 });
-                            } else {
-                                reject(new Error("Invalid value-range for brightness. Expected 1-100"));
-                            }
-                            break;
-                        case "5706":
-                            var colorCoord = JSON.parse(value);
-                            if (!colorCoord.hasOwnProperty("length") || !(colorCoord.length === 2)) {
-                                //Test if array [x,y]
-                                reject(new Error("Invalid coordinate-array! Expected [x,y]"));
-                            }
-                            var colorState = {};
-                            colorState.xy = colorCoord;
-
-                            that._hue.light(objectId).setState(colorState).catch(reject).then(function () {
-                                _logops2.default.debug("Hue: Light " + objectId + ": XY", colorState); //FIXME: Also runs on catch
-                                resolve();
-                            });
-                            break;
-                        case "5701":
-                            //Unit (Colour)
-                            reject(new Error("Resource '5701' (Unit) is read only!"));
-                            break;
-                        case "5852": //On Time (R,W)
-                        case "5805": //Cumulative active power (R)
-                        case "5820":
-                            //Power factor (R)
-                            reject(new Error("Resource not supported!"));
-                            break;
-                        default:
-                            reject(new Error("Unknown operation for resourceId " + resourceId));
-                            break;
+                                break;
+                            case "color.unit":
+                                //Unit for color-value
+                                reject(new Error("Resource Unit is read only!"));
+                                break;
+                            case "onTime": //R,W
+                            case "cumulativeActivePower": //R
+                            case "powerFactor":
+                                //R
+                                reject(new Error("Resource not supported!"));
+                                break;
+                        }
                     }
                 }
             });
