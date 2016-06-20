@@ -23,43 +23,64 @@ Object.defineProperty(exports, "__esModule", {
 var mapping = {};
 
 var map = [{
-    "objectTypeId": "3303",
+    "objectTypeId": 3303,
     "objectType": "temperature",
     "resources": [{
-        "resourceTypeId": "5700",
-        "resourceType": "value"
+        "resourceTypeId": 5700,
+        "resourceType": "value",
+        "readOnly": true
     }, {
-        "resourceTypeId": "5701",
-        "resourceType": "unit"
+        "resourceTypeId": 5701,
+        "resourceType": "unit",
+        "readOnly": true
     }]
 }, {
-    "objectTypeId": "3304",
+    "objectTypeId": 3304,
     "objectType": "humidity",
     "resources": [{
-        "resourceTypeId": "5700",
-        "resourceType": "value"
+        "resourceTypeId": 5700,
+        "resourceType": "value",
+        "readOnly": true
     }, {
-        "resourceTypeId": "5701",
-        "resourceType": "unit"
+        "resourceTypeId": 5701,
+        "resourceType": "unit",
+        "readOnly": true
     }]
 }, {
-    "objectTypeId": "3311",
+    "objectTypeId": 3311,
     "objectType": "light",
     "resources": [{
-        "resourceTypeId": "5801",
-        "resourceType": "name"
+        "resourceTypeId": 5801,
+        "resourceType": "name",
+        "readOnly": false
     }, {
-        "resourceTypeId": "5850",
-        "resourceType": "isOn"
+        "resourceTypeId": 5850,
+        "resourceType": "isOn",
+        "readOnly": false
     }, {
-        "resourceTypeId": "5851",
-        "resourceType": "dimmer"
+        "resourceTypeId": 5851,
+        "resourceType": "dimmer",
+        "readOnly": false
     }, {
-        "resourceTypeId": "5706",
-        "resourceType": "color.value"
+        "resourceTypeId": 5706,
+        "resourceType": "color.value",
+        "readOnly": false
     }, {
-        "resourceTypeId": "5701",
-        "resourceType": "color.unit"
+        "resourceTypeId": 5701,
+        "resourceType": "color.unit",
+        "readOnly": true
+    }, {
+        "resourceTypeId": 5852,
+        "resourceType": "onTime",
+        "readOnly": true
+    }, {
+        "resourceTypeId": 5805,
+        "resourceType": "cumulativeActivePower",
+        "readOnly": true
+    }, {
+        "resourceTypeId": 5820,
+        "resourceType": "powerFactor",
+        "readOnly": true
     }]
 }];
 
@@ -82,7 +103,8 @@ mapping.getAttrName = function (objectTypeId, resourceTypeId) {
                     resourceType = map[i].resources[j].resourceType;
                     return {
                         "resourceType": resourceType,
-                        "objectType": objectType
+                        "objectType": objectType,
+                        "readOnly": map[i].resources[j].readOnly
                     };
                 }
             }
@@ -112,7 +134,8 @@ mapping.getAttrId = function (objectType, resourceType) {
                     resourceTypeId = map[i].resources[j].resourceTypeId;
                     return {
                         "resourceTypeId": resourceTypeId,
-                        "objectTypeId": objectTypeId
+                        "objectTypeId": objectTypeId,
+                        "readOnly": map[i].resources[j].readOnly
                     };
                 }
             }
