@@ -43,6 +43,15 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+var interfaceError = Object.freeze({
+    invalidJSON: "Invalid JSON-String",
+    invalidHTTPMethod: "HTTP-Method not supported",
+    writeFail: "LWM2M-write failed",
+    database: "Database error",
+    unsupportedParam: "Unsupported parameter",
+    unknown: "Unknown"
+});
+
 var HTTPInterface = function () {
     function HTTPInterface(host, port, keyFile, certFile, database, lwm2m) {
         _classCallCheck(this, HTTPInterface);
@@ -74,9 +83,6 @@ var HTTPInterface = function () {
                 }
             });
         }
-
-        //TODO: Refactor: use "enum"
-
     }, {
         key: "_processRequest",
         value: function _processRequest(params) {
@@ -102,11 +108,11 @@ var HTTPInterface = function () {
                         }
 
                         if (objectType === null) {
-                            reply.error = HTTPInterface._getErrorReply("unsupportedParam", "Please specify which data to read");
+                            reply.error = HTTPInterface._getErrorReply(interfaceError.unsupportedParam, "Please specify which data to read");
                             resolve(reply);
                         } else {
                             that._database.getObject(objectType, objectName).catch(function (error) {
-                                reply.error = HTTPInterface._getErrorReply(null, error);
+                                reply.error = HTTPInterface._getErrorReply(interfaceError.database, error);
                                 reply.error = error;
                                 resolve(reply);
                             }).then(function (queriedObject) {
@@ -119,18 +125,18 @@ var HTTPInterface = function () {
                         if (params.hasOwnProperty("deviceName") && params.hasOwnProperty("objectType") && params.hasOwnProperty("objectId") && params.hasOwnProperty("resourceType") && params.hasOwnProperty("value")) {
 
                             that._write(params.deviceName, params.objectType, params.objectId, params.resourceType, params.value).catch(function (error) {
-                                reply.error = HTTPInterface._getErrorReply(null, error); //TODO: specific error message
+                                reply.error = HTTPInterface._getErrorReply(interfaceError.writeFail, error);
                                 resolve(reply);
                             }).then(function () {
                                 resolve(reply); //If no error on write, leave all fields null
                             });
                         } else {
-                            reply.error = HTTPInterface._getErrorReply("unsupportedParam", "Write must include 'deviceName'," + "'objectType', 'objectId', 'resourceType', 'value'.");
+                            reply.error = HTTPInterface._getErrorReply(interfaceError.unsupportedParam, "Write must include 'deviceName'," + "'objectType', 'objectId', 'resourceType', 'value'.");
                             resolve(reply);
                         }
                         }
                 } else {
-                    reply.error = HTTPInterface._getErrorReply("unsupportedParam", "Please either provide read or write-object!");
+                    reply.error = HTTPInterface._getErrorReply(interfaceError.unsupportedParam, "Please either provide read or write-object!");
                     resolve(reply);
                 }
             });
@@ -163,7 +169,7 @@ var HTTPInterface = function () {
                     if (req.method != "POST") {
                         _logops2.default.debug("HTTPInterface: Invalid method from [" + req.headers.host + "]: " + req.method);
                         res.writeHead(405, head);
-                        res.end(JSON.stringify(HTTPInterface._getErrorReply("invalidMethod", "Use POST")));
+                        res.end(JSON.stringify(HTTPInterface._getErrorReply(interfaceError.invalidHTTPMethod, "Use POST")));
                     } else {
                         var body = "";
                         var bodyValid;
@@ -177,7 +183,7 @@ var HTTPInterface = function () {
                                 var params = JSON.parse(body);
                             } catch (e) {
                                 res.writeHead(415, head);
-                                res.end(JSON.stringify(HTTPInterface._getErrorReply("invalidBody", e)));
+                                res.end(JSON.stringify(HTTPInterface._getErrorReply(interfaceError.invalidJSON, e)));
                                 bodyValid = false;
                             }
                             if (bodyValid) {
@@ -228,28 +234,29 @@ var HTTPInterface = function () {
         }
     }], [{
         key: "_getErrorReply",
-        value: function _getErrorReply(error, msg) {
+        value: function _getErrorReply(errorType, msg) {
             var json = {};
-            switch (error) {
-                case "invalidBody":
-                    json.error = "Invalid JSON-String!";
-                    break;
-                case "invalidMethod":
-                    json.error = "Method not supported";
-                    break;
-                case "unsupportedParam":
-                    json.error = "Unsupported parameter";
-                    break;
-                default:
-                    json.error = "Unknown";
-                    break;
+
+            //1st param (error type from enum interfaceError)
+            for (var key in interfaceError) {
+                if (interfaceError.hasOwnProperty(key) && errorType === interfaceError[key]) {
+                    json.error = interfaceError[key];
+                }
             }
+            if (typeof json.error === "undefined" || json.error === null) {
+                //Invalid value for param 'error'
+                json.error = interfaceError.unknown;
+            }
+
+            //2nd param (custom message)
             if (typeof msg !== "undefined" && msg !== null) {
                 try {
                     json.error += ": " + JSON.stringify(msg);
-                } catch (e) {//In case stringify fails
+                } catch (e) {//stringify fail
                 }
             }
+
+            //Return assembled error-message (json format)
             return json;
         }
     }]);
