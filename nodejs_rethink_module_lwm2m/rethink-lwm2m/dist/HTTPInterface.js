@@ -124,14 +124,9 @@ var HTTPInterface = function () {
                         //Example: myRaspberry, light, 1, dimmer, 75.0
                         if (params.hasOwnProperty("deviceName") && params.hasOwnProperty("objectType") && params.hasOwnProperty("objectId") && params.hasOwnProperty("resourceType") && params.hasOwnProperty("value")) {
 
-                            //lwm2m-module can only handle strings, convert if necessary
-                            for (var p in params) {
-                                if (params.hasOwnProperty(p)) {
-                                    if (!(typeof params[p] === "string")) {
-                                        params[p] = JSON.stringify(params[p]);
-                                    }
+                            if (typeof params.value !== "string") {
+                                params.value = JSON.stringify(params.value);
                                 }
-                            }
 
                             that._write(params.deviceName, params.objectType, params.objectId, params.resourceType, params.value).catch(function (error) {
                                 reply.error = HTTPInterface._getErrorReply(interfaceError.writeFail, error);
@@ -159,9 +154,13 @@ var HTTPInterface = function () {
                 if (ids === null) {
                     reject(new Error("Invalid objectType or resourceType"));
                 } else {
-                    _Util2.default.write(that._lwm2m, deviceName, ids.objectTypeId, objectId, ids.resourceTypeId, value).catch(function (error) {
-                        reject(error);
-                    }).then(resolve);
+                    if (ids.readOnly === true) {
+                        reject(new Error("Resource '" + resourceType + "' of objectType '" + objectType + "' is read-only"));
+                    } else {
+                        _Util2.default.write(that._lwm2m, deviceName, ids.objectTypeId, objectId, ids.resourceTypeId, value).catch(function (error) {
+                            reject(error);
+                        }).then(resolve);
+                    }
                 }
             });
         }
@@ -257,10 +256,15 @@ var HTTPInterface = function () {
                 json.error = interfaceError.unknown;
             }
 
+            _logops2.default.debug("_getErrorReply(): 2nd param (additional message): ", msg);
             //2nd param (custom message)
             if (typeof msg !== "undefined" && msg !== null) {
                 try {
-                    json.error += ": " + JSON.stringify(msg);
+                    if (!(msg instanceof Error)) {
+                        //Do not attempt to stringify Error-objects. Always results in {}.
+                        msg = JSON.stringify(msg);
+                    }
+                    json.error += ": " + msg;
                 } catch (e) {//stringify fail
                 }
             }
