@@ -39,6 +39,10 @@ var _Util = require("./Util");
 
 var _Util2 = _interopRequireDefault(_Util);
 
+var _lwm2mMapping = require("./lwm2m-mapping");
+
+var _lwm2mMapping2 = _interopRequireDefault(_lwm2mMapping);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -51,6 +55,7 @@ var TempSensor = function () {
 
         this._client = client;
         this._refreshInterval = refreshInterval;
+        this._objectTypeId = _lwm2mMapping2.default.getAttrId("temperature").objectTypeId;
     }
 
     _createClass(TempSensor, [{
@@ -79,8 +84,8 @@ var TempSensor = function () {
                             var index = 0;
                             var errors = [];
                             _async2.default.each(ids, function (id, callback) {
-                                _Util2.default.createClientObject(that._client, "/3303/" + index).catch(reject).then(function () {
-                                    return _Util2.default.setClientResource(that._client, "/3303/" + index, 5701, "Cel"); //Set temperature object unit
+                                _Util2.default.createClientObject(that._client, "/" + that._objectTypeId + "/" + index).catch(reject).then(function () {
+                                    return _Util2.default.setClientResource(that._client, "/" + that._objectTypeId + "/" + index, _lwm2mMapping2.default.getAttrId("temperature", "unit").resourceTypeId, "Cel"); //Set temperature object unit
                                 }).catch(function (error) {
                                     if (error) {
                                         errors.push(error);
@@ -121,6 +126,7 @@ var TempSensor = function () {
         value: function _setClientTemp(that) {
             var index = 0;
             var errors = [];
+            var resourceTypeId = _lwm2mMapping2.default.getAttrId("temperature", "value").resourceTypeId;
 
             _async2.default.each(that._sensors, function (id, callback) {
                 _ds18b2.default.temperature(id, function (error, value) {
@@ -131,7 +137,7 @@ var TempSensor = function () {
                         _logops2.default.debug("Sensor '" + id + "': " + value);
                         _logops2.default.debug("Setting values in lwm2m-client");
 
-                        Promise.all([_Util2.default.setClientResource(that._client, "/3303/" + index, 5700, value)]).then(function (results) {
+                        Promise.all([_Util2.default.setClientResource(that._client, "/" + that._objectTypeId + "/" + index, resourceTypeId, value)]).then(function (results) {
                             _logops2.default.debug("Set values", results);
                             index++;
                             callback();

@@ -20,6 +20,7 @@ import ds18b20 from "ds18b20";
 import logger from "logops";
 import async from "async";
 import util from "./Util";
+import mapping from "./lwm2m-mapping";
 
 
 class TempSensor {
@@ -27,6 +28,7 @@ class TempSensor {
     constructor(client, refreshInterval = 5000) {
         this._client = client;
         this._refreshInterval = refreshInterval;
+        this._objectTypeId = mapping.getAttrId("temperature").objectTypeId;
     }
 
     get sensors() {
@@ -57,10 +59,14 @@ class TempSensor {
                         var index = 0;
                         var errors = [];
                         async.each(ids, (id, callback) => {
-                            util.createClientObject(that._client, "/3303/" + index)
+                            util.createClientObject(that._client, "/" + that._objectTypeId + "/" + index)
                                 .catch(reject)
                                 .then(() => {
-                                    return util.setClientResource(that._client, "/3303/" + index, 5701, "Cel"); //Set temperature object unit
+                                    return util.setClientResource(
+                                        that._client,
+                                        "/" + that._objectTypeId + "/" + index,
+                                        mapping.getAttrId("temperature", "unit").resourceTypeId,
+                                        "Cel"); //Set temperature object unit
                                 })
                                 .catch((error) => {
                                     if (error) {
@@ -101,6 +107,7 @@ class TempSensor {
     _setClientTemp(that) {
         var index = 0;
         var errors = [];
+        var resourceTypeId = mapping.getAttrId("temperature", "value").resourceTypeId;
 
         async.each(that._sensors, (id, callback) => {
             ds18b20.temperature(id, (error, value) => {
@@ -113,8 +120,8 @@ class TempSensor {
                     logger.debug("Setting values in lwm2m-client");
 
                     Promise.all([
-                            util.setClientResource(that._client, "/3303/" + index, 5700, value)
-                        ])
+                        util.setClientResource(that._client, "/" + that._objectTypeId + "/" + index, resourceTypeId, value)
+                    ])
                         .then((results) => {
                             logger.debug("Set values", results);
                             index++;

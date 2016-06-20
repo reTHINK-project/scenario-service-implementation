@@ -17,8 +17,6 @@
  */
 'use strict';
 
-//TODO: remove hard-coded ipso-ids, query with them mapping-object by name
-
 import HueControl from "philips-hue";
 import logger from "logops";
 import async from "async";
@@ -55,40 +53,61 @@ class Hue {
         var that = this;
         return new Promise((resolve, reject) => {
             var errors = [];
+            var objectTypeId = mapping.getAttrId("light").objectTypeId;
 
             async.each(Object.keys(lights), (id, callback) => {
 
                 //Create lwm2m-client object to store lamp-data (Object/Resources according to IPSO Standard)
-                util.createClientObject(that._lwm2m, "/3311/" + id)
+                util.createClientObject(that._lwm2m, "/" + objectTypeId + "/" + id)
                     .catch((error) => {
                         if (error) {
                             errors.push(error);
                         }
                     })
                     .then(() => {
-                        var obj = "/3311/" + id;
+                        var obj = "/" + objectTypeId + "/" + id;
                         var state = lights[id].state;
                         var setVal = [];
-                        logger.debug("Hue: Created lwm2m-object for light '" + id + "' '/3311/" + id + "'");
+                        logger.debug("Hue: Created lwm2m-object for light '" + id + "' '/" + objectTypeId + "/" + id + "'");
 
                         //Get initial light info and set resources
 
                         //Name (Not IPSO compliant. IPSO does not provide field for descriptor)
                         if (lights[id].hasOwnProperty("name")) {
-                            setVal.push(util.setClientResource(that._lwm2m, obj, 5801, lights[id].name));
+                            setVal.push(
+                                util.setClientResource(that._lwm2m,
+                                    obj,
+                                    mapping.getAttrId("light", "name").resourceTypeId,
+                                    lights[id].name));
                         }
 
                         //On/off state
-                        setVal.push(util.setClientResource(that._lwm2m, obj, 5850, state.on ? "true" : "false"));
+                        setVal.push(
+                            util.setClientResource(
+                                that._lwm2m,
+                                obj,
+                                mapping.getAttrId("light", "isOn").resourceTypeId,
+                                state.on ? "true" : "false"));
 
                         //Brightness / Dimmer
-                        setVal.push(util.setClientResource(that._lwm2m, obj, 5851, util.convertRangeRound(state.bri, [1, 254], [1, 100])));
+                        setVal.push(
+                            util.setClientResource(that._lwm2m, obj,
+                                mapping.getAttrId("light", "dimmer").resourceTypeId,
+                                util.convertRangeRound(state.bri, [1, 254], [1, 100])));
 
                         //Color
-                        //Only set color if bulb supports it //TODO: Verify check
+                        //Only set color if bulb supports it
                         if (state.xy) {
-                            setVal.push(util.setClientResource(that._lwm2m, obj, 5706, JSON.stringify(state.xy))); //CIE-coords in json format
-                            setVal.push(util.setClientResource(that._lwm2m, obj, 5701, "CIE_JSON")); //TODO: might have to wrap in {} for valid JSON
+                            setVal.push(
+                                util.setClientResource(
+                                    that._lwm2m, obj,
+                                    mapping.getAttrId("light", "color.value").resourceTypeId,
+                                    JSON.stringify(state.xy))); //CIE-coords in json format
+                            setVal.push(
+                                util.setClientResource(
+                                    that._lwm2m, obj,
+                                    mapping.getAttrId("light", "color.unit").resourceTypeId,
+                                    "CIE_JSON"));
                             //Philips-hue uses coordinates in C.I.E for colors: http://www.developers.meethue.com/documentation/core-concepts
                         }
 
