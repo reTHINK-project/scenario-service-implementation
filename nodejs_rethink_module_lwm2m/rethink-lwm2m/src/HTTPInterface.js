@@ -137,6 +137,15 @@ class HTTPInterface {
                         && params.hasOwnProperty("objectId")
                         && params.hasOwnProperty("resourceType")
                         && params.hasOwnProperty("value")) {
+                        
+                        //lwm2m-module can only handle strings, convert if necessary
+                        for (var p in params) {
+                            if (params.hasOwnProperty(p)) {
+                                if (!(typeof params[p] === "string")) {
+                                    params[p] = JSON.stringify(params[p]);
+                                }
+                            }
+                        }
 
                         that._write(params.deviceName, params.objectType, params.objectId, params.resourceType, params.value)
                             .catch((error) => {
