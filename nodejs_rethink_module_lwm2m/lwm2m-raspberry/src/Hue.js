@@ -188,7 +188,13 @@ class Hue {
         var that = this;
         return new Promise((resolve, reject) => {
             var done;
-            if (state == true) {
+            try {
+                state = JSON.parse(state);
+            }
+            catch (e) {
+                reject(new Error("Hue: _setOnState(): Could not parse on-state"));
+            }
+            if (state == true || state == 1) {
                 done = that._hue.light(id).on();
             }
             else {

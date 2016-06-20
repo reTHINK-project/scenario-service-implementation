@@ -23,23 +23,7 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _createClass = function () {
-    function defineProperties(target, props) {
-        for (var i = 0; i < props.length; i++) {
-            var descriptor = props[i];
-            descriptor.enumerable = descriptor.enumerable || false;
-            descriptor.configurable = true;
-            if ("value" in descriptor) descriptor.writable = true;
-            Object.defineProperty(target, descriptor.key, descriptor);
-        }
-    }
-
-    return function (Constructor, protoProps, staticProps) {
-        if (protoProps) defineProperties(Constructor.prototype, protoProps);
-        if (staticProps) defineProperties(Constructor, staticProps);
-        return Constructor;
-    };
-}();
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _philipsHue = require("philips-hue");
 
@@ -169,7 +153,7 @@ var Hue = function () {
                     } else {
                         switch (attr.resourceType) {
                             case "name":
-                                that._hue.light(objectId).setInfo({"name": value}).catch(reject).then(resolve);
+                                that._hue.light(objectId).setInfo({ "name": value }).catch(reject).then(resolve);
                                 break;
                             case "isOn":
                                 that._setOnState(objectId, value).catch(reject).then(resolve);
@@ -222,7 +206,12 @@ var Hue = function () {
             var that = this;
             return new Promise(function (resolve, reject) {
                 var done;
-                if (state == true) {
+                try {
+                    state = JSON.parse(state);
+                } catch (e) {
+                    reject(new Error("Hue: _setOnState(): Could not parse on-state"));
+                }
+                if (state == true || state == 1) {
                     done = that._hue.light(id).on();
                 } else {
                     done = that._hue.light(id).off();
