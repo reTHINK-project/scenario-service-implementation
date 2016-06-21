@@ -30,6 +30,14 @@ let interfaceError = Object.freeze({
     unknown: "Unknown"
 });
 
+
+//HTTP-to-CoAP Mapping (https://tools.ietf.org/html/draft-ietf-core-http-mapping-10#section-7)
+let coapToHTTP = Object.freeze({
+    "2.01": 201, "2.02": 200, "2.03": 200, "2.04": 200, "2.05": 200, "4.00": 400, "4.01": 403, "4.02": 500, "4.03": 403,
+    "4.04": 404, "4.05": 400, "4.06": 406, "4.12": 412, "4.13": 413, "4.15": 415, "5.00": 500, "5.01": 501, "5.02": 502,
+    "5.03": 503, "5.04": 504, "5.05": 502
+});
+
 class HTTPInterface {
 
     constructor(host, port, keyFile, certFile, database, lwm2m) {
@@ -76,8 +84,6 @@ class HTTPInterface {
         if (typeof json.error === "undefined" || json.error === null) { //Invalid value for param 'error'
             json.error = interfaceError.unknown;
         }
-
-        logger.debug("_getErrorReply(): 2nd param (additional message): ", msg);
         //2nd param (custom message)
         if (typeof msg !== "undefined" && msg !== null) {
             try {
@@ -130,7 +136,7 @@ class HTTPInterface {
                             })
                             .then((queriedObject) => {
                                 reply.data = queriedObject;
-                                resolve(reply); //Convert to string for network
+                                resolve(reply);
                             });
                     }
                 }
@@ -141,15 +147,17 @@ class HTTPInterface {
                         && params.hasOwnProperty("objectId")
                         && params.hasOwnProperty("resourceType")
                         && params.hasOwnProperty("value")) {
-
                         if (typeof params.value !== "string") {
                             params.value = JSON.stringify(params.value);
                         }
-
+                        var httpCode;
                         that._write(params.deviceName, params.objectType, params.objectId, params.resourceType, params.value)
                             .catch((error) => {
+                                if (typeof error.code !== "undefined" && error.code !== null) { //if present, translate coap error-code to http
+                                    httpCode = coapToHTTP[error.code];
+                                }
                                 reply.error = HTTPInterface._getErrorReply(interfaceError.writeFail, error);
-                                resolve(reply);
+                                resolve([reply, httpCode]);
                             })
                             .then(() => {
                                 resolve(reply); //If no error on write, leave all fields null
@@ -163,10 +171,9 @@ class HTTPInterface {
                 }
             }
             else {
-                reply.error = HTTPInterface._getErrorReply(interfaceError.unsupportedParam, "Please either provide read or write-object!");
+                reply.error = HTTPInterface._getErrorReply(interfaceError.unsupportedParam, "Expected 'read' or 'write' for parameter 'mode'.");
                 resolve(reply);
             }
-
         });
     }
 
@@ -213,7 +220,7 @@ class HTTPInterface {
                     });
                     req.on("end", () => {
                         bodyValid = true;
-                        logger.debug("HTTPInterface: Received data from [" + req.headers.host + "]", body);
+                        logger.debug("HTTPInterface: Received data from [" + req.connection.remoteAddress + "]", body);
                         try {
                             var params = JSON.parse(body);
                         }
@@ -224,10 +231,28 @@ class HTTPInterface {
                         }
                         if (bodyValid) {
                             that._processRequest(params) //Process request and ...
-                                .then((reply) => {
+                                .then((result) => {
+                                    var reply, errorCode;
+                                    if (result instanceof Array) {
+                                        reply = result[0];
+                                        errorCode = result[1];
+                                    }
+                                    else {
+                                        reply = result;
+                                    }
+                                    if (typeof reply.error === "undefined" || reply.error === null) {
+                                        res.writeHead(200, head); //all OK
+                                    }
+                                    else {
+                                        if (typeof errorCode !== "undefined" && errorCode !== null) {
+                                            res.writeHead(errorCode, head); //Error from coap
+                                        }
+                                        else {
+                                            res.writeHead(500, head); //Unknown error
+                                        }
+                                    }
                                     reply = JSON.stringify(reply);
-                                    logger.debug("HTTPInterface: Sending data to [" + req.headers.host + "]", reply);
-                                    res.writeHead(200, head);
+                                    logger.debug("HTTPInterface: Sending data to [" + req.connection.remoteAddress + "]", reply);
                                     res.end(reply); //... reply to client
                                 });
                         }
