@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -34,15 +33,18 @@ var _Database = require("./Database");
 
 var _Database2 = _interopRequireDefault(_Database);
 
-function _interopRequireDefault(obj) {
-    return obj && obj.__esModule ? obj : {default: obj};
-}
+var _HTTPInterface = require("./HTTPInterface");
+
+var _HTTPInterface2 = _interopRequireDefault(_HTTPInterface);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var lwm2m = {};
 lwm2m.server = _lwm2mNodeLib2.default.server; //Enables use of all native lwm2m-lib methods
 lwm2m.serverInfo = {};
 var config = {};
 var database = void 0;
+var httpInterface = void 0;
 
 _logops2.default.format = _logops2.default.formatters.dev;
 
@@ -64,35 +66,45 @@ lwm2m.start = function () {
             _logops2.default.error("Missing configuration!");
             reject();
         }
+        initdb().catch(reject).then(function () {
+            return startm2m();
+        }).catch(reject).then(function () {
+            return initHTTP();
+        }).catch(reject).then(resolve);
+    });
+};
+
+function initdb() {
+    return new Promise(function (resolve, reject) {
         database = new _Database2.default(config);
         database.connect().catch(function (error) {
             _logops2.default.error(error);
             reject(error);
         }).then(function () {
-            database.isInitialised().catch(function (error) {
-                _logops2.default.error(error);
-                reject(error);
-            }).then(function (initialised) {
-                if (!initialised) {
-                    database.createHotel().catch(function (error) {
-                        _logops2.default.error(error);
-                        reject(error);
-                    }).then(function (errors) {
-                        if (errors) {
-                            _logops2.default.error("Problems while initialising db: ", errors);
-                        } else {
-                            _logops2.default.info("Database initialised with config-data!");
-                        }
-                        startm2m().catch(reject).then(resolve);
-                    });
-                } else {
-                    _logops2.default.info("Database already initialised. Using existing data.");
-                    startm2m().catch(reject).then(resolve);
-                }
-            });
+            return database.isInitialised();
+        }).catch(function (error) {
+            _logops2.default.error(error);
+            reject(error);
+        }).then(function (initialised) {
+            if (!initialised) {
+                database.createHotel().catch(function (error) {
+                    _logops2.default.error(error);
+                    reject(error);
+                }).then(function (errors) {
+                    if (errors) {
+                        _logops2.default.error("Problems while initialising db: ", errors);
+                    } else {
+                        _logops2.default.info("Database initialised with config-data!");
+                    }
+                    resolve();
+                });
+            } else {
+                _logops2.default.info("Database already initialised. Using existing data.");
+                resolve();
+            }
         });
     });
-};
+}
 
 function startm2m() {
     return new Promise(function (resolve, reject) {
@@ -110,21 +122,26 @@ function startm2m() {
 
 lwm2m.stop = function () {
     return new Promise(function (resolve, reject) {
-        database.disconnect().catch(function (error) {
-            _logops2.default.error(error);
-            reject();
-        });
-
         if (!lwm2m.serverInfo) {
-            var error = "Can't stop m2m server. Not running";
-            _logops2.default.error(error);
+            //If server not running, abort.
             reject(error);
         }
-
+        httpInterface.close().catch(function (error) {
+            _logops2.default.error("Error while closing httpInterface!", error);
+        }).then(function () {
+            _logops2.default.debug("Closed http-interface");
+        });
+        database.disconnect().catch(function (error) {
+            _logops2.default.error("Error while disconnecting from db!", error);
+        }).then(function () {
+            _logops2.default.debug("Disconnected from db");
+        });
         lwm2m.server.stop(lwm2m.serverInfo, function (error) {
+            //TODO: Observes somehow do not stop on lwm2m.server stop
             if (error) {
                 reject(error);
             } else {
+                _logops2.default.debug("Stopped lwm2m");
                 resolve();
             }
         });
@@ -138,8 +155,31 @@ function registrationHandler(endpoint, lifetime, version, binding, payload, call
     database.registerDevice(endpoint, true, payload).catch(function (error) {
         _logops2.default.error("Error while updating device-data", error);
     }).then(function () {
+        //TODO: Make list of objects/resources to observe configurable
         observeDeviceData(endpoint, 3303, 0, 5700); //Temperature
+        observeDeviceData(endpoint, 3303, 0, 5701); //Unit
+
         observeDeviceData(endpoint, 3304, 0, 5700); //Humidity
+        observeDeviceData(endpoint, 3304, 0, 5701); //Unit
+
+        //Get list of light-ids
+        var lightIdsMatch = new RegExp("<\/3311[\/]([0-9]+)>", "g");
+        var lightIds = [];
+        var result = null;
+        do {
+            result = lightIdsMatch.exec(payload);
+            if (result != null) {
+                lightIds.push(result[1]);
+            }
+        } while (result != null);
+        lightIds.forEach(function (id) {
+            observeDeviceData(endpoint, 3311, id, 5801); //Light name
+            observeDeviceData(endpoint, 3311, id, 5850); //Light on/off state
+            observeDeviceData(endpoint, 3311, id, 5851); //Light dimmer
+            observeDeviceData(endpoint, 3311, id, 5706); //Light colour
+            observeDeviceData(endpoint, 3311, id, 5701); //Light colour unit
+        });
+
         callback();
     });
 }
@@ -153,15 +193,19 @@ function unregistrationHandler(device, callback) {
     }).then(callback);
 }
 
-function observeHandler(objectType, objectId, resourceId, deviceId, value) {
+function observeHandler(value, objectType, objectId, resourceId, deviceId) {
     lwm2m.server.getRegistry().get(deviceId, function (error, device) {
-        database.storeValue(device.name, '/' + objectType + '/' + objectId + '/' + resourceId, value).catch(function (error) {
-            _logops2.default.error("Error while storing observe-data in db! Device: %s", device.name, error);
-        }).then(function () {
-            _logops2.default.debug("Stored observe-data for device '%s' in db!", device.name);
-        });
+        if (error) {
+            _logops2.default.error("Error while getting device by id", error);
+        } else {
+            database.storeValue(device.name, objectType, objectId, resourceId, value).catch(function (error) {
+                _logops2.default.error("Error while storing observe-data in db! Device: %s", device.name, error);
+            }).then(function () {
+                _logops2.default.debug("Stored observe-data for device '%s' in db!", device.name);
+            });
+        }
     });
-    _logops2.default.debug("Observe-handler device [" + deviceId + ", objectType " + objectType + ", objectId " + objectId + ", resourceId: " + resourceId + "] => " + value);
+    _logops2.default.debug("Observe-handler device [deviceId " + deviceId + ", objectType " + objectType + ", objectId " + objectId + ", resourceId: " + resourceId + "] => " + value);
 }
 
 function observeDeviceData(deviceName, objectType, objectId, resourceId) {
@@ -181,10 +225,11 @@ function observeDeviceData(deviceName, objectType, objectId, resourceId) {
                             _logops2.default.debug("Observe for '%s' canceled!", device.name);
                         });
                     } else {
-                        database.storeValue(deviceName, '/' + objectType + '/' + objectId + '/' + resourceId, value).catch(function (error) {
+                        _logops2.default.debug("START: database.storeValue(" + deviceName + ", " + objectType + ", " + objectId + ", " + resourceId + ", " + value + ")");
+                        database.storeValue(deviceName, objectType, objectId, resourceId, value).catch(function (error) {
                             _logops2.default.error("Error while storing initial read-data!", error);
                         }).then(function () {
-                            _logops2.default.debug("Stored initial read-data from observe.");
+                            _logops2.default.debug("DONE: database.storeValue(" + deviceName + ", " + objectType + ", " + objectId + ", " + resourceId + ", " + value + ")");
                         });
                     }
                 }
@@ -199,6 +244,25 @@ function setHandlers() {
         lwm2m.server.setHandler(lwm2m.serverInfo, 'unregistration', unregistrationHandler);
         _logops2.default.debug("Set registration handlers.");
         resolve();
+    });
+}
+
+function initHTTP() {
+    return new Promise(function (resolve, reject) {
+        if (!config.http.enabled) {
+            _logops2.default.debug("httpInterface not enabled");
+            resolve();
+        } else {
+            _logops2.default.debug("Starting HTTP-interface");
+            httpInterface = new _HTTPInterface2.default(config.http.host, config.http.port, config.http.key, config.http.cert, database, lwm2m);
+            httpInterface.open().catch(function (error) {
+                _logops2.default.error("Error while starting HTTP-interface", error);
+                reject(error);
+            }).then(function () {
+                _logops2.default.info("Started HTTP-interface");
+                resolve();
+            });
+        }
     });
 }
 

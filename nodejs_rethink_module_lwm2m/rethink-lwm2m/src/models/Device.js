@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 'use strict';
 import mongoose from "mongoose";
 
@@ -31,16 +30,50 @@ device.schema = new Schema({
         timestamp: {type: Date, default: Date.now},
         payload: String
     },
-    lastValues: [
-        {
-            uri: String,
-            value: String,
-            timestamp: {type: Date, default: Date.now}
-        }
-    ]
+    lastValues: {
+        temperature: [
+            {
+                id: {type: Number, unique: true},
+                value: Number,
+                unit: String,
+                timestamp: {type: Date, default: Date.now}
+            }
+        ],
+        humidity: [
+            {
+                id: {type: Number, unique: true},
+                value: Number,
+                unit: String,
+                timestamp: {type: Date, default: Date.now}
+            }
+        ],
+        light: [
+            {
+                id: {type: Number, unique: true},
+                name: String,
+                isOn: Boolean,
+                dimmer: Number,
+                color: {
+                    value: {
+                        x: Number,
+                        y: Number
+                    },
+                    unit: String
+                },
+                timestamp: {type: Date, default: Date.now}
+            }
+        ],
+        misc: [
+            {
+                uri: String,
+                value: String,
+                timestamp: {type: Date, default: Date.now}
+            }
+        ]
+    }
 });
 
-device.load = function (connection) {
+device.load = (connection) => {
     device.model = connection.model('Device', device.schema);
 };
 

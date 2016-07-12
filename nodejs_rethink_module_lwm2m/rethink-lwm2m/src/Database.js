@@ -15,19 +15,20 @@
  * limitations under the License.
  *
  */
-
+'use strict';
 import mongoose from "mongoose";
-import Hotel from "./models/Hotel";
 import Room from "./models/Room";
 import Device from "./models/Device";
 import async from "async";
 import logger from "logops";
-
+import util from "./Util";
+import mapping from "./lwm2m-mapping";
 
 class Database {
 
     constructor(config) {
         this._config = config;
+        this._lastStoreValue = null;
     }
 
     set config(config) {
@@ -42,9 +43,9 @@ class Database {
         return this._connection;
     }
 
-    connect() {//Assuming Hotel is singleton (in db scope)
+    connect() {
         var that = this;
-        return new Promise(function (resolve, reject) {
+        return new Promise((resolve, reject) => {
             if (that.connected()) {
                 reject(new Error("Already connected or connection pending!"));
             }
@@ -56,16 +57,15 @@ class Database {
 
     _init() {
         var that = this;
-        return new Promise(function (resolve) {
+        return new Promise((resolve) => {
             that._connection = mongoose.createConnection(that.config.db.host, that.config.db.database);
             that.connection.on('error', function mongodbErrorHandler(error) {
                 logger.fatal('Could not establish connection to mongodb!', error);
                 throw new Error(error);
             });
-            that.connection.once('open', function () {
+            that.connection.once('open', () => {
                 logger.debug('Database.js: connected to mongodb!');
                 Device.load(that.connection);
-                Hotel.load(that.connection);
                 Room.load(that.connection);
                 resolve();
             });
@@ -74,9 +74,9 @@ class Database {
 
     disconnect() {
         var that = this;
-        return new Promise(function (resolve, reject) {
+        return new Promise((resolve, reject) => {
             if (that.connected()) {
-                that.connection.close(function () {
+                that.connection.close(() => {
                     resolve();
                 })
             }
@@ -97,13 +97,13 @@ class Database {
 
     isInitialised() {
         var that = this;
-        return new Promise(function (resolve, reject) {
+        return new Promise((resolve, reject) => {
             if (!that.connected()) {
                 reject(new Error("Not connected to db!"));
             }
             else {
-                that.connection.db.listCollections({name: 'hotels'}) //appended 's' is mongoose-behavior, see: http://bit.ly/1Lq65AJ)
-                    .next(function (err, collinfo) {
+                that.connection.db.listCollections({name: 'rooms'}) //appended 's' is mongoose-behavior, see: http://bit.ly/1Lq65AJ)
+                    .next((err, collinfo) => {
                         if (err) {
                             reject(err);
                         }
@@ -118,7 +118,7 @@ class Database {
 
     createHotel() {
         var that = this;
-        return new Promise(function (resolve, reject) {
+        return new Promise((resolve, reject) => {
             if (typeof that.config === 'undefined') {
                 reject(new Error("Missing config!"));
             }
@@ -129,17 +129,14 @@ class Database {
                 else {
                     var errors = [];
 
-                    that._parseHotel(errors)
-                        .then(function (errors) {
-                            return that._parseRooms(errors);
-                        })
-                        .then(function (errors) {
+                    that._parseRooms(errors)
+                        .then((errors) => {
                             return that._parseDevices(errors);
                         })
-                        .then(function (errors) {
+                        .then((errors) => {
                             return that._setReferences(errors);
                         })
-                        .then(function (errors) {
+                        .then((errors) => {
                             if (errors.length === 0) {
                                 errors = null;
                             }
@@ -150,97 +147,57 @@ class Database {
         });
     }
 
-    _parseHotel(errors) {
-        var that = this;
-        return new Promise(function (resolve) {
-            var newHotel = Hotel.model();
-            newHotel.name = that.config.hotel.name;
-            newHotel.save(function (error) {
-                if (error) {
-                    errors.push(error);
-                }
-                resolve(errors);
-            });
-        })
-    }
-
     _parseRooms(errors) {
         var that = this;
-        return new Promise(function (resolve) {
+        return new Promise((resolve) => {
             if (!that.config.hotel.hasOwnProperty('rooms')) {
                 resolve(errors);
             }
             else {
                 logger.debug("Room-cfg existing, adding to db.");
-                var hotel;
 
-                Hotel.model.findOne({name: that.config.hotel.name}, function (error, result) {
-                    if (error) {
-                        errors.push(error);
-                    }
-                    hotel = result;
-
-                    if (!hotel) {
-                        errors.push(new Error("Hotel missing in db. Inconsistent data. Not able to link hotel->rooms."));
-                    }
-
-                    async.each(that.config.hotel.rooms, function (cfg_room, callback2) {
-                            var room = Room.model();
-                            room.name = cfg_room.name;
-                            room.isBooked = cfg_room.isBooked;
-                            room.members = cfg_room.members;
-                            room.save(function (error) {
-                                if (error) {
-                                    errors.push(error);
-                                }
-                                logger.debug("Added room '%s'", cfg_room.name);
-                                if (hotel) {
-                                    hotel.rooms.push(room); //Add room to hotel-list
-                                    logger.debug("Added %s to %s.rooms[]", room.name, hotel.name);
-                                }
-                                callback2();
-                            });
-
-                        },
-                        function () {
-                            if (hotel) {
-                                hotel.save(function (error) {
-                                    if (error) {
-                                        errors.push(error);
-                                    }
-                                    resolve(errors);
-                                })
+                async.each(that.config.hotel.rooms, (cfg_room, callback2) => {
+                        var room = Room.model();
+                        room.name = cfg_room.name;
+                        room.isBooked = cfg_room.isBooked;
+                        room.members = cfg_room.members;
+                        room.save((error) => {
+                            if (error) {
+                                errors.push(error);
                             }
-                            else {
-                                resolve(errors);
-                            }
-                        }
-                    );
-                });
+                            logger.debug("Added room '%s'", cfg_room.name);
+                            callback2();
+                        });
+
+                    },
+                    () => {
+                        resolve(errors);
+                    }
+                );
             }
         });
     }
 
     _parseDevices(errors) {
         var that = this;
-        return new Promise(function (resolve) {
+        return new Promise((resolve) => {
             if (!that.config.hotel.hasOwnProperty('devices')) {
                 resolve(errors);
             }
             else {
                 logger.debug("Device-cfg existing, adding to db.");
 
-                async.each(that.config.hotel.devices, function (cfg_device, callback2) {
+                async.each(that.config.hotel.devices, (cfg_device, callback2) => {
                     var device = Device.model();
                     device.name = cfg_device.name;
-                    device.save(function (error) {
+                    device.save((error) => {
                         if (error) {
                             errors.push(error);
                         }
                         logger.debug("Added device '%s'", cfg_device.name);
                         callback2();
                     });
-                }, function () {
+                }, () => {
                     resolve(errors);
                 });
             }
@@ -250,23 +207,25 @@ class Database {
 
     _setReferences(errors) {
         var that = this;
-        return new Promise(function (resolve) {
+        return new Promise((resolve) => {
             logger.debug("Establishing db-references");
-            async.each(that.config.hotel.devices, function (cfg_device, callback) {
+            async.each(that.config.hotel.devices, (cfg_device, callback) => {
                 if (!cfg_device.hasOwnProperty('room')) {
                     logger.debug("Device '%s' has no room-reference. Skipping...", cfg_device.name);
                     return callback();
                 }
-                Room.model.findOne({name: cfg_device.room}, function (error, room) {
+                Room.model.findOne({name: cfg_device.room}, (error, room) => {
                     if (error) {
                         errors.push(new Error("Error while querying db", error));
                         return callback();
                     }
-                    if (!room) {
-                        errors.push(new Error("Invalid reference '" + cfg_device.name + "." + cfg_device.room + "'! Room '" + cfg_device.room + "' not found."));
-                        return callback();
+                    else {
+                        if (!room) {
+                            errors.push(new Error("Invalid reference '" + cfg_device.name + "." + cfg_device.room + "'! Room '" + cfg_device.room + "' not found."));
+                            return callback();
+                        }
                     }
-                    Device.model.findOne({name: cfg_device.name}, function (error, device) {
+                    Device.model.findOne({name: cfg_device.name}, (error, device) => {
                         if (error) {
                             errors.push(new Error("Error while querying db", error));
                             return callback();
@@ -279,12 +238,12 @@ class Database {
                         device.room = room;
                         room.devices.push(device);
 
-                        device.save(function (error) {
+                        device.save((error) => {
                             if (error) {
                                 errors.push(error);
                                 return callback();
                             }
-                            room.save(function (error) {
+                            room.save((error) => {
                                 if (error) {
                                     errors.push(error);
                                     return callback();
@@ -295,7 +254,7 @@ class Database {
                         });
                     });
                 });
-            }, function () {
+            }, () => {
                 resolve(errors);
             });
         });
@@ -306,11 +265,11 @@ class Database {
      register type:Boolean - Register or de-register device
      */
     registerDevice(deviceName, register, payload) {
-        return new Promise(function (resolve, reject) {
+        return new Promise((resolve, reject) => {
             if (typeof register !== 'boolean') {
                 reject(new Error("Invalid param. register, boolean expected."));
             }
-            Device.model.findOne({name: deviceName}, function (error, device) { //Get device by name
+            Device.model.findOne({name: deviceName}, (error, device) => { //Get device by name
                 if (error) {
                     reject(error);
                 }
@@ -334,7 +293,7 @@ class Database {
                         device.registration.payload = null;
                     }
 
-                    device.save(function (error) {
+                    device.save((error) => {
                         if (error) {
                             reject(error);
                         }
@@ -345,9 +304,32 @@ class Database {
         });
     }
 
-    storeValue(deviceName, uri, value) {
-        return new Promise(function (resolve, reject) {
-            Device.model.findOne({name: deviceName}, function (error, device) {
+    //Wait for other queries to finish
+    storeValue(deviceName, objectType, objectId, resourceId, value) {
+        var that = this;
+        if (that._lastStoreValue === null) {
+            that._lastStoreValue = that._storeValueSynced(deviceName, objectType, objectId, resourceId, value);
+            return that._lastStoreValue;
+        }
+        else {
+            that._lastStoreValue = new Promise((resolve, reject) => {
+                that._lastStoreValue
+                    .catch(reject)
+                    .then(() => {
+                        that._storeValueSynced(deviceName, objectType, objectId, resourceId, value)
+                            .catch(reject)
+                            .then(() => {
+                                resolve();
+                            });
+                    });
+            });
+            return that._lastStoreValue;
+        }
+    }
+
+    _storeValueSynced(deviceName, objectType, objectId, resourceId, value) {
+        return new Promise((resolve, reject) => {
+            Device.model.findOne({name: deviceName}, (error, device) => {
                 if (error) {
                     reject(error);
                 }
@@ -356,28 +338,58 @@ class Database {
                         reject(new Error("Can't store value in db for device '" + deviceName + "'! Device not found!"));
                     }
                     else {
-                        var data = {};
-                        var pushNew = true;
+                        var category;
+                        var location;
 
-                        data.timestamp = Date.now();
-                        data.uri = uri;
-                        data.value = value;
+                        var attr = mapping.getAttrName(objectType, resourceId);
+                        if (attr === null) {
+                            category = "misc";
+                            location = "value";
+                        }
+                        else {
+                            category = attr.objectType;
+                            location = attr.resourceType;
 
-                        if (device.lastValues.length > 0) {
-                            device.lastValues.forEach(function (currValue) {
-                                if (currValue.uri == uri) {
-                                    currValue.value = data.value;
-                                    currValue.timestamp = data.timestamp;
-                                    pushNew = false;
-                                    //TODO: Exit loop, we're done
+                            if (((category === "temperature" || category === "humidity" ) && location === "value")
+                                || category === "light" && location === "dimmer"
+                            ) {
+                                value = parseFloat(value);
+                            }
+                            else {
+                                if (category === "light" && location === "color.value") {
+                                    value = JSON.parse(value);
+                                    value = {
+                                        "x": value[0],
+                                        "y": value[1]
+                                    };
                                 }
-                            });
-                        }
-                        if (pushNew) {
-                            device.lastValues.push(data);
+                            }
                         }
 
-                        device.save(function (error) {
+                        var found = false;
+                        device.lastValues[category].forEach((entry) => {
+                            if (entry.id === parseInt(objectId)) {
+                                util.setNestedValue(entry, location, value);
+                                if (location === "misc") {
+                                    entry.uri = '/' + objectType + '/' + objectId + '/' + resourceId;
+                                }
+                                entry.timestamp = Date.now();
+                                found = true;
+                            }
+                        });
+
+                        if (!found) {
+                            var obj = {};
+                            util.setNestedValue(obj, location, value);
+                            if (location === "misc") {
+                                obj.uri = '/' + objectType + '/' + objectId + '/' + resourceId;
+                            }
+                            obj.id = objectId;
+                            obj.timestamp = Date.now();
+                            device.lastValues[category].push(obj);
+                        }
+
+                        device.save((error) => {
                             if (error) {
                                 reject(error);
                             }
@@ -388,6 +400,44 @@ class Database {
                     }
                 }
             });
+        });
+    }
+
+    getObject(type, objName) {
+        return new Promise((resolve, reject) => {
+            if (typeof type === "undefined") {
+                reject(new Error("Database.getObject(): Invalid parameters!"));
+            }
+            else {
+                var model = {};
+                switch (type) {
+                    case "device":
+                        model = Device.model;
+                        break;
+                    case "room":
+                        model = Room.model;
+                        break;
+                    default:
+                        reject(new Error("Invalid type"));
+                        break;
+                }
+                var query;
+                if (typeof objName === "undefined" || objName === null) {
+                    query = model.find();
+                }
+                else {
+                    query = model.findOne({name: objName});
+                }
+                if (type === "room") { //Check if we need to populate
+                    query.populate("devices");
+                }
+                query.exec((error, result) => {
+                    if (error) {
+                        reject(error);
+                    }
+                    resolve(result);
+                });
+            }
         });
     }
 }

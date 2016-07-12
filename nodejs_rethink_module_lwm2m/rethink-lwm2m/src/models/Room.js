@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 'use strict';
 import mongoose from "mongoose";
 
@@ -29,7 +28,7 @@ room.schema = new Schema({
     members: [String]
 });
 
-room.load = function (connection) {
+room.load = (connection) => {
     room.model = connection.model('Room', room.schema);
 };
 export default room;

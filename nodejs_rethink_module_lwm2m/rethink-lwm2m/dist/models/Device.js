@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -26,27 +25,53 @@ var _mongoose = require('mongoose');
 
 var _mongoose2 = _interopRequireDefault(_mongoose);
 
-function _interopRequireDefault(obj) {
-    return obj && obj.__esModule ? obj : {default: obj};
-}
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var Schema = _mongoose2.default.Schema;
 var device = {};
 
 device.schema = new Schema({
-    name: {type: String, unique: true},
-    room: {type: Schema.Types.ObjectId, ref: 'Room'},
+    name: { type: String, unique: true },
+    room: { type: Schema.Types.ObjectId, ref: 'Room' },
 
     registration: {
-        registered: {type: Boolean, default: false},
-        timestamp: {type: Date, default: Date.now},
+        registered: { type: Boolean, default: false },
+        timestamp: { type: Date, default: Date.now },
         payload: String
     },
-    lastValues: [{
-        uri: String,
-        value: String,
-        timestamp: {type: Date, default: Date.now}
-    }]
+    lastValues: {
+        temperature: [{
+            id: { type: Number, unique: true },
+            value: Number,
+            unit: String,
+            timestamp: { type: Date, default: Date.now }
+        }],
+        humidity: [{
+            id: { type: Number, unique: true },
+            value: Number,
+            unit: String,
+            timestamp: { type: Date, default: Date.now }
+        }],
+        light: [{
+            id: { type: Number, unique: true },
+            name: String,
+            isOn: Boolean,
+            dimmer: Number,
+            color: {
+                value: {
+                    x: Number,
+                    y: Number
+                },
+                unit: String
+            },
+            timestamp: { type: Date, default: Date.now }
+        }],
+        misc: [{
+            uri: String,
+            value: String,
+            timestamp: { type: Date, default: Date.now }
+        }]
+    }
 });
 
 device.load = function (connection) {

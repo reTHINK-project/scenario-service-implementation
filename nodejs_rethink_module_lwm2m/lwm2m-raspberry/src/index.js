@@ -17,12 +17,12 @@
  */
 'use strict';
 
-//TODO: Sensor-code
-
 import lwm2mlib from "lwm2m-node-lib";
 import logger from "logops";
 import cmd from "command-node";
 import config from "./../config";
+import TempSensor from "./TempSensor";
+import Hue from "./Hue";
 
 logger.format = logger.formatters.dev;
 logger.setLevel('INFO'); //Initial log-level, overwritten by config later
@@ -30,9 +30,11 @@ logger.setLevel('INFO'); //Initial log-level, overwritten by config later
 
 var client = lwm2mlib.client;
 var globalDeviceInfo = null;
+var tempSensor = null;
+var hue = null;
 
 logger.debug("Initialising from config");
-init(config)
+init()
     .catch(function (error) {
         logger.fatal("Error while initialising! Abort.");
         if (error) {
@@ -41,29 +43,130 @@ init(config)
         process.exit(1);
     })
     .then(function () {
-        logger.info("Connecting to server");
-        register() //TODO: add timeout
+        var timeout_ms = 10000;
+        var timeout = setTimeout(() => {
+            logger.info("Timeout: Unable to register to server within " + timeout_ms + "ms!");
+            cmd_stop();
+        }, timeout_ms);
+
+        logger.info("Connecting to lwm2m-server [" + config.connection.host + ":" + config.connection.port + "] as '" + config.connection.endpoint + "'");
+        register()
             .catch(function (error) {
                 logger.error("Could not connect to server!", error);
+                clearTimeout(timeout);
+                cmd_stop();
             })
             .then(function () {
-                logger.info("Registered at server '" + config.connection.host + ":" + config.connection.port + "' as '" + config.connection.endpoint + "'!");
+                clearTimeout(timeout);
+                logger.info("Registered at server '" + config.connection.host + ":" + config.connection.port + "' as '"
+                    + config.connection.endpoint + "'!");
             });
     });
 
-function init(config) {
+function init() {
     return new Promise(function (resolve, reject) {
         if (!config || !config.hasOwnProperty("client") || !config.hasOwnProperty("connection")) {
             reject(new Error("Invalid configuration! Can't start."));
         }
         else {
             logger.setLevel(config.client.logLevel);
+
+            logger.info("Initialising client");
+            //Init lwm2m-client
             client.init(config);
-            resolve();
+
+            logger.info("Starting devices");
+            //Init devices attached and enabled
+            var devices = [];
+            if (config.sensors.hasOwnProperty("temperature") && config.sensors.temperature.enabled === true) {
+                devices.push(initTempSensor());
+            }
+            else {
+                logger.debug("Device 'temperature' is disabled");
+            }
+            if (config.sensors.hasOwnProperty("hue") && config.sensors.hue.enabled === true) {
+                devices.push(initHue());
+            }
+            else {
+                logger.debug("Device 'hue' is disabled");
+            }
+            Promise.all(devices) //Wait for devices before registering to server
+                .catch((errors) => {
+                    logger.error("Error while initialising devices!", errors);
+                })
+                .then(resolve);
         }
     });
 }
 
+function initHue() {
+    return new Promise((resolve) => {
+        hue = new Hue(lwm2mlib.client, config.sensors.hue.hostname, config.sensors.hue.username);
+
+        hue.start()
+            .catch((error) => {
+                logger.error("Error while initialising philips-hue!", error);
+            })
+            .then((lights) => {
+                logger.info("Hue: Connected lights", Object.keys(lights));
+                resolve();
+            });
+    })
+}
+
+function initTempSensor() {
+    return new Promise((resolve) => {
+        tempSensor = new TempSensor(lwm2mlib.client, config.sensors.temperature.refreshInterval);
+        tempSensor.start()
+            .catch((error) => {
+                logger.error("Temperature: Error while starting temperature-sensor!", error);
+                resolve();
+            })
+            .then(() => {
+                logger.info("Temperature: Found temperature sensor/s", tempSensor.sensors);
+                resolve();
+            });
+    });
+}
+
+
+function execute(objectType, objectId, resourceId, value, callback) {
+    logger.debug("Received 'execute'\n" + objectType + "/" + objectId + " " + resourceId + " " + value);
+    callback(null);
+}
+
+function read(objectType, objectId, resourceId, value, callback) {
+    logger.debug("Received 'read'\n" + objectType + "/" + objectId + " " + resourceId + " " + value);
+    callback(null);
+}
+
+function write(objectType, objectId, resourceId, value, callback) {
+    logger.debug("Received 'write'\n" + objectType + "/" + objectId + " " + resourceId + " " + value);
+
+    if (config.sensors.hue.enabled === true && hue !== null) {
+        if (objectType == "3311") {
+            hue.handleWrite(objectType, objectId, resourceId, value)
+                .catch((error) => {
+                    logger.error("Hue: Error while handling lwm2m-write", error);
+                    callback(error); //TODO: Set error code, not error-msg
+                })
+                .then(() => {
+                    callback(null); //No error
+                });
+        }
+    }
+    else {
+        callback(null);
+    }
+
+
+}
+
+function setHandlers(deviceInfo) {
+    client.setHandler(deviceInfo.serverInfo, 'write', write);
+    client.setHandler(deviceInfo.serverInfo, 'execute', execute);
+    client.setHandler(deviceInfo.serverInfo, 'read', read);
+}
 
 function register() {
     return new Promise(function (resolve, reject) {
@@ -71,15 +174,19 @@ function register() {
             reject(new Error("Can not register, already registered!"));
         }
         else {
-            client.register(config.connection.host, config.connection.port, config.connection.url, config.connection.endpoint, function (error, deviceInfo) {
-                if (error) {
-                    reject(error);
-                }
-                else {
-                    globalDeviceInfo = deviceInfo;
-                    resolve();
-                }
-            })
+            client.register(config.connection.host, config.connection.port, config.connection.url,
+                config.connection.endpoint, function (error, deviceInfo) {
+                    if (error) {
+                        reject(error);
+                    }
+                    else {
+                        globalDeviceInfo = deviceInfo;
+                        setHandlers(deviceInfo);
+
+                        logger.debug("Registration-info", deviceInfo);
+                        resolve();
+                    }
+                })
         }
     });
 }
@@ -104,24 +211,53 @@ function unregister() {
 }
 
 function cmd_showConfig() {
-    logger.info(config);
+    logger.info("Loaded configuration", config);
 }
 
 function cmd_stop() {
     logger.info("Stopping client");
+    const timeout_ms = 3000;
+
+    var timeout = setTimeout(() => {
+        logger.info("Timeout: Unable to unregister from server within " + timeout_ms + "ms!");
+        stopDevices();
+        cmd_exit();
+    }, timeout_ms);
+
     unregister()
         .catch(function (error) {
             logger.error("Error while unregistering from server!");
             if (error) {
                 logger.error(error);
             }
+            clearTimeout(timeout);
+            stopDevices();
+            cmd_exit();
         })
-        .then(function () { //TODO: Fix: Also runs on .catch above
+        .then(function () {
+            clearTimeout(timeout);
             logger.info("Unregistered from '" + config.connection.host + ":" + config.connection.port + "'!");
-        })
-        .then(function () { //Always
-            process.exit(0);
+            logger.info("Stopping devices");
+            stopDevices();
+
+            cmd_exit();
         });
+}
+
+function stopDevices() {
+    if (tempSensor) {
+        logger.info("Stopping temperature-sensor");
+        tempSensor.stop();
+    }
+    if (hue) {
+        logger.info("Stopping hue");
+        hue.stop();
+    }
+}
+
+function cmd_exit() {
+    logger.info("Stopping cmd...");
+    process.exit(0);
 }
 
 var commands = {
@@ -129,6 +265,11 @@ var commands = {
         parameters: [],
         description: '\tStop client',
         handler: cmd_stop
+    },
+    'exit': {
+        parameters: [],
+        description: '\tExit cmd, forces running threads to stop.',
+        handler: cmd_exit
     },
     'config': {
         parameters: [],

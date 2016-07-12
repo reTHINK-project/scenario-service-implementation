@@ -1,33 +1,33 @@
 import chai from "chai";
 import chaiAsPromised from "chai-as-promised";
 import lwm2m from "../src/index.js";
-import config from "./config.js";
+import config from "../config.js";
 
 let expect = chai.expect;
 chai.use(chaiAsPromised);
 
 
-describe('Test module', function () {
+describe('Test module', () => {
 
-    describe('Server start and stop', function () {
+    describe('Server start and stop', () => {
         this.timeout(0); //TODO
 
-        it('should set lwm2m-server configuration', function () {
+        it('should set lwm2m-server configuration', () => {
             lwm2m.setConfig(config);
             expect(lwm2m.getConfig()).to.eql(config);
         });
 
-        it('should start and stop lwm2m server', function (done) {
+        it('should start and stop lwm2m server', (done) => {
             lwm2m.start()
-                .catch(function (error) {
+                .catch((error) => {
                     expect(error).to.not.exist;
                 })
-                .then(function () {
+                .then(() => {
                     lwm2m.stop()
-                        .catch(function (error) {
+                        .catch((error) => {
                             expect(error).to.not.exist;
                         })
-                        .then(function () {
+                        .then(() => {
                             expect(lwm2m.server.isRunning()).to.be.false;
                             done();
                         });

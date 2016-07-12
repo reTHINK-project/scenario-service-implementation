@@ -1,26 +1,3 @@
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _createClass = function () {
-    function defineProperties(target, props) {
-        for (var i = 0; i < props.length; i++) {
-            var descriptor = props[i];
-            descriptor.enumerable = descriptor.enumerable || false;
-            descriptor.configurable = true;
-            if ("value" in descriptor) descriptor.writable = true;
-            Object.defineProperty(target, descriptor.key, descriptor);
-        }
-    }
-
-    return function (Constructor, protoProps, staticProps) {
-        if (protoProps) defineProperties(Constructor.prototype, protoProps);
-        if (staticProps) defineProperties(Constructor, staticProps);
-        return Constructor;
-    };
-}();
 /*
  * Copyright [2015-2017] Fraunhofer Gesellschaft e.V., Institute for
  * Open Communication Systems (FOKUS)
@@ -38,14 +15,17 @@ var _createClass = function () {
  * limitations under the License.
  *
  */
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _mongoose = require("mongoose");
 
 var _mongoose2 = _interopRequireDefault(_mongoose);
-
-var _Hotel = require("./models/Hotel");
-
-var _Hotel2 = _interopRequireDefault(_Hotel);
 
 var _Room = require("./models/Room");
 
@@ -63,27 +43,29 @@ var _logops = require("logops");
 
 var _logops2 = _interopRequireDefault(_logops);
 
-function _interopRequireDefault(obj) {
-    return obj && obj.__esModule ? obj : {default: obj};
-}
+var _Util = require("./Util");
 
-function _classCallCheck(instance, Constructor) {
-    if (!(instance instanceof Constructor)) {
-        throw new TypeError("Cannot call a class as a function");
-    }
-}
+var _Util2 = _interopRequireDefault(_Util);
+
+var _lwm2mMapping = require("./lwm2m-mapping");
+
+var _lwm2mMapping2 = _interopRequireDefault(_lwm2mMapping);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Database = function () {
     function Database(config) {
         _classCallCheck(this, Database);
 
         this._config = config;
+        this._lastStoreValue = null;
     }
 
     _createClass(Database, [{
         key: "connect",
         value: function connect() {
-            //Assuming Hotel is singleton (in db scope)
             var that = this;
             return new Promise(function (resolve, reject) {
                 if (that.connected()) {
@@ -106,7 +88,6 @@ var Database = function () {
                 that.connection.once('open', function () {
                     _logops2.default.debug('Database.js: connected to mongodb!');
                     _Device2.default.load(that.connection);
-                    _Hotel2.default.load(that.connection);
                     _Room2.default.load(that.connection);
                     resolve();
                 });
@@ -143,14 +124,14 @@ var Database = function () {
                 if (!that.connected()) {
                     reject(new Error("Not connected to db!"));
                 } else {
-                    that.connection.db.listCollections({name: 'hotels'}) //appended 's' is mongoose-behavior, see: http://bit.ly/1Lq65AJ)
-                        .next(function (err, collinfo) {
-                            if (err) {
-                                reject(err);
-                            } else {
-                                resolve(typeof collinfo !== 'undefined' && collinfo !== null);
-                            }
-                        });
+                    that.connection.db.listCollections({ name: 'rooms' }) //appended 's' is mongoose-behavior, see: http://bit.ly/1Lq65AJ)
+                    .next(function (err, collinfo) {
+                        if (err) {
+                            reject(err);
+                        } else {
+                            resolve(typeof collinfo !== 'undefined' && collinfo !== null);
+                        }
+                    });
                 }
             });
         }
@@ -167,9 +148,7 @@ var Database = function () {
                     } else {
                         var errors = [];
 
-                        that._parseHotel(errors).then(function (errors) {
-                            return that._parseRooms(errors);
-                        }).then(function (errors) {
+                        that._parseRooms(errors).then(function (errors) {
                             return that._parseDevices(errors);
                         }).then(function (errors) {
                             return that._setReferences(errors);
@@ -184,21 +163,6 @@ var Database = function () {
             });
         }
     }, {
-        key: "_parseHotel",
-        value: function _parseHotel(errors) {
-            var that = this;
-            return new Promise(function (resolve) {
-                var newHotel = _Hotel2.default.model();
-                newHotel.name = that.config.hotel.name;
-                newHotel.save(function (error) {
-                    if (error) {
-                        errors.push(error);
-                    }
-                    resolve(errors);
-                });
-            });
-        }
-    }, {
         key: "_parseRooms",
         value: function _parseRooms(errors) {
             var that = this;
@@ -207,46 +171,21 @@ var Database = function () {
                     resolve(errors);
                 } else {
                     _logops2.default.debug("Room-cfg existing, adding to db.");
-                    var hotel;
 
-                    _Hotel2.default.model.findOne({name: that.config.hotel.name}, function (error, result) {
-                        if (error) {
-                            errors.push(error);
-                        }
-                        hotel = result;
-
-                        if (!hotel) {
-                            errors.push(new Error("Hotel missing in db. Inconsistent data. Not able to link hotel->rooms."));
-                        }
-
-                        _async2.default.each(that.config.hotel.rooms, function (cfg_room, callback2) {
-                            var room = _Room2.default.model();
-                            room.name = cfg_room.name;
-                            room.isBooked = cfg_room.isBooked;
-                            room.members = cfg_room.members;
-                            room.save(function (error) {
-                                if (error) {
-                                    errors.push(error);
-                                }
-                                _logops2.default.debug("Added room '%s'", cfg_room.name);
-                                if (hotel) {
-                                    hotel.rooms.push(room); //Add room to hotel-list
-                                    _logops2.default.debug("Added %s to %s.rooms[]", room.name, hotel.name);
-                                }
-                                callback2();
-                            });
-                        }, function () {
-                            if (hotel) {
-                                hotel.save(function (error) {
-                                    if (error) {
-                                        errors.push(error);
-                                    }
-                                    resolve(errors);
-                                });
-                            } else {
-                                resolve(errors);
+                    _async2.default.each(that.config.hotel.rooms, function (cfg_room, callback2) {
+                        var room = _Room2.default.model();
+                        room.name = cfg_room.name;
+                        room.isBooked = cfg_room.isBooked;
+                        room.members = cfg_room.members;
+                        room.save(function (error) {
+                            if (error) {
+                                errors.push(error);
                             }
+                            _logops2.default.debug("Added room '%s'", cfg_room.name);
+                            callback2();
                         });
+                    }, function () {
+                        resolve(errors);
                     });
                 }
             });
@@ -288,16 +227,17 @@ var Database = function () {
                         _logops2.default.debug("Device '%s' has no room-reference. Skipping...", cfg_device.name);
                         return callback();
                     }
-                    _Room2.default.model.findOne({name: cfg_device.room}, function (error, room) {
+                    _Room2.default.model.findOne({ name: cfg_device.room }, function (error, room) {
                         if (error) {
                             errors.push(new Error("Error while querying db", error));
                             return callback();
+                        } else {
+                            if (!room) {
+                                errors.push(new Error("Invalid reference '" + cfg_device.name + "." + cfg_device.room + "'! Room '" + cfg_device.room + "' not found."));
+                                return callback();
+                            }
                         }
-                        if (!room) {
-                            errors.push(new Error("Invalid reference '" + cfg_device.name + "." + cfg_device.room + "'! Room '" + cfg_device.room + "' not found."));
-                            return callback();
-                        }
-                        _Device2.default.model.findOne({name: cfg_device.name}, function (error, device) {
+                        _Device2.default.model.findOne({ name: cfg_device.name }, function (error, device) {
                             if (error) {
                                 errors.push(new Error("Error while querying db", error));
                                 return callback();
@@ -343,7 +283,7 @@ var Database = function () {
                 if (typeof register !== 'boolean') {
                     reject(new Error("Invalid param. register, boolean expected."));
                 }
-                _Device2.default.model.findOne({name: deviceName}, function (error, device) {
+                _Device2.default.model.findOne({ name: deviceName }, function (error, device) {
                     //Get device by name
                     if (error) {
                         reject(error);
@@ -375,36 +315,83 @@ var Database = function () {
                 });
             });
         }
+
+        //Wait for other queries to finish
+
     }, {
         key: "storeValue",
-        value: function storeValue(deviceName, uri, value) {
+        value: function storeValue(deviceName, objectType, objectId, resourceId, value) {
+            var that = this;
+            if (that._lastStoreValue === null) {
+                that._lastStoreValue = that._storeValueSynced(deviceName, objectType, objectId, resourceId, value);
+                return that._lastStoreValue;
+            } else {
+                that._lastStoreValue = new Promise(function (resolve, reject) {
+                    that._lastStoreValue.catch(reject).then(function () {
+                        that._storeValueSynced(deviceName, objectType, objectId, resourceId, value).catch(reject).then(function () {
+                            resolve();
+                        });
+                    });
+                });
+                return that._lastStoreValue;
+            }
+        }
+    }, {
+        key: "_storeValueSynced",
+        value: function _storeValueSynced(deviceName, objectType, objectId, resourceId, value) {
             return new Promise(function (resolve, reject) {
-                _Device2.default.model.findOne({name: deviceName}, function (error, device) {
+                _Device2.default.model.findOne({ name: deviceName }, function (error, device) {
                     if (error) {
                         reject(error);
                     } else {
                         if (!device) {
                             reject(new Error("Can't store value in db for device '" + deviceName + "'! Device not found!"));
                         } else {
-                            var data = {};
-                            var pushNew = true;
+                            var category;
+                            var location;
 
-                            data.timestamp = Date.now();
-                            data.uri = uri;
-                            data.value = value;
+                            var attr = _lwm2mMapping2.default.getAttrName(objectType, resourceId);
+                            if (attr === null) {
+                                category = "misc";
+                                location = "value";
+                            } else {
+                                category = attr.objectType;
+                                location = attr.resourceType;
 
-                            if (device.lastValues.length > 0) {
-                                device.lastValues.forEach(function (currValue) {
-                                    if (currValue.uri == uri) {
-                                        currValue.value = data.value;
-                                        currValue.timestamp = data.timestamp;
-                                        pushNew = false;
-                                        //TODO: Exit loop, we're done
+                                if ((category === "temperature" || category === "humidity") && location === "value" || category === "light" && location === "dimmer") {
+                                    value = parseFloat(value);
+                                } else {
+                                    if (category === "light" && location === "color.value") {
+                                        value = JSON.parse(value);
+                                        value = {
+                                            "x": value[0],
+                                            "y": value[1]
+                                        };
                                     }
-                                });
+                                }
                             }
-                            if (pushNew) {
-                                device.lastValues.push(data);
+
+                            var found = false;
+                            device.lastValues[category].forEach(function (entry) {
+                                if (entry.id === parseInt(objectId)) {
+                                    _Util2.default.setNestedValue(entry, location, value);
+                                    if (location === "misc") {
+                                        entry.uri = '/' + objectType + '/' + objectId + '/' + resourceId;
+                                    }
+                                    entry.timestamp = Date.now();
+                                    found = true;
+                                }
+                            });
+
+                            if (!found) {
+                                var obj = {};
+                                _Util2.default.setNestedValue(obj, location, value);
+                                if (location === "misc") {
+                                    obj.uri = '/' + objectType + '/' + objectId + '/' + resourceId;
+                                }
+                                obj.id = objectId;
+                                obj.timestamp = Date.now();
+                                device.lastValues[category].push(obj);
                             }
 
                             device.save(function (error) {
@@ -417,6 +404,44 @@ var Database = function () {
                         }
                     }
                 });
+            });
+        }
+    }, {
+        key: "getObject",
+        value: function getObject(type, objName) {
+            return new Promise(function (resolve, reject) {
+                if (typeof type === "undefined") {
+                    reject(new Error("Database.getObject(): Invalid parameters!"));
+                } else {
+                    var model = {};
+                    switch (type) {
+                        case "device":
+                            model = _Device2.default.model;
+                            break;
+                        case "room":
+                            model = _Room2.default.model;
+                            break;
+                        default:
+                            reject(new Error("Invalid type"));
+                            break;
+                    }
+                    var query;
+                    if (typeof objName === "undefined" || objName === null) {
+                        query = model.find();
+                    } else {
+                        query = model.findOne({name: objName});
+                    }
+                    if (type === "room") {
+                        //Check if we need to populate
+                        query.populate("devices");
+                    }
+                    query.exec(function (error, result) {
+                        if (error) {
+                            reject(error);
+                        }
+                        resolve(result);
+                    });
+                }
             });
         }
     }, {

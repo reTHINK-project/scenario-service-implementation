@@ -21,7 +21,7 @@
 'use strict';
 
 import lwm2m from "../dist/index.js";
-import config from "./config.js";
+import config from "../config.js";
 import cmd from "command-node";
 
 function start() {
@@ -33,11 +33,11 @@ function start() {
         console.log("Starting rethink-lwm2m...");
         lwm2m.setConfig(config);
         lwm2m.start()
-            .catch(function (error) {
+            .catch((error) => {
                 console.error("rethink-lwm2m start failed!", error);
                 cmd.prompt();
             })
-            .then(function () {
+            .then(() => {
                 console.log("rethink-lwm2m started!");
                 cmd.prompt();
             })
@@ -48,11 +48,11 @@ function stop() {
     if (lwm2m.server.isRunning()) {
         console.log("Stopping rethink-lwm2m...");
         lwm2m.stop()
-            .catch(function (error) {
+            .catch((error) => {
                 console.error("rethink-lwm2m stop failed!", error);
                 cmd.prompt();
             })
-            .then(function () {
+            .then(() => {
                 console.log("rethink-lwm2m stopped!");
                 cmd.prompt();
             });
@@ -63,6 +63,23 @@ function stop() {
     }
 }
 
+function write(params) {
+    lwm2m.server.write(
+        params[0],
+        params[1],
+        params[2],
+        params[3],
+        params[4],
+        (error) => {
+            if (error) {
+                console.log("Error while writing resource!", error);
+            }
+            else {
+                console.log("Written resource successfully!");
+            }
+        })
+}
+
 function showConfig() {
     console.log(config);
 }
@@ -70,7 +87,6 @@ function showConfig() {
 function exit() {
     process.exit(0);
 }
-
 
 var commands = {
     'start': {
@@ -82,6 +98,11 @@ var commands = {
         parameters: [],
         description: '\tStop reTHINK-lwm2m',
         handler: stop
+    },
+    'write': {
+        parameters: ['id', 'objectType', 'objectId', 'resourceId', 'value'],
+        description: '\tManual lwm2m-write for development-tests',
+        handler: write
     },
     'config': {
         parameters: [],

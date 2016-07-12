@@ -1,5 +1,15 @@
 var config = {};
 
+//Configuration of HTTP-interface
+//--------------------------------------------------
+config.http = {
+    enabled: true,
+    host: 'localhost',
+    port: 8000,
+    key: './test/cert/rethink-certificate.key',
+    cert: './test/cert/rethink-certificate.cert'
+};
+
 //Configuration of the database (mongodb)
 //--------------------------------------------------
 config.db = {
@@ -21,7 +31,7 @@ config.hotel = {
             members: []
         },
         {
-            name: 'room2',
+            name: 'room3',
             isBooked: true,
             members: []
         }

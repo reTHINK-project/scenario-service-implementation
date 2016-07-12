@@ -17,3 +17,5 @@ node_modules
 resources/bundle.js
 privatekey.csr
 *.pem
+config.js
+*.js.map

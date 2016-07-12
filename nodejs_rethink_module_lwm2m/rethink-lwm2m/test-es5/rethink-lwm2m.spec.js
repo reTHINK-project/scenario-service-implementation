@@ -12,7 +12,7 @@ var _index = require("../src/index.js");
 
 var _index2 = _interopRequireDefault(_index);
 
-var _config = require("./config.js");
+var _config = require("../config.js");
 
 var _config2 = _interopRequireDefault(_config);
 
@@ -26,7 +26,7 @@ _chai2.default.use(_chaiAsPromised2.default);
 describe('Test module', function () {
 
     describe('Server start and stop', function () {
-        this.timeout(0); //TODO
+        undefined.timeout(0); //TODO
 
         it('should set lwm2m-server configuration', function () {
             _index2.default.setConfig(_config2.default);
