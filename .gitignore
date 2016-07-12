@@ -7,3 +7,6 @@
 *.iml
 out
 gen
+
+
+nodejs_rethink_module_lwm2m/rethink-lwm2m/config.js
