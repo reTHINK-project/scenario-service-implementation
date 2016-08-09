@@ -1,0 +1,159 @@
+<!--
+ Copyright [2015-2017] Fraunhofer Gesellschaft e.V., Institute for
+ Open Communication Systems (FOKUS)
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+ http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Room Control</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
+          integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css"
+          integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+    <link rel="stylesheet" href="hotelguest.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
+            integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
+            crossorigin="anonymous"></script>
+    <script src="build/rethink.js"></script>
+    <script src="colorConversion.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.js"></script>
+    <script src="hotelguest.js"></script>
+</head>
+<body>
+<div id="roomControl" ng-app="hotelGuestGUI" ng-controller="hotelGuestController">
+    <div ng-model="hotel">
+        <div class="flex-container">
+            <div class="">
+                <img id="hotelThumbnail" src={{hotel.thumbnailUrl}} class="flex-item img-thumbnail"
+                     alt="MyHotel"/>
+            </div>
+            <div id="hotelDescription" class="flex-item">
+                <h3>{{hotel.name}}</h3>
+                <p>{{hotel.description}}</p>
+            </div>
+        </div>
+
+        <hr/>
+
+        <div id="{{room.name}}" ng-repeat="room in hotel.rooms" class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <!--irgendein title-->
+                        <a data-toggle="collapse"
+                           ng-href="#{{room.name}}-collapse">{{room.name}}</a>
+                    </h4>
+                </div>
+                <div id="{{room.name}}-collapse" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        <div class="room">
+                            <!--<DeviceList devices={room.devices}/>-->
+                            <div id="device" ng-repeat="device in room.values">
+                                <div class="flex-container">
+                                    <div class="flex-item">
+                                        <h4>Temperature</h4>
+                                    </div>
+                                </div>
+                                <div id="{{temperature.id}}"
+                                     ng-repeat="temperature in device.value.lastValues.temperature"
+                                     class="flex-container singleVar">
+                                    <div class="flex-item">
+                                        {{temperature.id}}
+                                    </div>
+                                    <div class="flex-item">
+                                        {{temperature.value}} {{temperature.unit == "Cel" ? "℃" : temperature.unit}}
+                                    </div>
+                                </div>
+                                <div class="flex-container">
+                                    <div class="flex-item">
+                                        <h4>Humidity</h4>
+                                    </div>
+                                </div>
+                                <div id="{{humidity.id}}" ng-repeat="humidity in device.value.lastValues.humidity"
+                                     class="flex-container singleVar">
+                                    <div class="flex-item">
+                                        {{humidity.id}}
+                                    </div>
+                                    <div class="flex-item">
+                                        {{humidity.value}} {{humidity.unit}}
+                                    </div>
+                                </div>
+                                <div class="flex-container">
+                                    <div class="flex-item">
+                                        <h4>Lights</h4>
+                                    </div>
+                                </div>
+                                <div id="lights" class="flex-container">
+                                    <div id="{{light.id}}" class="flex-container"
+                                         ng-repeat="light in device.value.lastValues.light">
+                                        <div class="flex-item flex-container flex-col box-shadow"
+                                             ng-style="light.isOn ? {'background-color': cc.rgbToHex_s(cc.cieToRGB_s(light.color.value))} : {'background-color': '#5f5f5f', 'color': 'white'}">
+                                            <div class="flex-item">
+                                                <b>{{light.name}}</b>
+                                            </div>
+                                            <div class="flex-item">
+                                                <button type="button" class="btn btn-default">{{light.isOn ? 'ON' :
+                                                    'OFF'}}
+                                                </button>
+                                            </div>
+                                            <div class="flex-item">
+                                                <b>Color</b>
+                                            </div>
+                                            <div class="flex-item">
+                                                <!--<LightColor value={data.color} enabled={data.isOn}/>-->
+                                                <div class="flex-container">
+                                                    <div class="flex-item">
+                                                        <input
+                                                                type="color"
+                                                                value={{cc.rgbToHex_s(cc.cieToRGB_s(light.color.value))}}
+                                                                ng-disabled="!light.isOn"
+                                                        />
+                                                    </div>
+                                                    <div class="flex-item">
+                                                        {{cc.rgbToHex_s(cc.cieToRGB_s(light.color.value))}}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="flex-item">
+                                                Dimmer
+                                            </div>
+                                            <div class="flex-item">
+                                                <!--<LightDimmer value={data.dimmer} enabled={data.isOn}/>-->
+                                                {{light.dimmer}} %
+                                                <input
+                                                        type="range"
+                                                        name="dimmer" min="1" max="100"
+                                                        ng-disabled="!light.isOn"
+                                                        ng-model="light.dimmer"
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+</body>
+</html>
