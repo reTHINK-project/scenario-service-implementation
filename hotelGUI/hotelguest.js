@@ -30,12 +30,13 @@ app.controller('hotelGuestController', function ($scope) {
                 console.log("Room received", room);
                 hotel.rooms.push(room);
                 $scope.$apply();
+                console.log(JSON.stringify(hotel.rooms, null, 2));
             });
 
             roomClient.addEventListener('changedRoom', (room) => {
                 console.log("Room updated", room);
-                for(var i=0; i<hotel.rooms.length; i++) {
-                    if(hotel.rooms[i].name === room.name) {
+                for (var i = 0; i < hotel.rooms.length; i++) {
+                    if (hotel.rooms[i].name === room.name) {
                         hotel.rooms[i] = room;
                         break;
                     }
@@ -45,9 +46,6 @@ app.controller('hotelGuestController', function ($scope) {
 
         })
     });
-
-
-
 
 
     $scope.cc = window.colorConversion;
