@@ -21,14 +21,25 @@ app.controller('hotelGuestController', ($scope) => {
 
     var roomClient;
 
+    $scope.calculateBackgroundColor = (cie) => {
+        var rgb = cieToRGB_s(cie);
+        return "rgba(" + rgb[0] + "," + rgb[1] + "," + rgb[2] + ", .5)";
+    };
 
-    $scope.sendAction = (deviceName, objectId, resourceType , value) => {
-        if(!roomClient) {
+    $scope.updateColorPicker = (cie) => {
+        console.warn("Updating color picker", cie);
+        var ret = rgbToHex_s(cieToRGB_s(cie));
+        console.warn("Converted", ret);
+        return ret;
+    };
+
+    $scope.sendAction = (deviceName, objectId, resourceType, value) => {
+        if (!roomClient) {
             console.error("sendAction(): roomClient hyperty not loaded! Can't perform action.");
             alert("Error while sending action! Client Hyperty not ready!");
         }
-        else  {
-            if(resourceType === "color.value") {
+        else {
+            if (resourceType === "color.value") {
                 value = rgbToCIE_s(hexToRgb(value));
             }
             roomClient.sendAction(deviceName, "light", objectId, resourceType, value).then((result) => {
@@ -38,8 +49,8 @@ app.controller('hotelGuestController', ($scope) => {
     };
 
 
-     window.rethink.default.install({domain: 'hybroker.rethink.ptinovacao.pt', development: true}).then((runtime) => {
-         runtime.requireHyperty("hyperty-catalogue://hybroker.rethink.ptinovacao.pt/.well-known/hyperty/RoomClient").then((hyperty) => {
+    window.rethink.default.install({domain: 'hybroker.rethink.ptinovacao.pt', development: true}).then((runtime) => {
+        runtime.requireHyperty("hyperty-catalogue://hybroker.rethink.ptinovacao.pt/.well-known/hyperty/RoomClient").then((hyperty) => {
             roomClient = hyperty.instance;
             console.log(hyperty);
 
