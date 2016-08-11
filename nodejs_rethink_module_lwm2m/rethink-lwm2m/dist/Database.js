@@ -362,14 +362,16 @@ var Database = function () {
                                     value = parseFloat(value);
                                 } else {
                                     if (category === "light" && location === "color.value") {
-                                        value = JSON.parse(value);
-                                        value = {
-                                            "x": value[0],
-                                            "y": value[1]
-                                        };
+                                        try {
+                                            value = JSON.parse(value);
+                                        } catch (error) {
+                                            _logops2.default.error("Error while parsing color.value", error);
+                                        }
                                     }
                                 }
                             }
+
+                            _logops2.default.debug("FOUND OR NOT ?", deviceName, objectType, objectId, resourceId, value);
 
                             var found = false;
                             device.lastValues[category].forEach(function (entry) {

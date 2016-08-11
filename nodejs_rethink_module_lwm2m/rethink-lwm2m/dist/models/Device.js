@@ -58,10 +58,7 @@ device.schema = new Schema({
             isOn: Boolean,
             dimmer: Number,
             color: {
-                value: {
-                    x: Number,
-                    y: Number
-                },
+                value: [Number, Number], //x,y
                 unit: String
             },
             timestamp: { type: Date, default: Date.now }

@@ -357,14 +357,17 @@ class Database {
                             }
                             else {
                                 if (category === "light" && location === "color.value") {
-                                    value = JSON.parse(value);
-                                    value = {
-                                        "x": value[0],
-                                        "y": value[1]
-                                    };
+                                    try {
+                                        value = JSON.parse(value);
+                                    }
+                                    catch (error) {
+                                        logger.error("Error while parsing color.value", error);
+                                    }
                                 }
                             }
                         }
+
+                        logger.debug("FOUND OR NOT ?", deviceName, objectType, objectId, resourceId, value);
 
                         var found = false;
                         device.lastValues[category].forEach((entry) => {

@@ -25,10 +25,6 @@ var _fs = require("fs");
 
 var _fs2 = _interopRequireDefault(_fs);
 
-var _logops = require("logops");
-
-var _logops2 = _interopRequireDefault(_logops);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var util = {};
@@ -50,7 +46,7 @@ util.setNestedValue = function (obj, keystr, value) {
     var arr = keystr.split(".");
     var i = 0;
     for (; i < arr.length - 1; i++) {
-        if (!dest.hasOwnProperty(arr[i])) {
+        if (typeof dest[arr[i]] === "undefined") {
             dest[arr[i]] = {};
         }
         dest = dest[arr[i]];
