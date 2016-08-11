@@ -18,14 +18,14 @@
 
 function rgbToCIE_s(rgb) {
     if (!rgb) {
-        return;
+        return [1 / 3, 1 / 3];
     }
-    return rgbToCIE(rgb.r, rgb.g, rgb.b);
+    return rgbToCIE(rgb[0], rgb[1], rgb[2]);
 }
 
 function rgbToCIE(r, g, b) {
     if (!r || !g || !b) {
-        return;
+        return [1 / 3, 1 / 3];
     }
 
     var red = (r > 0.04045) ? Math.pow((r + 0.055) / (1.0 + 0.055), 2.4) : (r / 12.92);
@@ -39,23 +39,20 @@ function rgbToCIE(r, g, b) {
     var x = X / (X + Y + Z);
     var y = Y / (X + Y + Z);
 
-    return {
-        "x": x,
-        "y": y
-    }
+    return [x, y];
 }
 
 
 function cieToRGB_s(xy) {
     if (!xy) {
-        return;
+        return [255, 255, 255];
     }
-    return cieToRGB(xy.x, xy.y);
+    return cieToRGB(xy[0], xy[1]);
 }
 
 function cieToRGB(x, y) {
     if (!x || !y) {
-        return;
+        return [255, 255, 255];
     }
     var brightness = 1;
     var z = 1.0 - x - y;
@@ -86,11 +83,7 @@ function cieToRGB(x, y) {
     g = Math.round(g * 255);
     b = Math.round(b * 255);
 
-    return {
-        "r": r,
-        "g": g,
-        "b": b
-    }
+    return [r, g, b];
 }
 
 
@@ -104,26 +97,25 @@ function componentToHex(c) {
 
 function rgbToHex_s(rgb) {
     if (!rgb) {
-        return;
+        return "#ffffff";
     }
-    return rgbToHex(rgb.r, rgb.g, rgb.b);
+    return rgbToHex(rgb[0], rgb[1], rgb[2]);
 }
 
 function rgbToHex(r, g, b) {
+    if (!r || !g || !b) {
+        return "#ffffff"
+    }
     return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
 }
 
 
 function hexToRgb(hex) {
     if (!hex) {
-        return;
+        return [255, 255, 255];
     }
     var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-    return result ? {
-        r: parseInt(result[1], 16),
-        g: parseInt(result[2], 16),
-        b: parseInt(result[3], 16)
-    } : null;
+    return result ? [parseInt(result[1], 16), parseInt(result[2], 16), parseInt(result[3], 16)] : null;
 }
 
 var colorConversion = {

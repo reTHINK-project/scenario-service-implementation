@@ -76,3 +76,8 @@ hr {
 h4 {
     font-weight: bold;
 }
+
+.centered {
+    padding-top: 2em;
+    text-align: center;
+}

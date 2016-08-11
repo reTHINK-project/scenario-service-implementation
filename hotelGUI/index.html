@@ -21,19 +21,34 @@
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Room Control</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
-          integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css"
-          integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
-    <link rel="stylesheet" href="hotelguest.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
-            integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
-            crossorigin="anonymous"></script>
-    <script src="build/rethink.js"></script>
-    <script src="colorConversion.js"></script>
+
+    <!-- Material Design fonts -->
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Roboto:300,400,500,700">
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/icon?family=Material+Icons">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/bootstrap-material-design.min.css">
+    <link rel="stylesheet" href="css/ripples.min.css">
+
+    <!-- Bootstrap JS -->
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/material.min.js"></script>
+    <script src="js/ripples.min.js"></script>
+
+    <!-- AngularJS -->
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.js"></script>
-    <script src="hotelguest.js"></script>
+
+
+    <!-- Application -->
+    <link rel="stylesheet" href="css/hotelguest.css">
+    <link rel="stylesheet" href="css/spinner.css">
+
+    <script src="build/rethink.js"></script>
+    <script src="js/colorConversion.js"></script>
+    <script src="js/hotelguest.js"></script>
+
 </head>
 <body>
 <div id="roomControl" ng-app="hotelGuestGUI" ng-controller="hotelGuestController">
@@ -50,6 +65,15 @@
         </div>
 
         <hr/>
+
+        <div ng-hide="hotel.rooms.length > 0">
+            <div class="centered">
+                <svg class="spinner" width="65px" height="65px" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
+                    <circle class="path" fill="none" stroke-width="6" stroke-linecap="round" cx="33" cy="33"
+                            r="30"></circle>
+                </svg>
+            </div>
+        </div>
 
         <div id="{{room.name}}" ng-repeat="room in hotel.rooms" class="panel-group">
             <div class="panel panel-default">
@@ -111,39 +135,39 @@
                                                     <b>{{light.name}}</b>
                                                 </div>
                                                 <div class="flex-item">
-                                                    <button type="button" class="btn btn-default">{{light.isOn ? 'ON' :
-                                                        'OFF'}}
+                                                    <button type="button" class="btn btn-default btn-raised"
+                                                            ng-click="sendAction(device.name, light.id, 'isOn', !light.isOn)">
+                                                        {{light.isOn ? 'OFF' : 'ON'}}
                                                     </button>
                                                 </div>
                                                 <div class="flex-item">
                                                     <b>Color</b>
                                                 </div>
                                                 <div class="flex-item">
-                                                    <!--<LightColor value={data.color} enabled={data.isOn}/>-->
                                                     <div class="flex-container">
                                                         <div class="flex-item">
                                                             <input
                                                                     type="color"
                                                                     value={{cc.rgbToHex_s(cc.cieToRGB_s(light.color.value))}}
+                                                                    ng-model="lightColor"
                                                                     ng-disabled="!light.isOn"
+                                                                    id="{{room.name}}/{{light.id}}"
+                                                                    ng-change="sendAction(device.name, light.id, 'color.value', lightColor)"
                                                             />
-                                                        </div>
-                                                        <div class="flex-item">
-                                                            {{cc.rgbToHex_s(cc.cieToRGB_s(light.color.value))}}
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="flex-item">
-                                                    Dimmer
+                                                    <b>Dimmer</b>
                                                 </div>
                                                 <div class="flex-item">
-                                                    <!--<LightDimmer value={data.dimmer} enabled={data.isOn}/>-->
                                                     {{light.dimmer}} %
                                                     <input
                                                             type="range"
                                                             name="dimmer" min="1" max="100"
                                                             ng-disabled="!light.isOn"
                                                             ng-model="light.dimmer"
+                                                            ng-change="sendAction(device.name, light.id, 'dimmer', light.dimmer)"
                                                     />
                                                 </div>
                                             </div>
