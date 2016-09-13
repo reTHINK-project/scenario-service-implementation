@@ -33,26 +33,38 @@ app.controller('hotelGuestController', ($scope) => {
         return ret;
     };
 
+    var satMap = {};
     $scope.sendAction = (deviceName, objectId, resourceType, value) => {
         if (!roomClient) {
             console.error("sendAction(): roomClient hyperty not loaded! Can't perform action.");
             alert("Error while sending action! Client Hyperty not ready!");
         }
         else {
-            if (resourceType === "color.value") {
-                value = rgbToCIE_s(hexToRgb(value));
+            var key = [deviceName, objectId, resourceType];
+            var sat = satMap[key];
+            if (sat) {
+                clearTimeout(sat);
             }
-            roomClient.sendAction(deviceName, "light", objectId, resourceType, value).then((result) => {
-                console.log("sendAction(): Action sent", result);
-            })
+
+            sat = setTimeout(() => {
+                if (resourceType === "color.value") {
+                    value = rgbToCIE_s(hexToRgb(value));
+                }
+                roomClient.sendAction(deviceName, "light", objectId, resourceType, value).then((result) => {
+                    console.log("sendAction(): Action sent", result);
+                })
+            }, 100);
+
+            satMap[key] = sat;
+            
         }
     };
 
 
-    window.rethink.default.install({domain: 'hybroker.rethink.ptinovacao.pt', development: true}).then((runtime) => {
-        runtime.requireHyperty("hyperty-catalogue://hybroker.rethink.ptinovacao.pt/.well-known/hyperty/RoomClient").then((hyperty) => {
+    window.rethink.default.install({domain: 'fokus.fraunhofer.de', development: false}).then((runtime) => {
+        runtime.requireHyperty("hyperty-catalogue://catalogue.fokus.fraunhofer.de/.well-known/hyperty/RoomClient").then((hyperty) => {
             roomClient = hyperty.instance;
-            console.log(hyperty);
+            window.roomClient = roomClient;
 
             roomClient.addEventListener('newRoom', (room) => {
                 console.log("Room received", room);
@@ -85,4 +97,5 @@ app.controller('hotelGuestController', ($scope) => {
         rooms: []
     };
     $scope.hotel = hotel;
+    window.hotel = hotel;
 });
