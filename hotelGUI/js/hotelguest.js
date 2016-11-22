@@ -76,7 +76,7 @@ app.controller('hotelGuestController', ($scope) => {
     var token = getURLParameter("token");
     console.debug("URL value for 'token':", token);
     if (token === null) {
-        var errorMsg = "Invalid identity token! Must not be empty! [Test tokens: Admin: 'admintoken', User: 'usertoken']";
+        var errorMsg = "Invalid identity token! Must not be empty! [Test tokens: Admin: 'token=admintoken', User: 'token=usertoken']";
         console.error(errorMsg);
         $scope.failed = true;
         $scope.failMsg = errorMsg;
