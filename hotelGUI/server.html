@@ -20,12 +20,16 @@
 <head>
     <meta charset="UTF-8"/>
     <title>RoomServer</title>
-    <script src="https://rethink.fokus.fraunhofer.de/.well-known/runtime/rethink.js"></script>
+    <script src="https://runtime.fokus.fraunhofer.de/.well-known/runtime/rethink.js"></script>
 </head>
 <body>
 
 <script>
-    window.rethink.default.install({domain: 'fokus.fraunhofer.de', development: false}).then((runtime) => {
+    window.rethink.default.install({
+        domain: 'fokus.fraunhofer.de',
+        development: false,
+        accessMap: {"usertoken": ["room1"], "admintoken": ["room1", "room2"]}
+    }).then((runtime) => {
         runtime.requireHyperty("hyperty-catalogue://catalogue.fokus.fraunhofer.de/.well-known/hyperty/RoomServer").then((hyperty) => {
             console.log("Hyperty loaded", hyperty);
             window.roomServer = hyperty;

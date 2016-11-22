@@ -18,6 +18,19 @@
 
 var app = angular.module('hotelGuestGUI', []);
 app.controller('hotelGuestController', ($scope) => {
+    $scope.cc = window.colorConversion;
+
+    var hotel = {
+        thumbnailUrl: "img/hotel-thumbnail.jpg",
+        name: "MyHotel",
+        description: "The best Hotel in the world!",
+        rooms: []
+    };
+    $scope.hotel = hotel;
+    window.hotel = hotel;
+
+    $scope.failed = false;
+    $scope.failMsg = "Unknown error. Check the console for details";
 
     var roomClient;
 
@@ -56,10 +69,20 @@ app.controller('hotelGuestController', ($scope) => {
             }, 100);
 
             satMap[key] = sat;
-            
+
         }
     };
 
+    var token = getURLParameter("token");
+    console.debug("URL value for 'token':", token);
+    if (token === null) {
+        var errorMsg = "Invalid identity token! Must not be empty! [Test tokens: Admin: 'admintoken', User: 'usertoken']";
+        console.error(errorMsg);
+        $scope.failed = true;
+        $scope.failMsg = errorMsg;
+
+        return;
+    }
 
     window.rethink.default.install({domain: 'fokus.fraunhofer.de', development: false}).then((runtime) => {
         runtime.requireHyperty("hyperty-catalogue://catalogue.fokus.fraunhofer.de/.well-known/hyperty/RoomClient").then((hyperty) => {
@@ -82,20 +105,27 @@ app.controller('hotelGuestController', ($scope) => {
                     }
                 }
                 $scope.$apply();
-            })
+            });
 
+            roomClient.addEventListener('error', (error) => {
+                console.error("Error in roomClient", error);
+                $scope.failed = true;
+                if (typeof error !== "undefined") {
+                    $scope.failMsg = error.message;
+                }
+                $scope.$apply();
+            });
+
+            roomClient.start(token);
         })
+    }).catch((error) => {
+        console.error(error);
+        $scope.failed = true;
+        $scope.failMsg = error;
     });
-
-
-    $scope.cc = window.colorConversion;
-
-    var hotel = {
-        thumbnailUrl: "img/hotel-thumbnail.jpg",
-        name: "MyHotel",
-        description: "The best Hotel in the world!",
-        rooms: []
-    };
-    $scope.hotel = hotel;
-    window.hotel = hotel;
 });
+
+//From: https://stackoverflow.com/questions/11582512/how-to-get-url-parameters-with-javascript/11582513#11582513
+function getURLParameter(name) {
+    return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search) || [null, ''])[1].replace(/\+/g, '%20')) || null;
+}

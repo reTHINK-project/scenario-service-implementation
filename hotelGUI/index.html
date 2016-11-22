@@ -45,7 +45,7 @@
     <link rel="stylesheet" href="css/hotelguest.css">
     <link rel="stylesheet" href="css/spinner.css">
 
-    <script src="https://rethink.fokus.fraunhofer.de/.well-known/runtime/rethink.js"></script>
+    <script src="https://runtime.fokus.fraunhofer.de/.well-known/runtime/rethink.js"></script>
     <script src="js/colorConversion.js"></script>
     <script src="js/hotelguest.js"></script>
 
@@ -65,109 +65,119 @@
         </div>
 
         <hr/>
-
-        <div ng-hide="hotel.rooms.length > 0">
-            <div class="centered">
-                <svg class="spinner" width="65px" height="65px" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
-                    <circle class="path" fill="none" stroke-width="6" stroke-linecap="round" cx="33" cy="33"
-                            r="30"></circle>
-                </svg>
+        <div ng-hide="!failed">
+            <div style="text-align: center" class="alert alert-danger">
+                <strong>Runtime error:</strong> {{failMsg}}
             </div>
         </div>
 
-        <div id="{{room.name}}" ng-repeat="room in hotel.rooms" class="panel-group">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h4 class="panel-title">
-                        <a data-toggle="collapse"
-                           ng-href="#{{room.name}}-collapse">{{room.name}}</a>
-                    </h4>
+        <div ng-hide="failed">
+            <div ng-hide="hotel.rooms.length > 0">
+                <div class="centered">
+                    <svg class="spinner" width="65px" height="65px" viewBox="0 0 66 66"
+                         xmlns="http://www.w3.org/2000/svg">
+                        <circle class="path" fill="none" stroke-width="6" stroke-linecap="round" cx="33" cy="33"
+                                r="30"></circle>
+                    </svg>
                 </div>
-                <div id="{{room.name}}-collapse" class="panel-collapse collapse">
-                    <div class="panel-body">
-                        <div class="room">
-                            <div id="device" ng-repeat="device in room.values">
-                                <div ng-if="device.value.lastValues.temperature.length > 0">
-                                    <div class="flex-container">
-                                        <div class="flex-item">
-                                            <h4>Temperature</h4>
+            </div>
+
+            <div id="{{room.name}}" ng-repeat="room in hotel.rooms" class="panel-group">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse"
+                               ng-href="#{{room.name}}-collapse">{{room.name}}</a>
+                        </h4>
+                    </div>
+                    <div id="{{room.name}}-collapse" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <div class="room">
+                                <div id="device" ng-repeat="device in room.values">
+                                    <div ng-if="device.value.lastValues.temperature.length > 0">
+                                        <div class="flex-container">
+                                            <div class="flex-item">
+                                                <h4>Temperature</h4>
+                                            </div>
+                                        </div>
+                                        <div id="{{temperature.id}}"
+                                             ng-repeat="temperature in device.value.lastValues.temperature"
+                                             class="flex-container singleVar">
+                                            <div class="flex-item">
+                                                {{temperature.id}}
+                                            </div>
+                                            <div class="flex-item">
+                                                {{temperature.value}} {{temperature.unit == "Cel" ? "℃" :
+                                                temperature.unit}}
+                                            </div>
                                         </div>
                                     </div>
-                                    <div id="{{temperature.id}}"
-                                         ng-repeat="temperature in device.value.lastValues.temperature"
-                                         class="flex-container singleVar">
-                                        <div class="flex-item">
-                                            {{temperature.id}}
+                                    <div ng-if="device.value.lastValues.humidity.length > 0">
+                                        <div class="flex-container">
+                                            <div class="flex-item">
+                                                <h4>Humidity</h4>
+                                            </div>
                                         </div>
-                                        <div class="flex-item">
-                                            {{temperature.value}} {{temperature.unit == "Cel" ? "℃" : temperature.unit}}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div ng-if="device.value.lastValues.humidity.length > 0">
-                                    <div class="flex-container">
-                                        <div class="flex-item">
-                                            <h4>Humidity</h4>
-                                        </div>
-                                    </div>
-                                    <div id="{{humidity.id}}" ng-repeat="humidity in device.value.lastValues.humidity"
-                                         class="flex-container singleVar">
-                                        <div class="flex-item">
-                                            {{humidity.id}}
-                                        </div>
-                                        <div class="flex-item">
-                                            {{humidity.value}} {{humidity.unit}}
+                                        <div id="{{humidity.id}}"
+                                             ng-repeat="humidity in device.value.lastValues.humidity"
+                                             class="flex-container singleVar">
+                                            <div class="flex-item">
+                                                {{humidity.id}}
+                                            </div>
+                                            <div class="flex-item">
+                                                {{humidity.value}} {{humidity.unit}}
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div ng-if="device.value.lastValues.light.length > 0">
-                                    <div class="flex-container">
-                                        <div class="flex-item">
-                                            <h4>Lights</h4>
+                                    <div ng-if="device.value.lastValues.light.length > 0">
+                                        <div class="flex-container">
+                                            <div class="flex-item">
+                                                <h4>Lights</h4>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div id="lights" class="flex-container">
-                                        <div id="{{light.id}}" class="flex-container"
-                                             ng-repeat="light in device.value.lastValues.light">
-                                            <div class="flex-item flex-container flex-col box-shadow"
-                                                 ng-style="light.isOn ? {'background-color': calculateBackgroundColor(light.color.value)} : {'background-color': '#5f5f5f', 'color': 'white'}">
-                                                <div class="flex-item">
-                                                    <b>{{light.name}}</b>
-                                                </div>
-                                                <div class="flex-item">
-                                                    <button type="button" class="btn btn-default btn-raised"
-                                                            ng-click="sendAction(device.name, light.id, 'isOn', !light.isOn)">
-                                                        {{light.isOn ? 'OFF' : 'ON'}}
-                                                    </button>
-                                                </div>
-                                                <div class="flex-item">
-                                                    <b>Color</b>
-                                                </div>
-                                                <div class="flex-item">
-                                                    <div class="flex-container">
-                                                        <div class="flex-item">
-                                                            <input
-                                                                    type="color"
-                                                                    ng-value="updateColorPicker(light.color.value)"
-                                                                    ng-model="lightColor"
-                                                                    ng-disabled="!light.isOn"
-                                                                    ng-change="sendAction(device.name, light.id, 'color.value', lightColor)"
-                                                            />
+                                        <div id="lights" class="flex-container">
+                                            <div id="{{light.id}}" class="flex-container"
+                                                 ng-repeat="light in device.value.lastValues.light">
+                                                <div class="flex-item flex-container flex-col box-shadow"
+                                                     ng-style="light.isOn ? {'background-color': calculateBackgroundColor(light.color.value)} : {'background-color': '#5f5f5f', 'color': 'white'}">
+                                                    <div class="flex-item">
+                                                        <b>{{light.name}}</b>
+                                                    </div>
+                                                    <div class="flex-item">
+                                                        <button type="button" class="btn btn-default btn-raised"
+                                                                ng-click="sendAction(device.name, light.id, 'isOn', !light.isOn)">
+                                                            {{light.isOn ? 'OFF' : 'ON'}}
+                                                        </button>
+                                                    </div>
+                                                    <div class="flex-item">
+                                                        <b>Color</b>
+                                                    </div>
+                                                    <div class="flex-item">
+                                                        <div class="flex-container">
+                                                            <div class="flex-item">
+                                                                <input
+                                                                        type="color"
+                                                                        ng-value="updateColorPicker(light.color.value)"
+                                                                        ng-model="lightColor"
+                                                                        ng-disabled="!light.isOn"
+                                                                        ng-change="sendAction(device.name, light.id, 'color.value', lightColor)"
+                                                                />
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                                <div class="flex-item">
-                                                    <b>Dimmer</b>
-                                                </div>
-                                                <div class="flex-item">
-                                                    {{light.dimmer}} %
-                                                    <input
-                                                            type="range"
-                                                            name="dimmer" min="1" max="100"
-                                                            ng-disabled="!light.isOn"
-                                                            ng-model="light.dimmer"
-                                                            ng-change="sendAction(device.name, light.id, 'dimmer', light.dimmer)"
-                                                    />
+                                                    <div class="flex-item">
+                                                        <b>Dimmer</b>
+                                                    </div>
+                                                    <div class="flex-item">
+                                                        {{light.dimmer}} %
+                                                        <input
+                                                                type="range"
+                                                                name="dimmer" min="1" max="100"
+                                                                ng-disabled="!light.isOn"
+                                                                ng-model="light.dimmer"
+                                                                ng-change="sendAction(device.name, light.id, 'dimmer', light.dimmer)"
+                                                        />
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -178,7 +188,6 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 </div>
