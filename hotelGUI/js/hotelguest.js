@@ -29,8 +29,7 @@ app.controller('hotelGuestController', ($scope) => {
     $scope.hotel = hotel;
     window.hotel = hotel;
 
-    $scope.failed = false;
-    $scope.failMsg = "Unknown error. Check the console for details";
+    $scope.fail = [];
 
     var roomClient;
 
@@ -40,17 +39,18 @@ app.controller('hotelGuestController', ($scope) => {
     };
 
     $scope.updateColorPicker = (cie) => {
-        console.warn("Updating color picker", cie);
+        console.debug("Updating color picker", cie);
         var ret = rgbToHex_s(cieToRGB_s(cie));
-        console.warn("Converted", ret);
+        console.debug("Converted", ret);
         return ret;
     };
 
     var satMap = {};
     $scope.sendAction = (deviceName, objectId, resourceType, value) => {
         if (!roomClient) {
-            console.error("sendAction(): roomClient hyperty not loaded! Can't perform action.");
-            alert("Error while sending action! Client Hyperty not ready!");
+            var errorMsg = "sendAction(): roomClient hyperty not loaded! Can't perform action."
+            console.error(errorMsg);
+            $scope.fail.push(errorMsg);
         }
         else {
             var key = [deviceName, objectId, resourceType];
@@ -64,7 +64,7 @@ app.controller('hotelGuestController', ($scope) => {
                     value = rgbToCIE_s(hexToRgb(value));
                 }
                 roomClient.sendAction(deviceName, "light", objectId, resourceType, value).then((result) => {
-                    console.log("sendAction(): Action sent", result);
+                    console.debug("sendAction(): Action sent", result);
                 })
             }, 100);
 
@@ -78,9 +78,7 @@ app.controller('hotelGuestController', ($scope) => {
     if (token === null) {
         var errorMsg = "Invalid identity token! Must not be empty! [Test tokens: Admin: 'token=admintoken', User: 'token=usertoken']";
         console.error(errorMsg);
-        $scope.failed = true;
-        $scope.failMsg = errorMsg;
-
+        $scope.fail.push(errorMsg);
         return;
     }
 
@@ -90,14 +88,14 @@ app.controller('hotelGuestController', ($scope) => {
             window.roomClient = roomClient;
 
             roomClient.addEventListener('newRoom', (room) => {
-                console.log("Room received", room);
+                console.debug("Room received", room);
                 hotel.rooms.push(room);
                 $scope.$apply();
-                console.log(JSON.stringify(hotel.rooms, null, 2));
+                console.debug(JSON.stringify(hotel.rooms, null, 2));
             });
 
             roomClient.addEventListener('changedRoom', (room) => {
-                console.log("Room updated", room);
+                console.debug("Room updated", room);
                 for (var i = 0; i < hotel.rooms.length; i++) {
                     if (hotel.rooms[i].name === room.name) {
                         hotel.rooms[i] = room;
@@ -109,9 +107,8 @@ app.controller('hotelGuestController', ($scope) => {
 
             roomClient.addEventListener('error', (error) => {
                 console.error("Error in roomClient", error);
-                $scope.failed = true;
                 if (typeof error !== "undefined") {
-                    $scope.failMsg = error.message;
+                    $scope.fail.push(error.message);
                 }
                 $scope.$apply();
             });
@@ -120,8 +117,7 @@ app.controller('hotelGuestController', ($scope) => {
         })
     }).catch((error) => {
         console.error(error);
-        $scope.failed = true;
-        $scope.failMsg = error;
+        $scope.fail.push(error);
     });
 });
 

@@ -65,13 +65,16 @@
         </div>
 
         <hr/>
-        <div ng-hide="!failed">
-            <div style="text-align: center" class="alert alert-danger">
-                <strong>Runtime error:</strong> {{failMsg}}
+        <div ng-hide="fail.size <= 0">
+            <div ng-repeat="error in fail">
+                <div style="text-align: center" class="alert alert-danger">
+                    <strong>Error: </strong> {{error}}
+                </div>
             </div>
+            >
         </div>
 
-        <div ng-hide="failed">
+        <div ng-hide="fail.size > 0">
             <div ng-hide="hotel.rooms.length > 0">
                 <div class="centered">
                     <svg class="spinner" width="65px" height="65px" viewBox="0 0 66 66"
