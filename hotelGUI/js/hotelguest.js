@@ -41,8 +41,8 @@ app.controller('hotelGuestController', ($scope) => {
     $scope.updateColorPicker = (cie) => {
         console.debug("Updating color picker", cie);
         var ret = rgbToHex_s(cieToRGB_s(cie));
+        $scope.lightColor = ret;
         console.debug("Converted", ret);
-        return ret;
     };
 
     var satMap = {};
