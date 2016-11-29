@@ -1,8 +1,7 @@
 ## 2.2 Hotel Guest Application
 
 
-**bring in original content from D5-1.  Needs to be updated**
-
+**text updated; Bring in updated figures**
 
 ### 2.2.1	Scenario Environment
 
