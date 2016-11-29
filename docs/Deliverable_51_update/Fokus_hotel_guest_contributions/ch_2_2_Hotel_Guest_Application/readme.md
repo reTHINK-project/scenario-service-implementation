@@ -19,8 +19,6 @@ When Benjamin arrives at the hotel, he uses the Old Inn Hotel Guest Application 
 
 While the access token that Benjamin has received only grants access to the reserved room for the duration of the reservation, the same application allows via a priveledged administrator token to access all hotel rooms. A Hotel Administrator Application may hence open the room door in case of emergency even if a guest electronically locked it.
 
-**INCLUDE FIG HERE**
-
 ![Overview of Hotel Guest System](Overview_Hotel_Guest_System.png)
 
 ### 2.2.2	User perspective
