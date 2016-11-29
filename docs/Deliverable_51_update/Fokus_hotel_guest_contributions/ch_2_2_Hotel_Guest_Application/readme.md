@@ -1,7 +1,7 @@
 ## 2.2 Hotel Guest Application
 
 
-**text updated; Bring in updated figures**
+**text updated; 1st figure updted; Open -- Bring new versionn for 2nd figure reflecting text updated**
 
 ### 2.2.1	Scenario Environment
 
