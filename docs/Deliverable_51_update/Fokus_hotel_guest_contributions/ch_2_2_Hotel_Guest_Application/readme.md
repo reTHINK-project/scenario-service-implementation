@@ -21,6 +21,8 @@ While the access token that Benjamin has received only grants access to the rese
 
 **INCLUDE FIG HERE**
 
+![Overview of Hotel Guest System][Overview_Hotel_Guest_System.png]
+
 ### 2.2.2	User perspective
 
 Alice, the owner of the hotel is happy to be able to buy new sensors and easily configure and have them operational using the technology provided from D1.1 use case 5 “M2M Always Connected in Trustful Domains for Multi vendor devices”. The hotel owner and the hotel guest share trustfully access to the data collected from multiple sensors, feature enabled by D1.1 use cases 6 “M2M Seamless connected from different but Trustful domains” and  70 “Information reception from a sensor”.
