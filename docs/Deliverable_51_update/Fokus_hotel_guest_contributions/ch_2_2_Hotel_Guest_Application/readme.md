@@ -21,7 +21,7 @@ While the access token that Benjamin has received only grants access to the rese
 
 **INCLUDE FIG HERE**
 
-![Overview of Hotel Guest System][Overview_Hotel_Guest_System.png]
+![Overview of Hotel Guest System](Overview_Hotel_Guest_System.png)
 
 ### 2.2.2	User perspective
 
