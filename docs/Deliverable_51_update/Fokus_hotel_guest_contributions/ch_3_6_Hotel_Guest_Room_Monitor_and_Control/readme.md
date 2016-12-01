@@ -16,7 +16,7 @@ The architecture of the client-side hyperty is depicted in the following figure.
 
 ![Hotel Connectivity Hyperty Architecture](./Hotel-Connectivity-Hyperty-Architecture.png)
 
-**INCLUDE FIGURE HERE**
+The Hotel Guest Application uses this hyperty and provides on top of it the graphical user interface to display and manimulation smart appliances.
 
 #### 3.6.1.2	Hyperty Data Objects schemas
 
@@ -39,20 +39,31 @@ The hyperty exposes the following functionalities:
 
 ### 3.6.2 Server side Hyperty
 
-by interacting with the LWM2M Server. This hyperty is usually instatiated only once, i.e. in the back-end (here, at the hotel premises), to have a single means of communicating via standardized protocols like COAP but also via customized protocols to the IoT domain.  This hyperty encapsulates all functionality offered for a given scenario with re
+The *Room Monitor and Control Hyperty* provides server-side the logic and IoT-specifc communiction means to interact with smart appliances. Specifically, the hyperty allows the user to monitor and control the smart devices from an evironment. In the case of the hotel guest, the environment is limited to his/her hotel room and in the case of the administrator, the enviroment spans over all the rooms supported by the Hotel LWM2M Message Node.
 
+#### 3.6.1.1 Architecture
+
+The Room Monitor and Control Hyperty consists of three building blocks:
+  * Discovery module to retrieve the list of rooms and their associated devices received from the LWM2M Message Node;
+  * The Monitor and actuate communication client  interacts with the Hotel LWM2M Message Node to retrieve the list of rooms, their associated smart devices, the sensed data and allow actuation; and
+  * The authentication module providing a token-bases access control to smart appliances.
+
+![Room Monitor and Control Hyperty Architecture](Room-Monitor-and-Control-Hyperty-Architecture.png)
+
+#### 3.6.1.2	Hyperty Data Objects schemas
+
+#### 3.6.1.3	Hyperty API
+
+#### 3.6.1.4	Main data flows
+
+**Include MSC showing main data flows for the above described APIs**
 
 
 **Content from D5.1 below:  needs major update; merge into new structure above**
 
 
-3.8	Room Monitor and Control Hyperty
-The hyperty will allow the user to monitor and control the smart devices from an evironment. In the case of the hotel guest the environment will be limited to his/her hotel room and in the case of the administrator, the enviroment will span over all the rooms supported by the Hotel LWM2M Message Node.
-3.8.1	Architecture
-The Room Monitor and Control Hyperty will have as main building blocks:
-•	Discovery module to retrievethe list of rooms and their associated devices will be received from the LWM2M Message Node. 
-•	The Monitor and actuate GUI will be the graphical interface presenting to the user the sensed data and allowing actuation
-•	The Monitor and actuate communication client will interact with the Hotel LWM2M Message Node to retrieve the list of rooms, their associated smart devices, the sensed data and allow actuation.
+
+
  
 Figure 44 Room Monitor and Control Hyperty Architecture
 3.8.2	Hyperty Data Objects schemas
