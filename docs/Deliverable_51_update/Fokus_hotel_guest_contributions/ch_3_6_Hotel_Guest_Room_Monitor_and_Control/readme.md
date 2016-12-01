@@ -52,49 +52,20 @@ The Room Monitor and Control Hyperty consists of three building blocks:
 
 #### 3.6.1.2	Hyperty Data Objects schemas
 
+The SmartObject extends the Context Data Model to define a smart device and including the name, type (sensor, actuator, complex sensor), manufacturer information, capabilities (e.g. type of sensor) optional last measurement if a sensor and optional last received command. For both measurements and commands the timestamp and the user will be stored.
+
 #### 3.6.1.3	Hyperty API
+
+The Room Monitor and Control Hyperty will expose several functionalities:
+  * start (userSettings) this will trigger starting the Hyperty and as a first action the user will be authenticated by the LWM2M Message Node<List<roomNumber, role>> getRooms() the information received via registration related to the list of rooms the user can have access to and the associated role
+  * <List<DeviceId, SmartObject>>getDevices(roomNumber) – returns the devices from a room
+  * String getLatestMeasurement(deviceId)–returns the latest received sensed data
+  * <String, String, Time>getLatestActuation(deviceId)– returns the latest actuation command, the user and the timestamp on which it was sent
+  * Time sendNewActuation(deviceId, user, time, command)– actuate on a device, by a user, the time to apply it and the comman itself
+
+**cross check if up to date**
 
 #### 3.6.1.4	Main data flows
 
 **Include MSC showing main data flows for the above described APIs**
 
-
-**Content from D5.1 below:  needs major update; merge into new structure above**
-
-
-
-
- 
-Figure 44 Room Monitor and Control Hyperty Architecture
-3.8.2	Hyperty Data Objects schemas
-The SmartObject extends the Context Data Modelto define a smart device and including the name, type (sensor, actuator, complex sensor), manufacturer information, capabilities (e.g. type of sensor) optional last measurement if a sensor and optional last received command. For both measurements and commands the timestamp and the user will be stored.
-3.8.3	Hyperty API
-The Room Monitor and Control Hyperty will expose several functionalities:
-•	start (userSettings) this will trigger starting the Hyperty and as a first action the user will be authenticated by the LWM2M Message Node<List<roomNumber, role>> getRooms() the information received via registration related to the list of rooms the user can have access to and the associated role
-•	<List<DeviceId, SmartObject>>getDevices(roomNumber) – returns the devices from a room
-•	String getLatestMeasurement(deviceId)–returns the latest received sensed data
-•	<String, String, Time>getLatestActuation(deviceId)– returns the latest actuation command, the user and the timestamp on which it was sent
-•	Time sendNewActuation(deviceId, user, time, command)– actuate on a device, by a user, the time to apply it and the comman itself
-3.8.4	Main data flows
-The Monitor and actuate communication client will subscribe to the data sensed by a sensor from the room (Figure 34). Special care has to be taken so that the Hotel LWM2M Message Node is not overloaded with subscriptions from the same user smart phone that is changing the IP, at the same time the notifications have to arrive to the right smart phone so that the data is in sync when connected.
- 
-Figure 45 Room Monitor and Control Hyperty main data flow
-3.9	Smart Device Configuration Bootstrap Hyperty
-This Hyperty will supportsmart devices l. By Smart device we refer to devices that sense or actuate. This hyperty is part of the Hotel Administrator Application.
-3.9.1	Architecture
-As can be seen from Figure 35 the main building blocks of the Smart Device Configuration Bootstrap Hyperty are:
-•	the Graphical User Interface that will interact with the Hotel Administrator to insert and select devices to be bootstraped
-•	a Device Management (DM) Client that receives the request from the GUI and interacts with the Manufacturer DM server to bootstrap the devices. If the procedure was successful or any errors have occured, a message will be returned asynchronously to the GUI.
- 
-Figure 46 Smart Device Configuration Bootstrap Hyperty Architecture
-3.9.2	Hyperty Data Objects schemas
-A manufacturer DM server or Hotel LWM2M Message Node will be modelled as the pair (IP, port) on which it listens. A device will be modelled as the Manufacturer identity and its LWM2M endpoint id, unique identity per Manufacturer. 
-3.9.3	Hyperty API
-The Device Bootstrap API will expose the following API:
-insertNewDevice(manufacturerId, deviceEndpointId)
-insertNewManufacturer(dmSrvIP, dmSrvPort)
-insertNewHotelDataServer(ip, port)
-Integer bootstrapDevice(manufacturerId, deviceEndpointId, hotelDMSrvIP)
-3.9.4	Main data flows
- 
-Figure 47 Smart Device Configuration Bootstrap Hyperty data flows
