@@ -1,29 +1,47 @@
 ## 3.6	Hotel Guest Room Monitor & Control (FOKUS)
+
+Two hyperties are provided to allow in general connecting to a LWM2M Server, which is used as the back-end to control smart appliances in the hotel scenario.  The first of the two hyperties, the *Room Monitor and Control Hyperty*, provides access to the IoT domain and encapsulates all logic for functionality provided within the hotel scenario.  The second hyperty, the *Hotel Connectivity Hyperty*, provides the reTHINK interface to user-side applications and means to communicate with the *Room Monitor and Control Hyperty* via the reThINK Message Bus.
+
+by interacting with the LWM2M Server. This hyperty is usually instatiated only once, i.e. in the back-end (here, at the hotel premises), to have a single means of communicating via standardized protocols like COAP but also via customized protocols to the IoT domain.  This hyperty encapsulates all functionality offered for a given scenario with re
+
 ### 3.6.1 Client side Hyperty
+
+The *Room Monitor and Control Hyperty* resides at the client side. It provides the interface to applicaitons to control IoT appliances (here smart devices in hotel rooms). The implementation of the logic associated with each offered service related to the control of smart appliances resides remote at the server-side hyperty (i.e., the *Room Monitor and Control Hyperty*). The client-side hyperty "proxies" the communicaiton via the reTHINK message bus. This allows to decouple an IoT specific communication protocols from the user-side implementations.
+
+Besides, in this specific usage scenario, the *Room Monitor and Control Hyperty* allows as well to configure the WiFi Interface to be used and to connect to the local WiFi network of the hotel. For that, it interacts with the Last Hop Connectivity Broker (LHCB) from the reTHINK QoS framework to configure and request the appropriate uplink technology used for communication.
+
+#### 3.6.1.1 Architecture
+
+The architecture of the client-side hyperty is depicted in the following figure. Internally, functionality is split two-fold, i.e. into a component for communicating / proxing with the server-side hyperty, and into a component interacting with the LHCB.
+
+**INCLUDE FIGURE HERE**
+
+#### 3.6.1.2	Hyperty Data Objects schemas
+
+*WiFiConfig* is an object that holds the WiFi credentials: SSID, user, password, depending on the authentication scheme.
+
+**to be updated**
+
+#### 3.6.1.3	Hyperty API
+
+The hyperty exposes the following functionalities:
+
+*blabla()*  -- what its does
+
+**to be updated**
+
+#### 3.6.1.4	Main data flows
+
+**Include MSC showing main data flows for the above described APIs**
+
+
 ### 3.6.2 Server side Hyperty
+
 
 
 
 **Content from D5.1 below:  needs major update; merge into new structure above**
 
-3.7	Hotel Connectivity Hyperty
-The Hotel Connectivity Hyperty will help the hotel guest to use the connectivity provided by the hotel. A QR code will be received at checkin by the hotel guest. Using a QR code reader, the hyperty can retrieve WiFi information located at the URL link to which the QR code is leading to. After this the hyperty will access the list of WiFi configuration of the hotel guest smart phone and add the credentials of the WiFi connection.
-3.7.1	Architecture
-The architecture of the hyperty is depicted in Figure 42. The main building blocks are:
-•	the QR reader retrieving the WiFi connectivity credentials
-•	the Connectivity Adaptor manipulating the Smart Phone connectivity settings by adding the WiFi credentials. This component depends on the Smart Phone Operating System. The targeted Operating System is Android.
- 
-Figure 42 Hotel Connectivity Hyperty Architecture
-3.7.2	Hyperty Data Objects schemas
-WiFiConfig is an object that holds the WiFi credentials: SSID, user, password, depending on the authentication scheme.
-3.7.3	Hyperty API
-The Hyperty will expose two functionalities:
-WiFiConfig readQRCode() – reading the QR code received during checkin
-addWiFiSettings(WiFiConfig) – internal operation for adding the WiFi credentials to the hotel guest settings
-3.7.4	Main data flows
-The operation readQRcode will trigger scanning a QR code. The QR code encodes the Hotel WiFi settings location from the LWM2M Message Node. The hypertywill retrieving the resource located at the URLresource containing the WiFi settings that will be added on the hotel guest smart phone (Figure 43). An authentication of the guest follows to grant the guest free of charge access to the resource.
- 
-Figure 43 Hotel Connectivity Hyperty main data flows
 
 3.8	Room Monitor and Control Hyperty
 The hyperty will allow the user to monitor and control the smart devices from an evironment. In the case of the hotel guest the environment will be limited to his/her hotel room and in the case of the administrator, the enviroment will span over all the rooms supported by the Hotel LWM2M Message Node.
