@@ -2,17 +2,19 @@
 
 Two hyperties are provided to allow in general connecting to a LWM2M Server, which is used as the back-end to control smart appliances in the hotel scenario.  The first of the two hyperties, the *Room Monitor and Control Hyperty*, provides access to the IoT domain and encapsulates all logic for functionality provided within the hotel scenario.  The second hyperty, the *Hotel Connectivity Hyperty*, provides the reTHINK interface to user-side applications and means to communicate with the *Room Monitor and Control Hyperty* via the reThINK Message Bus.
 
-by interacting with the LWM2M Server. This hyperty is usually instatiated only once, i.e. in the back-end (here, at the hotel premises), to have a single means of communicating via standardized protocols like COAP but also via customized protocols to the IoT domain.  This hyperty encapsulates all functionality offered for a given scenario with re
+
 
 ### 3.6.1 Client side Hyperty
 
-The *Room Monitor and Control Hyperty* resides at the client side. It provides the interface to applicaitons to control IoT appliances (here smart devices in hotel rooms). The implementation of the logic associated with each offered service related to the control of smart appliances resides remote at the server-side hyperty (i.e., the *Room Monitor and Control Hyperty*). The client-side hyperty "proxies" the communicaiton via the reTHINK message bus. This allows to decouple an IoT specific communication protocols from the user-side implementations.
+The *Hotel Connectivity Hyperty* resides at the client side. It provides the interface to applicaitons to control IoT appliances (here smart devices in hotel rooms). The implementation of the logic associated with each offered service related to the control of smart appliances resides remote at the server-side hyperty (i.e., the *Room Monitor and Control Hyperty*). The client-side hyperty "proxies" the communicaiton via the reTHINK message bus. This allows to decouple an IoT specific communication protocols from the user-side implementations.
 
 Besides, in this specific usage scenario, the *Room Monitor and Control Hyperty* allows as well to configure the WiFi Interface to be used and to connect to the local WiFi network of the hotel. For that, it interacts with the Last Hop Connectivity Broker (LHCB) from the reTHINK QoS framework to configure and request the appropriate uplink technology used for communication.
 
 #### 3.6.1.1 Architecture
 
 The architecture of the client-side hyperty is depicted in the following figure. Internally, functionality is split two-fold, i.e. into a component for communicating / proxing with the server-side hyperty, and into a component interacting with the LHCB.
+
+![Hotel Connectivity Hyperty Architecture](./Hotel-Connectivity-Hyperty-Architecture.png)
 
 **INCLUDE FIGURE HERE**
 
@@ -37,6 +39,7 @@ The hyperty exposes the following functionalities:
 
 ### 3.6.2 Server side Hyperty
 
+by interacting with the LWM2M Server. This hyperty is usually instatiated only once, i.e. in the back-end (here, at the hotel premises), to have a single means of communicating via standardized protocols like COAP but also via customized protocols to the IoT domain.  This hyperty encapsulates all functionality offered for a given scenario with re
 
 
 
