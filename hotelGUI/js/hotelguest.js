@@ -16,6 +16,8 @@
  *
  */
 
+var debugMode = true;
+
 var app = angular.module('hotelGuestGUI', []);
 app.controller('hotelGuestController', ($scope) => {
     $scope.cc = window.colorConversion;
@@ -73,6 +75,10 @@ app.controller('hotelGuestController', ($scope) => {
         }
     };
 
+    $scope.toggleDoorLock = (roomName) => {
+        console.debug("toggleDoorLock(" + roomName + ")");
+    };
+
     var token = getURLParameter("token");
     console.debug("URL value for 'token':", token);
     if (token === null) {
@@ -82,43 +88,92 @@ app.controller('hotelGuestController', ($scope) => {
         return;
     }
 
-    window.rethink.default.install({domain: 'fokus.fraunhofer.de', development: false}).then((runtime) => {
-        runtime.requireHyperty("hyperty-catalogue://catalogue.fokus.fraunhofer.de/.well-known/hyperty/RoomClient").then((hyperty) => {
-            roomClient = hyperty.instance;
-            window.roomClient = roomClient;
-
-            roomClient.addEventListener('newRoom', (room) => {
-                console.debug("Room received", room);
-                hotel.rooms.push(room);
-                $scope.$apply();
-                console.debug(JSON.stringify(hotel.rooms, null, 2));
-            });
-
-            roomClient.addEventListener('changedRoom', (room) => {
-                console.debug("Room updated", room);
-                for (var i = 0; i < hotel.rooms.length; i++) {
-                    if (hotel.rooms[i].name === room.name) {
-                        hotel.rooms[i] = room;
-                        break;
+    if (debugMode) {
+        //Define dummy room
+        hotel.rooms.push(
+            {
+                "id": "5825a61908d25170004c597d",
+                "name": "room1",
+                "values": [{
+                    "name": "myRaspberry",
+                    "value": {
+                        "_id": "5825a61908d25170004c5980",
+                        "name": "myRaspberry",
+                        "__v": 99,
+                        "room": "5825a61908d25170004c597d",
+                        "lastValues": {
+                            "misc": [],
+                            "light": [{
+                                "name": "Desklamp",
+                                "id": 1,
+                                "_id": "5825a62608d25170004c5982",
+                                "isOn": true,
+                                "dimmer": 97,
+                                "timestamp": "2016-12-02T12:04:51.783Z",
+                                "color": {"unit": "CIE_JSON", "value": [0.409, 0.518]}
+                            }],
+                            "humidity": [],
+                            "temperature": [{
+                                "unit": "Cel",
+                                "id": 0,
+                                "_id": "5825a62608d25170004c5981",
+                                "value": 22.1,
+                                "timestamp": "2016-12-02T12:10:29.863Z"
+                            }]
+                        },
+                        "registration": {
+                            "payload": "</3311/1>,</3303/0>",
+                            "timestamp": "2016-12-02T12:04:48.839Z",
+                            "registered": true
+                        }
                     }
-                }
-                $scope.$apply();
-            });
+                }],
+                "scheme": "context",
+                "type": "chat",
+                "reporter": "hyperty://fokus.fraunhofer.de/5c9039f9-53be-40e9-815a-740879a5d837",
+                "schema": "hyperty-catalogue://catalogue.fokus.fraunhofer.de/.well-known/dataschema/Context"
+            }
+        )
+    }
+    else {
+        window.rethink.default.install({domain: 'fokus.fraunhofer.de', development: false}).then((runtime) => {
+            runtime.requireHyperty("hyperty-catalogue://catalogue.fokus.fraunhofer.de/.well-known/hyperty/RoomClient").then((hyperty) => {
+                roomClient = hyperty.instance;
+                window.roomClient = roomClient;
 
-            roomClient.addEventListener('error', (error) => {
-                console.error("Error in roomClient", error);
-                if (typeof error !== "undefined") {
-                    $scope.fail.push(error.message);
-                }
-                $scope.$apply();
-            });
+                roomClient.addEventListener('newRoom', (room) => {
+                    console.debug("Room received", room);
+                    hotel.rooms.push(room);
+                    $scope.$apply();
+                    console.debug(JSON.stringify(hotel.rooms, null, 2));
+                });
 
-            roomClient.start(token);
-        })
-    }).catch((error) => {
-        console.error(error);
-        $scope.fail.push(error);
-    });
+                roomClient.addEventListener('changedRoom', (room) => {
+                    console.debug("Room updated", room);
+                    for (var i = 0; i < hotel.rooms.length; i++) {
+                        if (hotel.rooms[i].name === room.name) {
+                            hotel.rooms[i] = room;
+                            break;
+                        }
+                    }
+                    $scope.$apply();
+                });
+
+                roomClient.addEventListener('error', (error) => {
+                    console.error("Error in roomClient", error);
+                    if (typeof error !== "undefined") {
+                        $scope.fail.push(error.message);
+                    }
+                    $scope.$apply();
+                });
+
+                roomClient.start(token);
+            })
+        }).catch((error) => {
+            console.error(error);
+            $scope.fail.push(error);
+        });
+    }
 });
 
 //From: https://stackoverflow.com/questions/11582512/how-to-get-url-parameters-with-javascript/11582513#11582513

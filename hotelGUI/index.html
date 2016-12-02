@@ -44,6 +44,7 @@
     <!-- Application -->
     <link rel="stylesheet" href="css/hotelguest.css">
     <link rel="stylesheet" href="css/spinner.css">
+    <link rel="stylesheet" href="css/slider.css">
 
     <script src="https://runtime.fokus.fraunhofer.de/.well-known/runtime/rethink.js"></script>
     <script src="js/colorConversion.js"></script>
@@ -71,10 +72,9 @@
                     <strong>Error: </strong> {{error}}
                 </div>
             </div>
-            >
         </div>
 
-        <div ng-hide="fail.size > 0">
+        <div ng-hide="fail.size > 0" class="flex-container">
             <div ng-hide="hotel.rooms.length > 0">
                 <div class="centered">
                     <svg class="spinner" width="65px" height="65px" viewBox="0 0 66 66"
@@ -87,15 +87,50 @@
 
             <div id="{{room.name}}" ng-repeat="room in hotel.rooms" class="panel-group">
                 <div class="panel panel-default">
-                    <div class="panel-heading">
+                    <div class="panel-heading flex-container singleVar">
+
                         <h4 class="panel-title">
-                            <a data-toggle="collapse"
+                            <a style="vertical-align: super; font-size: x-large" data-toggle="collapse"
                                ng-href="#{{room.name}}-collapse">{{room.name}}</a>
                         </h4>
+                        <div style="text-align: right" class="door_lock">
+                            <img src="img/ic_lock_black_24px.svg" style="vertical-align: super"
+                                 ng-click="toggleDoorLock(room.name)">
+                            <label class="switch">
+                                <input type="checkbox" ng-model="doorLock" ng-click="toggleDoorLock(room.name)">
+                                <div class="slider round"></div>
+                            </label>
+                        </div>
                     </div>
-                    <div id="{{room.name}}-collapse" class="panel-collapse collapse">
+                    <div id="{{room.name}}-collapse"
+                         class='{{$index == 0 ? "panel-collapse collapse in" : "panel-collapse collapse"}}'>
                         <div class="panel-body">
                             <div class="room">
+                                <!-- TODO: Replace mockup with logic -->
+                                <div class="flex-container">
+                                    <div class="flex-item">
+                                        <h4>WiFi</h4>
+                                    </div>
+                                </div>
+                                <!-- Wifi Info -->
+                                <div class="flex-container">
+                                    <form class="flex-container wifi_info">
+                                        <label>
+                                            SSID
+                                            <input type="text" value="MyHotelWifi" readonly>
+                                        </label>
+                                        <label>
+                                            User
+                                            <input type="text" value="Bob" readonly>
+                                        </label>
+                                        <label>
+                                            Password
+                                            <input type="text" value="talElZis2" readonly>
+                                        </label>
+                                    </form>
+                                </div>
+
+
                                 <div id="device" ng-repeat="device in room.values">
                                     <div ng-if="device.value.lastValues.temperature.length > 0">
                                         <div class="flex-container">

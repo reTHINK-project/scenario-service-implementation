@@ -18,13 +18,14 @@
 
 .panel-group {
     margin-bottom: 3px;
+    min-width: 100vmin;
 }
 
 .panel-title {
     text-align: center;
 }
 
-.flex-container {
+.flex-container, .wifi_info label {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
@@ -37,10 +38,14 @@
     flex-direction: column;
 }
 
-.flex-item {
+.flex-item, .wifi_info label {
     order: 0;
     flex: 0 1 auto;
     align-self: auto;
+    margin: 10px;
+}
+
+.flex-item {
     margin: 10px;
 }
 
@@ -49,6 +54,8 @@
 }
 
 .singleVar {
+    padding-top: 1em;
+    padding-bottom: 1em;
     justify-content: space-between;
 }
 
@@ -81,4 +88,17 @@ h4 {
 .centered {
     padding-top: 2em;
     text-align: center;
+}
+
+.door_lock label {
+    margin: 0;
+}
+
+.wifi_info label {
+    flex-grow: 1;
+    justify-content: space-between;
+}
+
+.wifi_info input {
+    margin-left: 0.5em;
 }
