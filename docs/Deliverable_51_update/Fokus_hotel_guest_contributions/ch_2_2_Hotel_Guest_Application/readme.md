@@ -23,7 +23,7 @@ While the access token that Benjamin has received only grants access to the rese
 
 ### 2.2.2	User perspective
 
-Alice, the owner of the hotel is happy to be able to buy new sensors and easily configure and have them operational using the technology provided from D1.1 use case 5 “M2M Always Connected in Trustful Domains for Multi vendor devices”. The hotel owner and the hotel guest share trustfully access to the data collected from multiple sensors, feature enabled by D1.1 use cases 6 “M2M Seamless connected from different but Trustful domains” and  70 “Information reception from a sensor”.
+Alice, the owner of the hotel is happy to be able to buy new sensors and easily configure and have them operational using the technology provided from D1.1 use case 5 “M2M Always Connected in Trustful Domains for Multi vendor devices”. The hotel owner and the hotel guest share trustfully access to the data collected from multiple sensors, feature enabled by D1.1 use cases 6 “M2M Seamless connected from different but Trustful domains” and  7 “Information reception from a sensor”.
 
 #### 2.2.2.1	Identity Management and Trust from user perspective
 
@@ -41,6 +41,8 @@ The usecase demands user roles in monitoring and actuating smart devices. Such r
 
 From D3.1 the directly used components are the Runtime User Agent, the QoS User Agent and the Identity Hiperty. The Runtime User Agent is used by the hotel guest to to download the hotel guest application and hiperties; this process requires user identification in the system via the Identity Hyperty / runtime environment. The QoS User Agent, namely the interface of it to the LHCB, is used to request switching the mobile device's connection to the hotel's WiFi network. The Hotel Room Monitor and Control Hiperty is used to monitor and control smart appliances in the hotel room.
 From reThink Identity Management (D4.1) the used components are the Catalogue and the Identity Management Server. The Catalogue enables the end devices to dynamically download and refresh the downloaded version of the hyperties based on request from the Runtime User Agent. The indentity Management Server is capable of generating a temporary identity of the hotel guest and authenticate it when request is received from the LWM2M Message Node.
+
+**check if we should rather reference updated versions of the deliverables D3.1 an D4.1**
 
 ### 2.2.4	Required Testbed features
 
