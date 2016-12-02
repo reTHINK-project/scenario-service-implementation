@@ -38,7 +38,7 @@ The detailed call flows internal to this hyperty are provided in Figure 2.
 
 ### Server Hyperty Data Objects schemas
 
-The Server hyperty will be loaded and executed in the Runtime Node. This Hyperty handles standard [Communication Data Objects](https://github.com/reTHINK-project/specs/blob/master/datamodel/data-objects/communication/readme.md) extended for WebRTC Group Communication:
+The Server hyperty will be loaded and executed in the Runtime Node. This Hyperty handles standard [Communication Data Objects](https://github.com/reTHINK-project/specs/blob/master/datamodel/data-objects/communication/readme.md) extended for WebRTC Group Communication(See Figure 3):
 
 
   ![Communication-Data-Object-Model.png](Communication-Data-Object-Model.png)
@@ -114,7 +114,7 @@ This function is used to deallocate a room group communication instance only whe
 
 ### Main data flows
 
- The detailed call flows internal to this hyperty are provided in next Figure 3.
+ The detailed call flows internal to this hyperty are provided in next Figure 4.
 
 
    ![Conference-Hyperty.png](Conference-Hyperty.png)
