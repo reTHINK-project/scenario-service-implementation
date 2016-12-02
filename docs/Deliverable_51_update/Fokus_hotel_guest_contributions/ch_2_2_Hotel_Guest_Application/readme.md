@@ -39,10 +39,8 @@ The usecase demands user roles in monitoring and actuating smart devices. Such r
 
 ### 2.2.3	Required reTHINK Framework Functionalities
 
-From D3.1 the directly used components are the Runtime User Agent, the QoS User Agent and the Identity Hiperty. The Runtime User Agent is used by the hotel guest to to download the hotel guest application and hiperties; this process requires user identification in the system via the Identity Hyperty / runtime environment. The QoS User Agent, namely the interface of it to the LHCB, is used to request switching the mobile device's connection to the hotel's WiFi network. The Hotel Room Monitor and Control Hiperty is used to monitor and control smart appliances in the hotel room.
-From reThink Identity Management (D4.1) the used components are the Catalogue and the Identity Management Server. The Catalogue enables the end devices to dynamically download and refresh the downloaded version of the hyperties based on request from the Runtime User Agent. The indentity Management Server is capable of generating a temporary identity of the hotel guest and authenticate it when request is received from the LWM2M Message Node.
-
-**check if we should rather reference updated versions of the deliverables D3.1 an D4.1**
+From D3.1 and D3.5 the directly used components are the Runtime User Agent, the QoS User Agent and the Identity Hiperty. The Runtime User Agent is used by the hotel guest to to download the hotel guest application and hiperties; this process requires user identification in the system via the Identity Hyperty / runtime environment. The QoS User Agent, namely the interface of it to the LHCB, is used to request switching the mobile device's connection to the hotel's WiFi network. The Hotel Room Monitor and Control Hiperty is used to monitor and control smart appliances in the hotel room.
+From reThink Identity Management (D4.1 and D4.4) the used components are the Catalogue and the Identity Management Server. The Catalogue enables the end devices to dynamically download and refresh the downloaded version of the hyperties based on request from the Runtime User Agent. The indentity Management Server is capable of generating a temporary identity of the hotel guest and authenticate it when request is received from the LWM2M Message Node.
 
 ### 2.2.4	Required Testbed features
 
@@ -63,4 +61,3 @@ The use case demands a couple of applications and Hyperties.
 In the Hotel Guest Application there are two Hyperties needed: Hotel Connectivity Hypertyand Room Monitor and Control Hyperty. The Hotel Administrator Application also makes use of the Room Monitor and Control Hyperty with credentials recognized by the LWM2M Message Node through the Identity Management Server with a role to override the hotel guest actions and has access to all the hotel rooms.
 
 ![Hotel Scenario -- Applications and Hyperties](./Hotel-Applications-and-Hyperties.png)
-**Include Figure Here**
