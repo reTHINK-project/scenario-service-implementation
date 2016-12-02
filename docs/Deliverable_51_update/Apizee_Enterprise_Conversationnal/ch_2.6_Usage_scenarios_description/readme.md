@@ -166,7 +166,7 @@ As illustrated in figure 3. a list of hyperties used by the SmartBusinessApp:
 * MyContacts Hyperty, Contact list of registered entreprise agents
 * WebRTC Group Communication Hyperty (server side), new hyperty to be developped  on Runtime Node, to handel WebRTC group communication through Kurento WebRTC media server.
 
- ![SmartBusinessApp-hyperties](./SmartBusinessApp-hypertie.png)
+ ![SmartBusinessApp-hyperties](./SmartBusinessApp-hyperties.png)
 
 
 
