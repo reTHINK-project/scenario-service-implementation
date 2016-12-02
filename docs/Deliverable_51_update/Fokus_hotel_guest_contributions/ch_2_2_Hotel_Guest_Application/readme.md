@@ -55,6 +55,6 @@ The light bulb and (optional) web cam as well as the LWM2M server should be acce
 
 ### 2.2.5	Required Hyperties
 The use case demands a couple of applications and Hyperties.
-In the Hotel Guest Application there are two Hyperties needed: Hotel Connectivity Hypertyand Room Monitor and Control Hyperty. The Hotel Administrator Application also makes use of the Room Monitor and Control Hyperty with credentials recognized by the LWM2M Message Node through the Identity Management Server with a role to override the hotel guest actions and has access to all the hotel rooms.
+In the Hotel Guest Application there are two Hyperties needed: Hotel Connectivity Hypertyand Room Monitor and Control Hyperty. The Hotel Administration part is included in the Hotel Guest Application and activated if the Application was started with the appropriate token, included additional actions like "lock all doors", lets administrators override the hotel guest actions and has access to all the hotel rooms.
 
 ![Hotel Scenario -- Applications and Hyperties](./Hotel-Applications-and-Hyperties.png)
