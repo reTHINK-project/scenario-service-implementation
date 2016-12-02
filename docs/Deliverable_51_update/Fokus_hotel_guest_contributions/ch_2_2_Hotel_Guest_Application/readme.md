@@ -1,8 +1,5 @@
 ## 2.2 Hotel Guest Application
 
-
-**text updated; 1st figure updted; Open -- Bring new versionn for 2nd figure reflecting text updated**
-
 ### 2.2.1	Scenario Environment
 
 The Hotel Guest Application User Scenario is situated within a smart economy environment in a smart city, named Bersabon. Deliverable D1.1 describes the scenario as follows:
