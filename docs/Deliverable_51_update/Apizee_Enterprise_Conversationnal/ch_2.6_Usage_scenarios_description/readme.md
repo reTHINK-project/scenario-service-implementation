@@ -108,6 +108,7 @@ From an external user perspective, customers can use any communication Hyperty f
 The  `SmartBusinessApp` requires the following major reTHINK functionalities:
 
 **Phase 1**
+
 * Hyperty Runtime in Browser
 * Hyperty Runtime in Smartphone
 * Hyperty server Runtime in Nodejs for rethink group communication
@@ -166,8 +167,11 @@ As illustrated in figure 3. a list of hyperties used by the SmartBusinessApp:
 * MyContacts Hyperty, Contact list of registered entreprise agents
 * WebRTC Group Communication Hyperty (server side), new hyperty to be developped  on Runtime Node, to handel WebRTC group communication through Kurento WebRTC media server.
 
- ![SmartBusinessApp-hyperties](./SmartBusinessApp-hyperties.png)
-<p align="center">
-  Figure 3 : SmartBusinessApp hyperties
-</p>
+
+![SmartBusinessApp-hyperties](./SmartBusinessApp-hyperties.png)
+
+Figure 3 : SmartBusinessApp hyperties
+
+ 
+
 
