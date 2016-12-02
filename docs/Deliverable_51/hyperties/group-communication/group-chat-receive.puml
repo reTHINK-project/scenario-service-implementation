@@ -1,0 +1,29 @@
+@startuml
+autonumber
+
+participant "Group Chat\nApp" as app
+
+participant "Group Chat\nHyperty" as myChatH
+
+participant "Communication\nData Object" as myChat
+
+participant "Chat Message\nData Object" as myMsg
+
+participant "Syncher" as sync
+
+sync <- Bus : postMsg( Create ChatMsg Message )
+
+create myMsg
+
+sync -> myMsg : new Child
+
+sync -> myChat : addRemoteChild( Chat Message )
+
+myChatH <- myChat : onChanges( Chat Message )
+
+myChatH <- myChatH : index
+
+app <- myChatH : on( indexed Chat Message)
+
+
+@enduml

@@ -1,0 +1,39 @@
+@startuml
+
+class DataSync {
+
+}
+
+class DataSyncChild {
+
+}
+
+package Communication {
+class Communication {
+		owner
+	}
+
+class Participant{
+	}
+
+class ChatMessage {
+	}
+
+}
+
+package HypertyResource {
+
+class HypertyResource{
+	}
+	}
+
+Communication -up-|> DataSync
+HypertyResource -up-|> ChatMessage
+ChatMessage -up-|> DataSyncChild
+
+Communication "1"*..>"1..*" Participant
+Communication "1"*..>"1..*" ChatMessage
+
+ChatMessage ..> Participant : author
+
+@enduml
