@@ -25,7 +25,7 @@ app.controller('hotelGuestController', ($scope) => {
     var hotel = {
         thumbnailUrl: "img/hotel-thumbnail.jpg",
         name: "MyHotel",
-        description: "The best Hotel in the world!",
+        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam finibus neque ut dolor pharetra tempus. Ut eget turpis faucibus, tincidunt ante id, auctor elit.",
         rooms: []
     };
     $scope.hotel = hotel;
@@ -111,13 +111,38 @@ app.controller('hotelGuestController', ($scope) => {
                                 "dimmer": 97,
                                 "timestamp": "2016-12-02T12:04:51.783Z",
                                 "color": {"unit": "CIE_JSON", "value": [0.409, 0.518]}
-                            }],
+                            },
+                                {
+                                    "name": "Bedroom",
+                                    "id": 1,
+                                    "_id": "5825a62608d25170004c5982",
+                                    "isOn": true,
+                                    "dimmer": 60,
+                                    "timestamp": "2016-12-02T12:04:51.783Z",
+                                    "color": {"unit": "CIE_JSON", "value": [0.3333, 0.3333]}
+                                },
+                                {
+                                    "name": "Bathroom",
+                                    "id": 1,
+                                    "_id": "5825a62608d25170004c5982",
+                                    "isOn": false,
+                                    "dimmer": 100,
+                                    "timestamp": "2016-12-02T12:04:51.783Z",
+                                    "color": {"unit": "CIE_JSON", "value": [0.3333, 0.3333]}
+                                }],
                             "humidity": [],
                             "temperature": [{
                                 "unit": "Cel",
                                 "id": 0,
                                 "_id": "5825a62608d25170004c5981",
                                 "value": 22.1,
+                                "timestamp": "2016-12-02T12:10:29.863Z"
+                            }, {
+
+                                "unit": "Cel",
+                                "id": 1,
+                                "_id": "5825a62608d25170004c5981",
+                                "value": 20.4,
                                 "timestamp": "2016-12-02T12:10:29.863Z"
                             }]
                         },

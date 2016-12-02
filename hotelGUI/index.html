@@ -85,6 +85,44 @@
                 </div>
             </div>
 
+            <!-- FIXME: Mockup -->
+            <div id="admincontrol" class="panel-group">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a style="vertical-align: super; font-size: x-large" data-toggle="collapse"
+                               ng-href="#admincontrol-collapse">Admin Control</a>
+                        </h4>
+                    </div>
+                    <div id="admincontrol-collapse" class="panel-collapse collapse in">
+                        <div class="panel-body">
+                            <div class="box singleVar">
+                                <label>Global Door Control</label>
+                                <div style="text-align: right" class="door_lock">
+                                    <img src="img/ic_lock_black_24px.svg" style="vertical-align: super"
+                                         ng-click="toggleDoorLock()">
+                                    <label class="switch">
+                                        <input type="checkbox">
+                                        <div class="slider round"></div>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="box singleVar">
+                                <label>Global Light Control</label>
+                                <div style="text-align: right" class="door_lock">
+                                    <img src="img/ic_lightbulb_outline_black_24px.svg" style="vertical-align: super">
+                                    <label class="switch">
+                                        <input type="checkbox">
+                                        <div class="slider round"></div>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- FIXME: Mockup -->
+
             <div id="{{room.name}}" ng-repeat="room in hotel.rooms" class="panel-group">
                 <div class="panel panel-default">
                     <div class="panel-heading flex-container singleVar">
@@ -169,7 +207,7 @@
                                                 <table width="100%" style="text-align: center">
                                                     <tr>
                                                         <td>
-                                                            <h5>State</h5>
+                                                            <h5>Switch</h5>
                                                         </td>
                                                         <td>
                                                             <h5>Color</h5>
