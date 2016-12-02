@@ -52,10 +52,8 @@ According to the above scenario and to the `SmartBusinessApp` we could distingui
  #### 2.6.2.1 Customer Perspective
 
  As described in the above scenario, customer or potential customer according to the business Roles defined in D1.1 and D2.1, they can benefit from limited functionalities like instant chat messaging, voice and video communication, in ordrer to ensure powerful customer relationships and long sales lifeline. Thus, any customer incoming requests are instantely handelled by entreprise employees. Besides, on the `SmartBusinessApp` the customer will have real time information about available entreprise employees.(See Figure 1)
- 
 
   ![SmartBusinessApp-view](./SmartBusinessApp.png)
- 
  <p align="center">
    Figure 2 : SmartBusinessApp Internal view
  </p>
@@ -168,9 +166,7 @@ As illustrated in figure 3. a list of hyperties used by the SmartBusinessApp:
 * MyContacts Hyperty, Contact list of registered entreprise agents
 * WebRTC Group Communication Hyperty (server side), new hyperty to be developped  on Runtime Node, to handel WebRTC group communication through Kurento WebRTC media server.
 
-
  ![SmartBusinessApp-hyperties](./SmartBusinessApp-hypertie.png)
-
 
 
 
