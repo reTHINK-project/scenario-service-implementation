@@ -42,9 +42,8 @@ Anne needs some support from some other colleagues having more experience with t
 <p align="justify">Depending on customer’s identification and requests, calls can be routed to the appropriate person, like in contact centers model.
 For some special appointment, Anne has the ability to schedule calls and meetings in advance with enhanced quality. She also has the ability to record the customer conversations, after having customer agreements to do so.</p>
 
-<p align="center">
+
+
  ![SmartBusinessApp-view](./SmartBusinessApp-view.png)
-</p>
-<p align="center">
-  Figure 1 : SmartBusinessApp logic
-</p>
+  <p align="center">Figure 1 : SmartBusinessApp logic</p>
+
