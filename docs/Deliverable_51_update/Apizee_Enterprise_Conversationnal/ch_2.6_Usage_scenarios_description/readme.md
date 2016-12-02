@@ -170,7 +170,7 @@ As illustrated in figure 3. a list of hyperties used by the SmartBusinessApp:
 
 ![SmartBusinessApp-hyperties](./SmartBusinessApp-hyperties.png)
 
-Figure 3 : SmartBusinessApp hyperties
+ <p align="center">Figure 3 : SmartBusinessApp hyperties</p>
 
  
 
