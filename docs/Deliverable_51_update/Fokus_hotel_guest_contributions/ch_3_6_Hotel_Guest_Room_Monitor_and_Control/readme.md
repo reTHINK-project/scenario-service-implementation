@@ -108,7 +108,12 @@ Besides, in this specific usage scenario, the *Hotel Connectivity Hyperty* allow
 
 #### 3.6.2.1 Architecture
 
-The architecture of the client-side hyperty is depicted in the following figure:
+The architecture of the client-side hyperty consists of the following parts:
+
+* Discovery of the running Room Monitor and Control Hyperty, and Authentication on it with an access token provided by the user
+* Request of available rooms from the Room Monitor and Control Hyperty, and provisioning them to the user
+* Event system that triggers events for room availability, state changes and errors
+* Connectivity Adapter to the Last Hop Connectivity Broker, in order to change the netork interface used by the user's device
 
 ![Hotel Connectivity Hyperty Architecture](./Hotel-Connectivity-Hyperty-Architecture.png)
 
