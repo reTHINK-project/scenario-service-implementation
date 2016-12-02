@@ -24,5 +24,11 @@ The application provides means to open all rooms for which the used access-token
 
 The following screenshot shows the GUI of the application:
 
+User View:
+
 ![screenshot hotelguest](hotelguest.png)
+
+Admin View:
+
+![screenshot hotelguest](adminview.png)
 
