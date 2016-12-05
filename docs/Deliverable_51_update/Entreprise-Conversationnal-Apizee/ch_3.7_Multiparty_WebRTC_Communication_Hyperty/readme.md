@@ -34,7 +34,7 @@ The detailed call flows internal to this hyperty are provided in Figure 2.
      Figure 2: Client conference hyperty main call flows
 </p>
 
-##### 3.7.2.3 Hyperty API
+#### 3.7.2.3 Hyperty API
 
 This Hyperty is used to control a connection instance.
 
