@@ -7,4 +7,15 @@ receiving calls with identity display and other type of notification, like new m
 The main window displays the active conversation or meeting, with accessible features like chat, data sharing and screensharing.
 User can also browse into discussion’s history :
 
-Multiparty conferences : 
+![businessapp2.png](./businessapp2.png)
+<p align="center">
+       Figure 69 – Enterprise application
+</p>
+
+
+**Multiparty conferences :**
+
+![businessapp-meeting.png](./businessapp-meeting.png)
+<p align="center">
+       Figure 70 – Enteprise application – conferences
+</p>
