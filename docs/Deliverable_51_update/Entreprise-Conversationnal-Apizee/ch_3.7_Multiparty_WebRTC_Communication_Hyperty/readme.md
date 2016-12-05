@@ -1,13 +1,12 @@
 3.7 Multiparty WebRTC Communication Hyperty
 ---------------------------
 
-### 3.7.1 Architecture
 This section provides specification for the reTHINK WebRTC group communication Hyperty (aka WebRTC Multiparty), enabling WebRTC conference in reTHINK. This hyperty is made of two types of hyperties for Client and Server. 
 The client  hyperty ( called Peer Conference Hyperty in D3.5) executed on runtime browser. Besides, a server hyperty ( called Conference Hyperty in D3.5) loaded and executed on Runtime Node, both theses hypeties are defined in D3.5.
 
 
-### 3.7.2 Client Conference Hyperty 
-#### 3.7.2.1 Hyperty Data Objects schemas
+### 3.7.1 Client Conference Hyperty 
+#### 3.7.1.1 Hyperty Data Objects schemas
 
 
 The client conference Hyperty is supposed to be running on runtime browser of user initiating/joining the conference. This hyperty similar to the standard connector hyperty [Connection Data Model](https://github.com/reTHINK-project/specs/tree/master/datamodel/data-objects/connection) , enriched with the ability of handling WebRTC conferencing.(See Figure 1)
@@ -24,7 +23,7 @@ The client conference Hyperty is supposed to be running on runtime browser of us
 
 As illustrated above, the Connector Hyperty handles the connections to the server  conference hyperty. This client hyperty is the Reporter for its connection data object and at the same time observer for the server communication data object per conference room. The same can be said for other participants connection hyperties.
 
-#### 3.7.2.2 Hyperty main call flows
+#### 3.7.1.2 Hyperty main call flows
 
 The detailed call flows internal to this hyperty are provided in Figure 2.
 
@@ -34,7 +33,7 @@ The detailed call flows internal to this hyperty are provided in Figure 2.
      Figure 2: Client conference hyperty main call flows
 </p>
 
-#### 3.7.2.3 Hyperty API
+#### 3.7.1.3 Hyperty API
 
 This Hyperty is used to control a connection instance.
 
@@ -63,8 +62,8 @@ This function is used to send leave message in order to leave the room.
 This function is used to handle notifications that a participants has left the room.
 
 
-### 3.7.3 Server Conference Hyperty 
-#### 3.7.3.1 Hyperty Data Objects schemas
+### 3.7.2 Server Conference Hyperty 
+#### 3.7.2.1 Hyperty Data Objects schemas
 
 The Server hyperty will be loaded and executed in the Runtime Node. This Hyperty handles standard [Communication Data Objects](https://github.com/reTHINK-project/specs/blob/master/datamodel/data-objects/communication/readme.md) extended for WebRTC Group Communication(See Figure 3):
 
@@ -81,7 +80,7 @@ Each conference room (identitfied by roomId) will have its associated room commu
 
 We suppose that this server conference hyperty is up running on Runtime Node waiting for connection incoming requests. This hyperty will have an interesting feature of coordinating multiple data objects, each per room. an orchestrator hyperty.
 
-#### 3.7.3.2 Hyperty main call flows
+#### 3.7.2.2 Hyperty main call flows
 
  The detailed call flows internal to this hyperty are provided in next Figure 4.
 
@@ -93,7 +92,7 @@ We suppose that this server conference hyperty is up running on Runtime Node wai
 
 More detailed specifications are  provided in the following link   https://github.com/reTHINK-project/specs/blob/master/dynamic-view/group-communication/readme.md.
 
-#### 3.7.3.3 Hyperty API
+#### 3.7.2.3 Hyperty API
 
 This Hyperty is used to control multiple room group communication instcances, a multiparty communication.
 
