@@ -5,7 +5,7 @@ Contributions are structured according to the chapters in the [main document](..
   * [2.6 Enterprise Conversational(APIZEE) - Usage Scenarios Description](./ch_2.6_Usage_Scenarios_Description/readme.md)
   * [3.5 User Status Hyperty(APIZEE)](./ch_3.5_User_Status_Hyperty/readme.md)
   * [3.7 Multiparty WebRTC Communicaation Hypety(APIZEE) - Hyperty phase 2](./ch_3.7_Multiparty_WebRTC_Communication_Hyperty/readme.md)
-  * [4.8 Client application(APIZEE)](./ch_4.8_Client_application/readme.md)
-  * [4.9 Agent application(APIZEE)](./ch_4.9_Agent_application/readme.md)
+  * [4.8 Enterprise application(APIZEE)](./ch_4.8_Enterprise_application/readme.md)
+  * [4.9 Customer application(APIZEE)](./ch_4.9_Customer_application/readme.md)
   
   
