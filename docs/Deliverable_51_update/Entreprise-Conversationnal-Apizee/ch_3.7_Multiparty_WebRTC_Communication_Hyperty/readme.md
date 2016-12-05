@@ -63,7 +63,7 @@ This function is used to send leave message in order to leave the room.
 This function is used to handle notifications that a participants has left the room.
 
 
-### 3.7.3 Server Hyperty Data Objects schemas
+### 3.7.3 Server conference Hyperty 
 #### 3.7.3.1 Hyperty Data Objects schemas
 
 The Server hyperty will be loaded and executed in the Runtime Node. This Hyperty handles standard [Communication Data Objects](https://github.com/reTHINK-project/specs/blob/master/datamodel/data-objects/communication/readme.md) extended for WebRTC Group Communication(See Figure 3):
