@@ -6,7 +6,7 @@ This section provides specification for the reTHINK WebRTC group communication H
 The client  hyperty ( called Peer Conference Hyperty in D3.5) executed on runtime browser. Besides, a server hyperty ( called Conference Hyperty in D3.5) loaded and executed on Runtime Node, both theses hypeties are defined in D3.5.
 
 
-### 3.7.2 Client conference Hyperty 
+### 3.7.2 Client Conference Hyperty 
 #### 3.7.2.1 Hyperty Data Objects schemas
 
 
@@ -63,7 +63,7 @@ This function is used to send leave message in order to leave the room.
 This function is used to handle notifications that a participants has left the room.
 
 
-### 3.7.3 Server conference Hyperty 
+### 3.7.3 Server Conference Hyperty 
 #### 3.7.3.1 Hyperty Data Objects schemas
 
 The Server hyperty will be loaded and executed in the Runtime Node. This Hyperty handles standard [Communication Data Objects](https://github.com/reTHINK-project/specs/blob/master/datamodel/data-objects/communication/readme.md) extended for WebRTC Group Communication(See Figure 3):
