@@ -22,8 +22,15 @@ var app = angular.module('hotelGuestGUI', []);
 app.controller('hotelGuestController', ($scope) => {
     $scope.cc = window.colorConversion;
 
+    var thumbnailUrl;
+    if (debugMode) {
+        thumbnailUrl = "img/hotel-thumbnail.jpg";
+    }
+    else {
+        thumbnailUrl = "/cam"; //url of webcam feed for hue bulb
+    }
     var hotel = {
-        thumbnailUrl: "img/hotel-thumbnail.jpg",
+        thumbnailUrl: thumbnailUrl,
         name: "MyHotel",
         description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam finibus neque ut dolor pharetra tempus. Ut eget turpis faucibus, tincidunt ante id, auctor elit.",
         rooms: []
