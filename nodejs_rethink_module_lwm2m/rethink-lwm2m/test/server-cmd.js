@@ -116,3 +116,4 @@ var commands = {
     }
 };
 cmd.initialize(commands, 'reTHINK-lwm2m> ');
+start();
