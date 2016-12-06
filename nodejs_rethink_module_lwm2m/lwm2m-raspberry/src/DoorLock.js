@@ -19,6 +19,7 @@
 
 import util from "./Util";
 import mapping from "./lwm2m-mapping";
+import logger from "logops";
 
 class DoorLock {
     constructor(lwm2m) {
@@ -69,7 +70,8 @@ class DoorLock {
     handleWrite(objectType, objectId, resourceId, value) {
         var that = this;
         return new Promise((resolve, reject) => {
-            if (objectType !== mapping.getAttrId("actuator")) {
+            logger.debug("DoorLock handleWrite:", objectType, objectId, resourceId, value);
+            if (objectType != mapping.getAttrId("actuator").objectTypeId) {
                 reject(new Error("Invalid objectType for DoorLock!"));
             }
             else {

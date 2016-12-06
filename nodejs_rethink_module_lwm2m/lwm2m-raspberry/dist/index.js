@@ -45,6 +45,10 @@ var _DoorLock = require("./DoorLock");
 
 var _DoorLock2 = _interopRequireDefault(_DoorLock);
 
+var _lwm2mMapping = require("./lwm2m-mapping");
+
+var _lwm2mMapping2 = _interopRequireDefault(_lwm2mMapping);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 _logops2.default.format = _logops2.default.formatters.dev;
@@ -171,17 +175,30 @@ function read(objectType, objectId, resourceId, value, callback) {
 function write(objectType, objectId, resourceId, value, callback) {
     _logops2.default.debug("Received 'write'\n" + objectType + "/" + objectId + " " + resourceId + " " + value);
 
-    if (_config2.default.sensors.hue.enabled === true && hue !== null) {
-        if (objectType == "3311") {
+    if (objectType == _lwm2mMapping2.default.getAttrId("light").objectTypeId) {
+        if (hue) {
             hue.handleWrite(objectType, objectId, resourceId, value).catch(function (error) {
                 _logops2.default.error("Hue: Error while handling lwm2m-write", error);
                 callback(error); //TODO: Set error code, not error-msg
             }).then(function () {
                 callback(null); //No error
             });
+        } else {
+            callback(new Error("Hue light not enabled"));
+        }
+    } else if (objectType == _lwm2mMapping2.default.getAttrId("actuator").objectTypeId) {
+        if (!doorLock) {
+            callback(new Error("DoorLock not enabled"));
+        } else {
+            doorLock.handleWrite(objectType, objectId, resourceId, value).catch(function (error) {
+                _logops2.default.error("doorLock: Error while handling lwm2m-write", error);
+                callback(error);
+            }).then(function () {
+                callback(null);
+            });
         }
     } else {
-        callback(null);
+        callback(new Error("No appropriate device handler found for lwm2m-write"));
     }
 }
 

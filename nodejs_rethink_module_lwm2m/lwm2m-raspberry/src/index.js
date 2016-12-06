@@ -24,6 +24,7 @@ import config from "./../config";
 import TempSensor from "./TempSensor";
 import Hue from "./Hue";
 import DoorLock from "./DoorLock";
+import mapping from "./lwm2m-mapping";
 
 logger.format = logger.formatters.dev;
 logger.setLevel('INFO'); //Initial log-level, overwritten by config later
@@ -166,8 +167,8 @@ function read(objectType, objectId, resourceId, value, callback) {
 function write(objectType, objectId, resourceId, value, callback) {
     logger.debug("Received 'write'\n" + objectType + "/" + objectId + " " + resourceId + " " + value);
 
-    if (config.sensors.hue.enabled === true && hue !== null) {
-        if (objectType == "3311") {
+    if (objectType == mapping.getAttrId("light").objectTypeId) {
+        if (hue) {
             hue.handleWrite(objectType, objectId, resourceId, value)
                 .catch((error) => {
                     logger.error("Hue: Error while handling lwm2m-write", error);
@@ -177,12 +178,29 @@ function write(objectType, objectId, resourceId, value, callback) {
                     callback(null); //No error
                 });
         }
+        else {
+            callback(new Error("Hue light not enabled"));
+        }
+
+    }
+    else if (objectType == mapping.getAttrId("actuator").objectTypeId) {
+        if (!doorLock) {
+            callback(new Error("DoorLock not enabled"));
+        }
+        else {
+            doorLock.handleWrite(objectType, objectId, resourceId, value)
+                .catch((error) => {
+                    logger.error("doorLock: Error while handling lwm2m-write", error);
+                    callback(error);
+                })
+                .then(() => {
+                    callback(null);
+                })
+        }
     }
     else {
-        callback(null);
+        callback(new Error("No appropriate device handler found for lwm2m-write"));
     }
-
-
 }
 
 function setHandlers(deviceInfo) {
