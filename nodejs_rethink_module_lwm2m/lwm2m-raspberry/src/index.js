@@ -23,6 +23,7 @@ import cmd from "command-node";
 import config from "./../config";
 import TempSensor from "./TempSensor";
 import Hue from "./Hue";
+import DoorLock from "./DoorLock";
 
 logger.format = logger.formatters.dev;
 logger.setLevel('INFO'); //Initial log-level, overwritten by config later
@@ -32,6 +33,7 @@ var client = lwm2mlib.client;
 var globalDeviceInfo = null;
 var tempSensor = null;
 var hue = null;
+var doorLock = null;
 
 logger.debug("Initialising from config");
 init()
@@ -90,6 +92,12 @@ function init() {
             else {
                 logger.debug("Device 'hue' is disabled");
             }
+            if (config.sensors.hasOwnProperty("doorLock") && config.sensors.doorLock.enabled === true) {
+                devices.push(initDoorLock());
+            }
+            else {
+                logger.debug("Device 'doorLock' is disabled");
+            }
             Promise.all(devices) //Wait for devices before registering to server
                 .catch((errors) => {
                     logger.error("Error while initialising devices!", errors);
@@ -126,6 +134,21 @@ function initTempSensor() {
                 logger.info("Temperature: Found temperature sensor/s", tempSensor.sensors);
                 resolve();
             });
+    });
+}
+
+function initDoorLock() {
+    return new Promise((resolve) => {
+        doorLock = new DoorLock(lwm2mlib.client);
+        doorLock.start()
+            .catch((error) => {
+                logger.error("DoorLock: Error while initialising virtual door-lock!", error);
+                resolve();
+            })
+            .then(() => {
+                logger.info("DoorLock: Virtual door-lock initialised!");
+                resolve();
+            })
     });
 }
 
@@ -244,7 +267,7 @@ function cmd_stop() {
         });
 }
 
-function stopDevices() {
+function stopDevices() { //TODO: Promise (wait for stops)
     if (tempSensor) {
         logger.info("Stopping temperature-sensor");
         tempSensor.stop();
@@ -252,6 +275,10 @@ function stopDevices() {
     if (hue) {
         logger.info("Stopping hue");
         hue.stop();
+    }
+    if (doorLock) {
+        logger.info("Stopping doorLock");
+        doorLock.stop();
     }
 }
 
