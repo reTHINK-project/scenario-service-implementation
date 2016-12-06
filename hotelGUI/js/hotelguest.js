@@ -16,7 +16,7 @@
  *
  */
 
-var debugMode = true;
+var debugMode = false;
 
 var app = angular.module('hotelGuestGUI', []);
 app.controller('hotelGuestController', ($scope) => {
@@ -82,8 +82,38 @@ app.controller('hotelGuestController', ($scope) => {
         }
     };
 
-    $scope.toggleDoorLock = (roomName) => {
-        console.debug("toggleDoorLock(" + roomName + ")");
+    $scope.getDoorLock = (room) => {
+        console.debug("getDoorLock(" + room + ")");
+        for (var device in room.values) {
+
+            var actuators = room.values[device].value.lastValues.actuator;
+
+            for (var a in actuators) {
+                if (actuators[a].applicationType === "doorLock" && actuators[a].name === "Door") {
+                    console.debug("getDoorLock(): Found door lock", actuators[a]);
+                    return actuators[a];
+                }
+            }
+        }
+    };
+
+    $scope.toggleDoorLock = (doorLock, room) => {
+        console.debug("toggleDoorLock:", doorLock);
+
+        for (var device in room.values) {
+
+            var actuators = room.values[device].value.lastValues.actuator;
+
+            for (var a in actuators) {
+                if (actuators[a] === doorLock) {
+                    console.debug("toggleDoorLock(): Found device", room.values[device]);
+                    roomClient.sendAction(room.values[device].name, "actuator", doorLock.id, "isOn", !doorLock.isOn).then((result) => {
+                        console.debug("sendAction(): Action sent", result);
+                    })
+
+                }
+            }
+        }
     };
 
     var token = getURLParameter("token");
@@ -138,6 +168,16 @@ app.controller('hotelGuestController', ($scope) => {
                                     "color": {"unit": "CIE_JSON", "value": [0.3333, 0.3333]}
                                 }],
                             "humidity": [],
+                            "actuator": [
+                                {
+                                    "applicationType": "doorLock",
+                                    "isOn": true,
+                                    "timestamp": "2016-12-06T12:40:32.315Z",
+                                    "_id": "5846b1c03ed04866771e7601",
+                                    "name": "Door",
+                                    "id": 0
+                                }
+                            ],
                             "temperature": [{
                                 "unit": "Cel",
                                 "id": 0,

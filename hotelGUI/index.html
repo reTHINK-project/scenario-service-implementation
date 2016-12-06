@@ -131,11 +131,12 @@
                             <a style="vertical-align: super; font-size: x-large" data-toggle="collapse"
                                ng-href="#{{room.name}}-collapse">{{room.name}}</a>
                         </h4>
-                        <div style="text-align: right" class="door_lock">
-                            <img src="img/ic_lock_black_24px.svg" style="vertical-align: super"
-                                 ng-click="toggleDoorLock(room.name)">
+                        <div style="text-align: right" class="door_lock" ng-model="doorLock"
+                             ng-init="doorLock = getDoorLock(room)" ng-show="doorLock">
+                            <img src="img/ic_lock_black_24px.svg" style="vertical-align: super">
                             <label class="switch">
-                                <input type="checkbox" ng-model="doorLock" ng-click="toggleDoorLock(room.name)">
+                                <input type="checkbox" ng-model="doorState" ng-init="doorState = doorLock.isOn"
+                                       ng-checked="doorLock.isOn" ng-change="toggleDoorLock(doorLock, room)">
                                 <div class="slider round"></div>
                             </label>
                         </div>
@@ -221,11 +222,12 @@
                                                     <tr>
                                                         <td>
                                                             <div class="flex-item">
-                                                                <button type="button"
-                                                                        class="btn btn-default btn-raised flex-item"
-                                                                        ng-click="sendAction(device.name, light.id, 'isOn', !light.isOn)">
-                                                                    {{light.isOn ? 'OFF' : 'ON'}}
-                                                                </button>
+                                                                <label class="switch">
+                                                                    <input type="checkbox" ng-model="lightState"
+                                                                           ng-checked="light.isOn"
+                                                                           ng-change="sendAction(device.name, light.id, 'isOn', !light.isOn)">
+                                                                    <div class="slider round"></div>
+                                                                </label>
                                                             </div>
                                                         </td>
                                                         <td>
