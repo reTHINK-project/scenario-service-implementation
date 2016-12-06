@@ -224,7 +224,8 @@
                                                             <div class="flex-item">
                                                                 <label class="switch">
                                                                     <input type="checkbox" ng-model="lightState"
-                                                                           ng-checked="light.isOn"
+                                                                           ng-init="lightState=light.isOn"
+                                                                           ng-checked="lightState"
                                                                            ng-change="sendAction(device.name, light.id, 'isOn', !light.isOn)">
                                                                     <div class="slider round"></div>
                                                                 </label>
