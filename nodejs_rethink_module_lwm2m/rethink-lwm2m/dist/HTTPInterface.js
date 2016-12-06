@@ -206,27 +206,27 @@ var HTTPInterface = function () {
                             }
                             if (bodyValid) {
                                 that._processRequest(params) //Process request and ...
-                                    .then(function (result) {
-                                        var reply, errorCode;
-                                        if (result instanceof Array) {
-                                            reply = result[0];
-                                            errorCode = result[1];
+                                .then(function (result) {
+                                    var reply, errorCode;
+                                    if (result instanceof Array) {
+                                        reply = result[0];
+                                        errorCode = result[1];
+                                    } else {
+                                        reply = result;
+                                    }
+                                    if (typeof reply.error === "undefined" || reply.error === null) {
+                                        res.writeHead(200, head); //all OK
+                                    } else {
+                                        if (typeof errorCode !== "undefined" && errorCode !== null) {
+                                            res.writeHead(errorCode, head); //Error from coap
                                         } else {
-                                            reply = result;
+                                            res.writeHead(500, head); //Unknown error
                                         }
-                                        if (typeof reply.error === "undefined" || reply.error === null) {
-                                            res.writeHead(200, head); //all OK
-                                        } else {
-                                            if (typeof errorCode !== "undefined" && errorCode !== null) {
-                                                res.writeHead(errorCode, head); //Error from coap
-                                            } else {
-                                                res.writeHead(500, head); //Unknown error
-                                            }
-                                        }
-                                        reply = JSON.stringify(reply);
-                                        _logops2.default.debug("HTTPInterface: Sending data to [" + req.connection.remoteAddress + "]", reply);
-                                        res.end(reply); //... reply to client
-                                    });
+                                    }
+                                    reply = JSON.stringify(reply);
+                                    _logops2.default.debug("HTTPInterface: Sending data to [" + req.connection.remoteAddress + "]", reply);
+                                    res.end(reply); //... reply to client
+                                });
                             }
                         });
                     }

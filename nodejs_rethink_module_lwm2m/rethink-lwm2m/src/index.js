@@ -20,6 +20,7 @@ import logger from "logops";
 import lwm2mlib from "lwm2m-node-lib";
 import Database from "./Database";
 import HTTPInterface from "./HTTPInterface";
+import mapping from "./lwm2m-mapping";
 
 let lwm2m = {};
 lwm2m.server = lwm2mlib.server; //Enables use of all native lwm2m-lib methods
@@ -160,12 +161,28 @@ function registrationHandler(endpoint, lifetime, version, binding, payload, call
         })
         .then(() => {
             //TODO: Make list of objects/resources to observe configurable
-            observeDeviceData(endpoint, 3303, 0, 5700); //Temperature
-            observeDeviceData(endpoint, 3303, 0, 5701); //Unit
 
-            observeDeviceData(endpoint, 3304, 0, 5700); //Humidity
-            observeDeviceData(endpoint, 3304, 0, 5701); //Unit
+            //TEMPERATURE
+            let tempObj = mapping.getAttrId("temperature").objectTypeId;
+            logger.debug("Got object for observe job:", tempObj);
+            observeDeviceData(endpoint, tempObj, 0, mapping.getAttrId("temperature", "value").resourceTypeId);
+            observeDeviceData(endpoint, tempObj, 0, mapping.getAttrId("temperature", "unit").resourceTypeId);
 
+            //Old
+            //observeDeviceData(endpoint, 3303, 0, 5700); //Temperature
+            //observeDeviceData(endpoint, 3303, 0, 5701); //Unit
+
+            //HUMIDITY
+            let humObj = mapping.getAttrId("humidity").objectTypeId;
+            logger.debug("Got object for observe job:", humObj);
+            observeDeviceData(endpoint, humObj, 0, mapping.getAttrId("humidity", "value").resourceTypeId);
+            observeDeviceData(endpoint, humObj, 0, mapping.getAttrId("humidity", "unit").resourceTypeId);
+
+            //Old
+            //observeDeviceData(endpoint, 3304, 0, 5700); //Humidity
+            //observeDeviceData(endpoint, 3304, 0, 5701); //Unit
+
+            //LIGHT
             //Get list of light-ids
             var lightIdsMatch = new RegExp("<\/3311[\/]([0-9]+)>", "g");
             var lightIds = [];
@@ -177,13 +194,27 @@ function registrationHandler(endpoint, lifetime, version, binding, payload, call
                 }
             }
             while (result != null);
+            let lightObj = mapping.getAttrId("light").objectTypeId;
+            logger.debug("Got object for observe job:", lightObj);
             lightIds.forEach((id) => {
-                observeDeviceData(endpoint, 3311, id, 5801); //Light name
-                observeDeviceData(endpoint, 3311, id, 5850); //Light on/off state
-                observeDeviceData(endpoint, 3311, id, 5851); //Light dimmer
-                observeDeviceData(endpoint, 3311, id, 5706); //Light colour
-                observeDeviceData(endpoint, 3311, id, 5701); //Light colour unit
+                observeDeviceData(endpoint, lightObj, id, mapping.getAttrId("light", "name").resourceTypeId);
+                observeDeviceData(endpoint, lightObj, id, mapping.getAttrId("light", "isOn").resourceTypeId);
+                observeDeviceData(endpoint, lightObj, id, mapping.getAttrId("light", "dimmer").resourceTypeId);
+                observeDeviceData(endpoint, lightObj, id, mapping.getAttrId("light", "color.value").resourceTypeId);
+                observeDeviceData(endpoint, lightObj, id, mapping.getAttrId("light", "color.unit").resourceTypeId);
+
+                //observeDeviceData(endpoint, 3311, id, 5801); //Light name
+                //observeDeviceData(endpoint, 3311, id, 5850); //Light on/off state
+                //observeDeviceData(endpoint, 3311, id, 5851); //Light dimmer
+                //observeDeviceData(endpoint, 3311, id, 5706); //Light color
+                //observeDeviceData(endpoint, 3311, id, 5701); //Light color unit
             });
+
+            //LOCK or misc actuators
+            let actObj = mapping.getAttrId("actuator").objectTypeId;
+            observeDeviceData(endpoint, actObj, 0, mapping.getAttrId("actuator", "isOn").resourceTypeId);
+            observeDeviceData(endpoint, actObj, 0, mapping.getAttrId("actuator", "name").resourceTypeId);
+            observeDeviceData(endpoint, actObj, 0, mapping.getAttrId("actuator", "applicationType").resourceTypeId);
 
             callback();
         });
@@ -220,6 +251,8 @@ function observeHandler(value, objectType, objectId, resourceId, deviceId) {
 }
 
 function observeDeviceData(deviceName, objectType, objectId, resourceId) {
+    logger.debug("observeDeviceData(): start")
+    logger.debug("test");
     lwm2m.server.getRegistry().getByName(deviceName, (error, device) => {
         if (error) {
             logger.error(error);
