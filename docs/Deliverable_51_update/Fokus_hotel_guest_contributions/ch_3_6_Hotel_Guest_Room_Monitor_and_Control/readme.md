@@ -97,7 +97,9 @@ With the provided functionalities, other hyperties can read the current state of
 
 #### 3.6.1.4	Main data flows
 
-*Include MSC showing main data flows for the above described APIs*
+In general, the Monitor and actuate communication client will subscribe to the data sensed by a sensor from the room (see figure below). Special care has to be taken so that the Hotel LWM2M Message Node is not overloaded with subscriptions from the same user smart phone that is changing the IP, at the same time the notifications have to arrive to the right smart phone so that the data is in sync when connected.
+
+![Room Monitor and Control Hyperty main data flow](room-monitor-and-control-hyperty-data-flow.png)
 
 
 ### 3.6.2 Client side Hyperty
