@@ -1,0 +1,64 @@
+@startuml
+
+actor Alice
+actor "Coach" as Trainer
+actor "FitnessBuddy" as WorkoutBuddy
+
+rectangle "Health and Activity Monitoring" {
+  usecase (Smart Contextual Health and Activity Monitoring) as healthCtrlUC
+
+  usecase healthMonitorUC as "Collect and Publish Data\n
+  from Bracelet"
+
+  usecase inferHealthContextUC as "Health Context Inference"
+
+  usecase inferActivityContextUC as "Activity Context Inference"
+
+  inferActivityContextUC -[hidden]up- inferHealthContextUC
+
+  usecase workoutCtrlUC as "Fitness Control\n
+   uses Activiy and Health context\n
+   to track Fitness Program including\n
+   notification about Fitness reminders"
+
+  inferActivityContextUC -[hidden]down- workoutCtrlUC
+
+  usecase workoutSessionUC as "Fitness Session\n given remotely by personal coach"
+
+  workoutSessionUC -[hidden]up- workoutCtrlUC
+
+  usecase workoutReportUC as "Report about Fitness User Performance"
+
+  workoutSessionUC -[hidden]down- workoutReportUC
+
+  usecase workoutBuddyMatchUC as "Fitness Buddy Match\n
+  real time recommendation about other users\n
+  that might join for a get together for remote fitness"
+
+  workoutBuddyMatchUC -[hidden]up- workoutReportUC
+
+  usecase workoutBuddySessionUC as "Fitness Buddy Session\n
+  between remote users\n
+  that might join for a get \n
+  together remotely fitness session"
+
+  workoutBuddySessionUC -[hidden]up- workoutBuddyMatchUC
+}
+
+
+healthCtrlUC ..> healthMonitorUC : <<includes>>
+healthCtrlUC ..> inferHealthContextUC : <<includes>>
+healthCtrlUC ..> inferActivityContextUC : <<includes>>
+healthCtrlUC ..> workoutCtrlUC : <<includes>>
+healthCtrlUC ..> workoutSessionUC : <<includes>>
+healthCtrlUC ..> workoutReportUC : <<includes>>
+healthCtrlUC ..> workoutBuddyMatchUC : <<includes>>
+healthCtrlUC ..> workoutBuddySessionUC : <<includes>>
+
+Alice -left-> healthCtrlUC : is assisted
+
+Trainer -right-> healthCtrlUC : assists
+
+WorkoutBuddy -left-> workoutBuddySessionUC : remotely joins Alice Fitness
+
+@enduml

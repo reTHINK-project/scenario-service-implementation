@@ -1,0 +1,6 @@
+@startuml
+
+usecase (Light Control) as lightCtrlUC
+usecase (Temperature Control) as temperatureCtrlUC
+
+@enduml

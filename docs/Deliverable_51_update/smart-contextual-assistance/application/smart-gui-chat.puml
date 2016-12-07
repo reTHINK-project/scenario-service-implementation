@@ -1,0 +1,16 @@
+@startsalt
+{+
+  <&grid-four-up> joelpinheiro <&account-logout>
+  ==
+  {
+  {[Audio] | [<b>Video] | [Chat]} 
+  ~~
+  [img:] <b>joelpinheiro 10:31
+  ping
+  [img:] <b>pchainho 10:32
+  pong
+  { "Write message... "}
+  }
+  --
+}
+@endsalt

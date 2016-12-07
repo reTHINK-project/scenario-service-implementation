@@ -1,0 +1,29 @@
+@startuml
+!include h2h-use-cases.puml
+
+actor "Browser User" as browser
+actor "Smartphone User" as smartphone
+
+usecase (Group H2H Communication) as grouph2hUC
+
+grouph2hUC <|-- chatUC
+grouph2hUC <|-- callUC
+grouph2hUC <|-- videoUC
+grouph2hUC <|-- screenUC
+grouph2hUC <|-- fileUC
+
+smartphone -up-> chatUC : communicates
+smartphone -up-> callUC : communicates
+smartphone -up-> videoUC : communicates
+smartphone -up-> screenUC : only\nreceives
+smartphone -up-> fileUC : communicates
+smartphone -up-> presenceUC
+
+browser -down--> chatUC : communicates
+browser -down--> callUC : communicates
+browser -down--> videoUC : communicates
+browser -down--> screenUC : communicates
+browser -down--> fileUC : communicates
+browser -down--> presenceUC
+
+@enduml

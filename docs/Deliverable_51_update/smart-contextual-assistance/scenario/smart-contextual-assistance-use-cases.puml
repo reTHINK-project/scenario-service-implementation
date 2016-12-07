@@ -1,0 +1,11 @@
+@startuml
+
+usecase (Smart Contextual Assistance) as assistUC
+usecase (Smart Contextual Business Assistance) as bizzAssistUC
+usecase (Smart Contextual Personal Assistance) as myAssistUC
+
+assistUC <|-- bizzAssistUC
+assistUC <|-- myAssistUC
+
+
+@enduml

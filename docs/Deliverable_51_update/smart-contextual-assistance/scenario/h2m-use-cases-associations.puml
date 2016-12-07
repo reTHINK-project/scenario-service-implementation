@@ -1,0 +1,14 @@
+@startuml
+!include h2m-use-cases.puml
+
+actor "Room" as room
+
+usecase (H2M Communication) as h2mUC
+
+h2mUC <|-- lightCtrlUC
+h2mUC <|-- temperatureCtrlUC
+
+room <-up- lightCtrlUC : control
+room <-up- temperatureCtrlUC : control
+
+@enduml

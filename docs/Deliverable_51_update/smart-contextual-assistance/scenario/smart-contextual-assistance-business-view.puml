@@ -1,0 +1,14 @@
+@startuml
+
+actor "HyBroker Customer" as client
+
+usecase (HyBroker Service Broker) as pt
+usecase (HySmart Hyperty Service Provider) as hySmart
+usecase (iHackker Identity Provider) as iHackker
+
+pt <-> hySmart : IoT Hyperties partnership
+pt -down-> client : delivers Smart Context Assistance app
+iHackker -right-> client : manages Identity
+
+
+@enduml

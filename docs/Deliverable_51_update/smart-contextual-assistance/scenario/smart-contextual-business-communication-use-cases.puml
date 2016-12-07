@@ -1,0 +1,27 @@
+@startuml
+!include h2h-use-cases.puml
+
+usecase (Smart Contextual Business Assistance) as bizzAssistUC
+
+usecase (Smart Contextual Business Communication) as bizzCommUC
+usecase (Smart Contextual co-worker Communication) as bizzCoworkerCommUC
+usecase (Smart Contextual Partner Communication) as bizzPartnerCommUC
+
+usecase (Smart Contextual Customer Communication) as bizzClientCommUC
+
+
+
+bizzAssistUC <|-right-- bizzCommUC
+
+chatUC <.. bizzCommUC : <<includes>>
+callUC <.. bizzCommUC : <<includes>>
+videoUC <.. bizzCommUC : <<includes>>
+screenUC <.. bizzCommUC : <<includes>>
+fileUC <.. bizzCommUC : <<includes>>
+presenceUC <.. bizzCommUC : <<includes>>
+
+bizzCommUC <|-- bizzCoworkerCommUC
+bizzCommUC <|-- bizzClientCommUC
+bizzCommUC <|-- bizzPartnerCommUC
+
+@enduml

@@ -1,0 +1,48 @@
+@startuml
+
+actor Alice
+actor "Occupational safety\nand health Doctor" as Trainer
+
+rectangle "Smart Working (Occupational safety and health)" {
+  usecase healthCtrlUC as "Smart Working (Occupational safety and health)"
+
+  usecase healthMonitorUC as "Collect and Publish Data\nfrom Bracelet"
+
+  usecase inferHealthContextUC as "Health Context Inference"
+
+  usecase inferActivityContextUC as "Activity Context Inference"
+
+  inferActivityContextUC -[hidden]up- inferHealthContextUC
+
+  usecase workoutCtrlUC as "Occupational safety\nand health Control\n
+   uses Activiy and Health context
+   to track employe health\n
+   notification about safety
+    procedures when required"
+
+  inferActivityContextUC -[hidden]down- workoutCtrlUC
+
+  usecase workoutSessionUC as "Occupational safety\nand health Appointment"
+
+  workoutSessionUC -[hidden]up- workoutCtrlUC
+
+  usecase workoutReportUC as "Occupational safety\nand health Report"
+
+  workoutSessionUC -[hidden]down- workoutReportUC
+
+}
+
+
+healthCtrlUC ..> healthMonitorUC : <<includes>>
+healthCtrlUC ..> inferHealthContextUC : <<includes>>
+healthCtrlUC ..> inferActivityContextUC : <<includes>>
+healthCtrlUC ..> workoutCtrlUC : <<includes>>
+healthCtrlUC ..> workoutSessionUC : <<includes>>
+healthCtrlUC ..> workoutReportUC : <<includes>>
+
+Alice -left-> healthCtrlUC : is assisted
+
+Trainer -right-> healthCtrlUC : assists
+
+
+@enduml

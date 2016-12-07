@@ -1,0 +1,131 @@
+@startuml
+skinparam handwritten true
+
+skinparam usecase {
+	BackgroundColor DarkSalmon
+	BorderColor Black
+
+	BackgroundColor<< Context >> DarkRed
+	BorderColor<< Context >> DarkRed
+
+	ActorBackgroundColor<< Human >> Green
+  ActorBackgroundColor<< Object >> Silver
+}
+
+skinparam component {
+	BackgroundColor DarkSeaGreen
+	BorderColor Black
+}
+
+actor Alice << Human >>
+actor Customer <<Human>>
+actor Office <<Object>> as "Office Room"
+
+rectangle "Smart Contextual Assistance App" {
+
+usecase myBraH <<Hyperty Context>> as "**MyBracelet**
+--
+Hyperty to Collect
+and publish data
+from a Bracelet"
+
+component "Bracelet Data" <<Context Object>> as myBraObj
+
+myBraH -down-> myBraObj
+
+usecase myCtxtH <<Hyperty Context>> as "**MyContext**
+--
+Hyperty to Handle
+an Human individual
+Health context"
+
+component "Individual Context" <<Context Object>> as myCtxtObj
+
+myCtxtH -up-> myBraObj
+
+myCtxtH -down-> myCtxtObj
+
+  usecase contactsH <<Hyperty Context>> as "**MyContacts**
+  --
+  Hyperty to Handle
+  a presence enriched
+  Contact List"
+
+	component UserProfile <<Identity Object>> as idObj
+
+	contactsH -down-> idObj
+
+	contactsH -down-> myCtxtObj
+
+	usecase voiceH <<Hyperty Connector>> as "**ContextualVoice**
+  --
+  Hyperty to Handle Audio
+  and Video Communications
+	according to User's Context"
+
+	component Connection <<Connection Object>> as comObj
+
+	voiceH -down-> comObj
+
+	voiceH -down-> myCtxtObj
+
+	usecase chatH <<Hyperty Communication>> as "**GroupChat**
+  --
+  Hyperty to Handle Group Chat"
+
+	component Communication <<Communication Object>> as commObj
+
+	chatH -down-> commObj
+
+	usecase myWorkoutBuddyH <<Hyperty>> as "**My Fitness Buddy**
+  --
+  Hyperty to Handle
+  Fitness Buddy matches
+	and the setup of
+	Fitness Buddy Sessions"
+
+	myWorkoutBuddyH -up-> myCtxtObj
+
+	myWorkoutBuddyH -up-> comObj
+
+	usecase myCoachH <<Hyperty>> as "**My Coach**
+  --
+  Hyperty to Handle
+  Personal Coach tracking
+	and the setup of
+	Coaching Sessions"
+
+	myCoachH -up-> myCtxtObj
+
+	myCoachH -up-> comObj
+
+	usecase roomH <<Hyperty Context>> as "**Room**
+  --
+  Hyperty to Handle
+  a Room context"
+
+	component "Room Context" <<Context Object>> as roomCtxtObj
+
+	roomH -down-> roomCtxtObj
+
+	roomH -[hidden]up- myWorkoutBuddyH
+
+}
+
+actor Buddy <<Human>> as "Fitness Buddy"
+actor Coach <<Human>> as "Coach/Doctor"
+
+Alice .left- voiceH
+Customer .right- voiceH
+Customer .right- chatH
+Alice .left- chatH
+Alice .left- contactsH
+Alice .left- myCtxtH
+Alice .left- myBraH
+Alice .left- myWorkoutBuddyH
+myWorkoutBuddyH .. Buddy
+Alice . myCoachH
+myCoachH .. Coach
+Office .left- roomH
+
+@enduml
