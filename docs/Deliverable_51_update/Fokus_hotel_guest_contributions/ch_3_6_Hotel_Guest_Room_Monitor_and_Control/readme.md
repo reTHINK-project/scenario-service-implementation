@@ -11,9 +11,9 @@ The *Room Monitor and Control Hyperty* provides server-side the logic and IoT-sp
 
 The Room Monitor and Control Hyperty consists of three building blocks:
 
-* Monitor and control of rooms and their devices using the LWM2M Message Node;
-* provisioning of rooms as SyncObjects to other hyperties
-* token-bases access control to rooms and their devices.
+* monitor and control rooms and their devices using the LWM2M Message Node;
+* provision rooms as SyncObjects to other hyperties
+* token-based access control to rooms and their devices.
 
 ![Room Monitor and Control Hyperty Architecture](Room-Monitor-and-Control-Hyperty-Architecture.png)
 
