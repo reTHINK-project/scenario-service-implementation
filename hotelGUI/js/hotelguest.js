@@ -107,8 +107,9 @@ app.controller('hotelGuestController', ($scope) => {
         if (room)
             rooms = [room];
 
-
         for (var r in rooms) {
+            r = rooms[r];
+
             for (var device in r.values) {
 
                 var actuators = r.values[device].value.lastValues.actuator;
