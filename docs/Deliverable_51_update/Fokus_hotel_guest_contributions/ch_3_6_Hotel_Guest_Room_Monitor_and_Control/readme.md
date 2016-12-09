@@ -63,6 +63,14 @@ An example representation for a room could look as follows:
                     "_id": "5825a62608d25170004c5981",
                     "value": 22.1,
                     "timestamp": "2016-12-02T12:10:29.863Z"
+                }],
+                "actuator" : [{
+                    "isOn" : false,
+                    "applicationType" : "doorLock",
+                    "_id" : "5846b1c03ed04866771e7601",
+                    "timestamp" : "2016-12-02T12:11:06.477Z",
+                    "name" : "Door",
+                    "id" : 0
                 }]
             },
             "registration": {
@@ -135,8 +143,9 @@ The hyperty exposes the following functionalities:
   * `error(errorReason)`: triggered, when errors occur
 * functions
   * `start(accessToken)`: executes the starting routine of the hyperty, provided with the access token it sends to the *Room Monitor and Control Hyperty* to get access to the appropriate rooms
-  * `sendAction(deviceName, objectType, objectId, resourceType, value)`: invoke an action on the LWM2M Message Node.
-
+  * `sendAction(deviceName, objectType, objectId, resourceType, value)`: invoke an action on the LWM2M Message Node
+  * `switchToWifi()`: request a network interface change on the user device to wifi with credentials provided by the Hotel
+  
 #### 3.6.2.4	Main data flows
 
 The *Hotel Connectivity Hyperty* first tries to discover a currently running Room Monitor and Control hyperty based on a well known identity (i.e. the identity that started the *Room Monitor and Control Hyperty*).
