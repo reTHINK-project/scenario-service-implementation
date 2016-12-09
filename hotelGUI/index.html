@@ -85,8 +85,7 @@
                 </div>
             </div>
 
-            <!-- FIXME: Mockup -->
-            <div id="admincontrol" class="panel-group">
+            <div id="admincontrol" class="panel-group" ng-if="adminMode" ng-show="hotel.rooms.length > 0">
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h4 class="panel-title">
@@ -99,22 +98,27 @@
                             <div class="box singleVar">
                                 <label>Global Door Control</label>
                                 <div style="text-align: right" class="door_lock">
-                                    <img src="img/ic_lock_black_24px.svg" style="vertical-align: super"
-                                         ng-click="toggleDoorLock()">
-                                    <label class="switch">
-                                        <input type="checkbox">
-                                        <div class="slider round"></div>
-                                    </label>
+                                    <button type="button" class="btn btn-default btn-raised"
+                                            ng-click="toggleGlobalState('doorLock', false)">
+                                        <img src="img/ic_lock_open_black_24px.svg">
+                                    </button>
+                                    <button type="button" class="btn btn-default btn-raised"
+                                            ng-click="toggleGlobalState('doorLock', true)">
+                                        <img src="img/ic_lock_black_24px.svg">
+                                    </button>
                                 </div>
                             </div>
                             <div class="box singleVar">
                                 <label>Global Light Control</label>
                                 <div style="text-align: right" class="door_lock">
-                                    <img src="img/ic_lightbulb_outline_black_24px.svg" style="vertical-align: super">
-                                    <label class="switch">
-                                        <input type="checkbox">
-                                        <div class="slider round"></div>
-                                    </label>
+                                    <button type="button" class="btn btn-default btn-raised"
+                                            ng-click="toggleGlobalState('light', true)">
+                                        <img src="img/ic_lightbulb_outline_black_24px.svg">
+                                    </button>
+                                    <button type="button" class="btn btn-default btn-raised"
+                                            ng-click="toggleGlobalState('light', false)">
+                                        <img src="img/ic_highlight_off_black_24px.svg">
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -132,11 +136,11 @@
                                ng-href="#{{room.name}}-collapse">{{room.name}}</a>
                         </h4>
                         <div style="text-align: right" class="door_lock"
-                              ng-show="room.mainLock">
+                             ng-show="room.mainLock">
                             <img src="img/ic_lock_black_24px.svg" style="vertical-align: super">
                             <label class="switch">
                                 <input type="checkbox" ng-model="room.mainLock.isOn"
-                                        ng-change="toggleDoorLock(room.mainLock, room)">
+                                       ng-change="toggleDoorLock(room.mainLock, room)">
                                 <div class="slider round"></div>
                             </label>
                         </div>

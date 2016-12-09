@@ -36,8 +36,8 @@ app.controller('hotelGuestController', ($scope) => {
         rooms: []
     };
     $scope.hotel = hotel;
-    window.hotel = hotel;
 
+    $scope.adminMode = true;
     $scope.fail = [];
 
     var roomClient;
@@ -99,23 +99,65 @@ app.controller('hotelGuestController', ($scope) => {
         }
     };
 
+
     $scope.toggleDoorLock = (doorLock, room) => {
         console.debug("toggleDoorLock:", doorLock, room);
 
-        for (var device in room.values) {
+        var rooms = $scope.hotel.rooms;
+        if (room)
+            rooms = [room];
 
-            var actuators = room.values[device].value.lastValues.actuator;
 
-            for (var a in actuators) {
-                if (actuators[a] === doorLock) {
-                    console.debug("toggleDoorLock(): Found device", room.values[device]);
-                    $scope.sendAction(room.values[device].name, "actuator", doorLock.id, "isOn", doorLock.isOn).then((result) => {
-                        console.debug("sendAction(): Action sent", result);
-                    })
+        for (var r in rooms) {
+            for (var device in r.values) {
 
+                var actuators = r.values[device].value.lastValues.actuator;
+
+                for (var a in actuators) {
+                    if (doorLock === undefined || actuators[a] === doorLock) {
+                        console.debug("toggleDoorLock(): Found device", r.values[device]);
+                        $scope.sendAction(r.values[device].name, "actuator", doorLock.id, "isOn", doorLock.isOn).then((result) => {
+                            console.debug("sendAction(): Action sent", result);
+                        })
+
+                    }
                 }
             }
         }
+
+
+    };
+
+    $scope.toggleGlobalState = (type, state) => {
+
+        if (type !== "doorLock" && type !== "light") {
+            console.error("Invalid type");
+        }
+        else {
+            var tasks = [];
+            hotel.rooms.forEach((room) => {
+                room.values.forEach((device) => {
+                    if (type === "light") {
+                        device.value.lastValues.light.forEach((light) => {
+                            tasks.push(roomClient.sendAction(device.name, type, light.id, "isOn", state)); //Send from roomClient directly to skip timeout
+                        })
+                    }
+                    else if (type === "doorLock") {
+                        device.value.lastValues.actuator.forEach((actuator) => {
+                            if (actuator.applicationType === type) {
+                                tasks.push(roomClient.sendAction(device.name, "actuator", actuator.id, "isOn", state)); //Send from roomClient directly to skip timeout
+                            }
+                        })
+                    }
+                })
+            });
+            Promise.all(tasks)
+                .then((result) => {
+                    console.debug("Set " + type + " state for all lights to", state);
+                    console.debug("Result:", result);
+                })
+        }
+
     };
 
     var token = getURLParameter("token");
