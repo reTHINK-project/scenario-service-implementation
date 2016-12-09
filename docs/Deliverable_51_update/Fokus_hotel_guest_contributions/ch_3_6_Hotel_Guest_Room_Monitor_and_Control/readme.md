@@ -9,13 +9,13 @@ The *Room Monitor and Control Hyperty* provides server-side the logic and IoT-sp
 
 #### 3.6.1.1 Architecture
 
-The Room Monitor and Control Hyperty consists of three building blocks:
+The *Room Monitor and Control Hyperty* consists of three building blocks:
 
 * monitor and control rooms and their devices using the LWM2M Message Node;
 * provision rooms as SyncObjects to other hyperties
 * token-based access control to rooms and their devices.
 
-![Room Monitor and Control Hyperty Architecture](Room-Monitor-and-Control-Hyperty-Architecture.png)
+![*Room Monitor and Control Hyperty* Architecture](Room-Monitor-and-Control-Hyperty-Architecture.png)
 
 #### 3.6.1.2	Hyperty Data Objects schemas
 
@@ -86,7 +86,7 @@ The example shows a room named "room1" that contains
 
 #### 3.6.1.3	Hyperty API
 
-The Room Monitor and Control Hyperty will expose several _hyperty-to-hyperty_ functionalities:
+The *Room Monitor and Control Hyperty* will expose several _hyperty-to-hyperty_ functionalities:
 
 * automatically creates and publishes SyncObjects representing each room the hyperty was able to gather from the LWM2M Message Node
 * exposes two functions that other hyperties can invoke
@@ -97,9 +97,9 @@ With the provided functionalities, other hyperties can read the current state of
 
 #### 3.6.1.4	Main data flows
 
-In general, the Room Monitor and Control Hyperty periodically polls the state of all rooms provided by the Hotel LWM2M Message Node and and serves them as SyncObjects to other hyperties. On every poll it detects if a new room has been introduced, or an existing room state has changed. By changing the contents of a SyncObject, all hyperties subscribed to that object will get notified of the change.
+In general, the *Room Monitor and Control Hyperty* periodically polls the state of all rooms provided by the Hotel LWM2M Message Node and and serves them as SyncObjects to other hyperties. On every poll it detects if a new room has been introduced, or an existing room state has changed. By changing the contents of a SyncObject, all hyperties subscribed to that object will get notified of the change.
 
-![Room Monitor and Control Hyperty main data flow](room-monitor-and-control-hyperty-data-flow.png)
+![*Room Monitor and Control Hyperty* main data flow](room-monitor-and-control-hyperty-data-flow.png)
 
 
 ### 3.6.2 Client side Hyperty
@@ -112,12 +112,12 @@ Besides, in this specific usage scenario, the *Hotel Connectivity Hyperty* allow
 
 The architecture of the client-side hyperty consists of the following parts:
 
-* Discovery of the running Room Monitor and Control Hyperty, and Authentication on it with an access token provided by the user
-* Request of available rooms from the Room Monitor and Control Hyperty, and provisioning them to the user
+* Discovery of the running *Room Monitor and Control Hyperty*, and Authentication on it with an access token provided by the user
+* Request of available rooms from the *Room Monitor and Control Hyperty*, and provisioning them to the user
 * Event system that triggers events for room availability, state changes and errors
 * Connectivity Adapter to the Last Hop Connectivity Broker, in order to change the netork interface used by the user's device
 
-![Hotel Connectivity Hyperty Architecture](./Hotel-Connectivity-Hyperty-Architecture.png)
+![*Hotel Connectivity Hyperty* Architecture](./Hotel-Connectivity-Hyperty-Architecture.png)
 
 The Hotel Guest Application uses this hyperty and provides on top of it the graphical user interface to display and manipulate smart appliances.
 
@@ -139,12 +139,12 @@ The hyperty exposes the following functionalities:
 
 #### 3.6.2.4	Main data flows
 
-The Hotel Connectivity Hyperty first tries to discover a currently running Room Monitor and Control hyperty based on a well known identity (i.e. the identity that started the Room Monitor and Control Hyperty).
-It then tries to request a list of syncObject URLs of rooms from the Room Monitor and Control Hyperty, providing a token that it got from the Hotel Guest Application. Based on this token, the Room Monitor and Control hyperty returns the amount of syncObject URLs of rooms this token is allowed access to.
-The Hotel Connectivity Hyperty then subscribes on each syncObject in order to get the current room states, as well as get notified of state changes of those rooms. Events for new and/or changed rooms will be triggered in the Hotel Guest Application appropriately.
+The *Hotel Connectivity Hyperty* first tries to discover a currently running Room Monitor and Control hyperty based on a well known identity (i.e. the identity that started the *Room Monitor and Control Hyperty*).
+It then tries to request a list of syncObject URLs of rooms from the *Room Monitor and Control Hyperty*, providing a token that it got from the Hotel Guest Application. Based on this token, the Room Monitor and Control hyperty returns the amount of syncObject URLs of rooms this token is allowed access to.
+The *Hotel Connectivity Hyperty* then subscribes on each syncObject in order to get the current room states, as well as get notified of state changes of those rooms. Events for new and/or changed rooms will be triggered in the Hotel Guest Application appropriately.
 
-Finally, at the user's will, the Hotel Connectivity Hyperty may send a state change request for a device, which the Room Monitor and Control Hyperty forwards to the Hotel LwM2M Message Node.
+Finally, at the user's will, the *Hotel Connectivity Hyperty* may send a state change request for a device, which the *Room Monitor and Control Hyperty* forwards to the Hotel LwM2M Message Node.
 
-![Hotel Connectivity Hyperty main data flow](hotel-connectivity-hyperty-data-flow.png)
+![*Hotel Connectivity Hyperty* main data flow](hotel-connectivity-hyperty-data-flow.png)
 
 Please note: green text/arrow implies interaction with other reTHINK components (e.g. communication through the reTHINK Message Node)
