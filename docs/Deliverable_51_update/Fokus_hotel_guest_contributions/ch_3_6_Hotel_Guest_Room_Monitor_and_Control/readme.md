@@ -90,7 +90,8 @@ The example shows a room named "room1" that contains
 
 * a _misc_ object, which shows the Wifi credentials for the user,
 * one _light_ called "Desklamp",
-* and one _temperature sensor_
+* one _temperature sensor_
+* one _door lock actuator_
 
 #### 3.6.1.3	Hyperty API
 
