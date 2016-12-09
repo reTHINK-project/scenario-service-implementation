@@ -145,7 +145,7 @@ The hyperty exposes the following functionalities:
 * functions
   * `start(accessToken)`: executes the starting routine of the hyperty, provided with the access token it sends to the *Room Monitor and Control Hyperty* to get access to the appropriate rooms
   * `sendAction(deviceName, objectType, objectId, resourceType, value)`: invoke an action on the LWM2M Message Node
-  * `switchToWifi()`: request a network interface change on the user device to wifi with credentials provided by the Hotel
+  * `switchToWifi()`: request a network interface change on the user device to wifi with credentials provided by the Hotel
   
 #### 3.6.2.4	Main data flows
 
