@@ -47,39 +47,41 @@ app.controller('hotelGuestController', ($scope) => {
         return "rgba(" + rgb[0] + "," + rgb[1] + "," + rgb[2] + ", .5)";
     };
 
+    //FIXME
     $scope.updateColorPicker = (cie) => {
         console.debug("Updating color picker", cie);
         var ret = rgbToHex_s(cieToRGB_s(cie));
-        $scope.lightColor = ret;
+        $scope.lightColor = ret; //FIXME
         console.debug("Converted", ret);
     };
 
     var satMap = {};
-    $scope.sendAction = (deviceName, objectId, resourceType, value) => {
-        if (!roomClient) {
-            var errorMsg = "sendAction(): roomClient hyperty not loaded! Can't perform action."
-            console.error(errorMsg);
-            $scope.fail.push(errorMsg);
-        }
-        else {
-            var key = [deviceName, objectId, resourceType];
-            var sat = satMap[key];
-            if (sat) {
-                clearTimeout(sat);
+    $scope.sendAction = (deviceName, objectType, objectId, resourceType, value) => {
+        return new Promise((resolve, reject) => {
+            if (!roomClient) {
+                var errorMsg = "sendAction(): roomClient hyperty not loaded! Can't perform action."
+                console.error(errorMsg);
+                $scope.fail.push(errorMsg);
+                reject(errorMsg);
             }
-
-            sat = setTimeout(() => {
-                if (resourceType === "color.value") {
-                    value = rgbToCIE_s(hexToRgb(value));
+            else {
+                var key = [deviceName, objectId, resourceType];
+                var sat = satMap[key];
+                if (sat) {
+                    clearTimeout(sat);
                 }
-                roomClient.sendAction(deviceName, "light", objectId, resourceType, value).then((result) => {
-                    console.debug("sendAction(): Action sent", result);
-                })
-            }, 100);
-
-            satMap[key] = sat;
-
-        }
+                sat = setTimeout(() => {
+                    if (objectType === "light" && resourceType === "color.value") { //Conversion needed
+                        value = rgbToCIE_s(hexToRgb(value));
+                    }
+                    roomClient.sendAction(deviceName, objectType, objectId, resourceType, value).then((result) => {
+                        console.debug("sendAction(): Action sent", result);
+                        resolve(result);
+                    })
+                }, 100);
+                satMap[key] = sat;
+            }
+        })
     };
 
     $scope.getDoorLock = (room) => {
@@ -98,7 +100,7 @@ app.controller('hotelGuestController', ($scope) => {
     };
 
     $scope.toggleDoorLock = (doorLock, room) => {
-        console.debug("toggleDoorLock:", doorLock);
+        console.debug("toggleDoorLock:", doorLock, room);
 
         for (var device in room.values) {
 
@@ -107,7 +109,7 @@ app.controller('hotelGuestController', ($scope) => {
             for (var a in actuators) {
                 if (actuators[a] === doorLock) {
                     console.debug("toggleDoorLock(): Found device", room.values[device]);
-                    roomClient.sendAction(room.values[device].name, "actuator", doorLock.id, "isOn", !doorLock.isOn).then((result) => {
+                    $scope.sendAction(room.values[device].name, "actuator", doorLock.id, "isOn", doorLock.isOn).then((result) => {
                         console.debug("sendAction(): Action sent", result);
                     })
 
@@ -218,6 +220,9 @@ app.controller('hotelGuestController', ($scope) => {
                     hotel.rooms.push(room);
                     $scope.$apply();
                     console.debug(JSON.stringify(hotel.rooms, null, 2));
+                    hotel.rooms.forEach((r) => {
+                        r.mainLock = $scope.getDoorLock(room); //Init main locks
+                    })
                 });
 
                 roomClient.addEventListener('changedRoom', (room) => {
@@ -225,6 +230,7 @@ app.controller('hotelGuestController', ($scope) => {
                     for (var i = 0; i < hotel.rooms.length; i++) {
                         if (hotel.rooms[i].name === room.name) {
                             hotel.rooms[i] = room;
+                            room.mainLock = $scope.getDoorLock(room); //Init main lock
                             break;
                         }
                     }
