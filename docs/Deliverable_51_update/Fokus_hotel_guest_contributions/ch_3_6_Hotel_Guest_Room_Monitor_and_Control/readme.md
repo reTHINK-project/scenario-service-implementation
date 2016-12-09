@@ -147,4 +147,4 @@ Finally, at the user's will, the Hotel Connectivity Hyperty may send a state cha
 
 ![Hotel Connectivity Hyperty main data flow](hotel-connectivity-hyperty-data-flow.png)
 
-Please note: green text/arrows imply communication from/to/over the reTHINK Message Node.
+Please note: green text/arrow implies interaction with other reTHINK components (e.g. communication through the reTHINK Message Node)
