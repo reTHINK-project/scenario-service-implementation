@@ -123,7 +123,7 @@ The Smart Contextual Assistance requires the following major reTHINK functionali
 -	Hyperty Runtime in Browser
 -	Hyperty Runtime in Smartphone
 -	Hyperty Runtime in Raspberry PI
--	Hyperty Runtime in Kurento Media Server to support Group Communication
+-	Hyperty Runtime in NdeJS integrated with Media Server to support Group Communication
 -	Vertx Message Node and its associated Protostub
 -	*partner1* Message Node and its associated Protostub to test cross domain H2H Communication interoperability
 -	*partner2* Message Node and its associated Protostub to test cross domain M2M Communication interoperability
@@ -146,7 +146,6 @@ The following APIs and Procedures are required:
 -	Chat and Group Chat
 -	Human Presence
 -	File Sharing
--	Screen Sharing
 -	Device Control / Actuation
 
 ### Required Testbed features
@@ -155,14 +154,12 @@ The following domains should be provided:
 
 -	hybroker.rethink.ptinovacao.pt
 -	hysmart.rethink.ptinovacao.pt
--	iHacker.rethink.ptinovacao.pt
 
 HyBroker should provide the following servers (and associated sub-domains):
 
 -	Vertx Messaging Node (msg-node.hybroker.rethink.ptinovacao.pt)
 -	Domain Registry (registry.hybroker.rethink.ptinovacao.pt)
 -	Catalogue server (catalogue.hybroker.rethink.ptinovacao.pt)
--	IdM Server (?) (idm.hybroker.rethink.ptinovacao.pt)
 -	Global Registry
 -	TURN/STUN server
 
@@ -170,3 +167,4 @@ HySmart should provide the following servers (and associated sub-domains):
 
 -	Domain Registry (registry.hysmart.rethink.ptinovacao.pt)
 -	Catalogue server (catalogue.hysmart.rethink.ptinovacao.pt)
+-	Vertx Messaging Node (msg-node.hysmart.rethink.ptinovacao.pt)
