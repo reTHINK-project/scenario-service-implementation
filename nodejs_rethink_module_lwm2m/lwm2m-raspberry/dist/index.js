@@ -41,15 +41,25 @@ var _Hue = require("./Hue");
 
 var _Hue2 = _interopRequireDefault(_Hue);
 
+var _DoorLock = require("./DoorLock");
+
+var _DoorLock2 = _interopRequireDefault(_DoorLock);
+
+var _lwm2mMapping = require("./lwm2m-mapping");
+
+var _lwm2mMapping2 = _interopRequireDefault(_lwm2mMapping);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 _logops2.default.format = _logops2.default.formatters.dev;
 _logops2.default.setLevel('INFO'); //Initial log-level, overwritten by config later
 
+
 var client = _lwm2mNodeLib2.default.client;
 var globalDeviceInfo = null;
 var tempSensor = null;
 var hue = null;
+var doorLock = null;
 
 _logops2.default.debug("Initialising from config");
 init().catch(function (error) {
@@ -100,6 +110,11 @@ function init() {
             } else {
                 _logops2.default.debug("Device 'hue' is disabled");
             }
+            if (_config2.default.sensors.hasOwnProperty("doorLock") && _config2.default.sensors.doorLock.enabled === true) {
+                devices.push(initDoorLock());
+            } else {
+                _logops2.default.debug("Device 'doorLock' is disabled");
+            }
             Promise.all(devices) //Wait for devices before registering to server
             .catch(function (errors) {
                 _logops2.default.error("Error while initialising devices!", errors);
@@ -134,6 +149,19 @@ function initTempSensor() {
     });
 }
 
+function initDoorLock() {
+    return new Promise(function (resolve) {
+        doorLock = new _DoorLock2.default(_lwm2mNodeLib2.default.client);
+        doorLock.start().catch(function (error) {
+            _logops2.default.error("DoorLock: Error while initialising virtual door-lock!", error);
+            resolve();
+        }).then(function () {
+            _logops2.default.info("DoorLock: Virtual door-lock initialised!");
+            resolve();
+        });
+    });
+}
+
 function execute(objectType, objectId, resourceId, value, callback) {
     _logops2.default.debug("Received 'execute'\n" + objectType + "/" + objectId + " " + resourceId + " " + value);
     callback(null);
@@ -147,18 +175,31 @@ function read(objectType, objectId, resourceId, value, callback) {
 function write(objectType, objectId, resourceId, value, callback) {
     _logops2.default.debug("Received 'write'\n" + objectType + "/" + objectId + " " + resourceId + " " + value);
 
-    if (_config2.default.sensors.hue.enabled === true && hue !== null) {
-        if (objectType == "3311") {
+    if (objectType == _lwm2mMapping2.default.getAttrId("light").objectTypeId) {
+        if (hue) {
             hue.handleWrite(objectType, objectId, resourceId, value).catch(function (error) {
                 _logops2.default.error("Hue: Error while handling lwm2m-write", error);
                 callback(error); //TODO: Set error code, not error-msg
             }).then(function () {
                 callback(null); //No error
             });
+        } else {
+            callback(new Error("Hue light not enabled"));
+        }
+    } else if (objectType == _lwm2mMapping2.default.getAttrId("actuator").objectTypeId) {
+        if (!doorLock) {
+            callback(new Error("DoorLock not enabled"));
+        } else {
+            doorLock.handleWrite(objectType, objectId, resourceId, value).catch(function (error) {
+                _logops2.default.error("doorLock: Error while handling lwm2m-write", error);
+                callback(error);
+            }).then(function () {
+                callback(null);
+            });
         }
     } else {
-            callback(null);
-        }
+        callback(new Error("No appropriate device handler found for lwm2m-write"));
+    }
 }
 
 function setHandlers(deviceInfo) {
@@ -237,6 +278,7 @@ function cmd_stop() {
 }
 
 function stopDevices() {
+    //TODO: Promise (wait for stops)
     if (tempSensor) {
         _logops2.default.info("Stopping temperature-sensor");
         tempSensor.stop();
@@ -244,6 +286,10 @@ function stopDevices() {
     if (hue) {
         _logops2.default.info("Stopping hue");
         hue.stop();
+    }
+    if (doorLock) {
+        _logops2.default.info("Stopping doorLock");
+        doorLock.stop();
     }
 }
 

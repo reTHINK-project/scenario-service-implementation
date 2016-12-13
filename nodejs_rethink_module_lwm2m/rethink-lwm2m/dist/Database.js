@@ -302,7 +302,7 @@ var Database = function () {
                         if (register === true) {
                             if (typeof payload !== 'undefined' && payload !== null) device.registration.payload = payload;
                         } else {
-                            device.registration.payload = null;
+                            device.registration.payload = undefined;
                         }
 
                         device.save(function (error) {
@@ -358,9 +358,11 @@ var Database = function () {
                                 category = attr.objectType;
                                 location = attr.resourceType;
 
+                                //Parse floats if needed
                                 if ((category === "temperature" || category === "humidity") && location === "value" || category === "light" && location === "dimmer") {
                                     value = parseFloat(value);
                                 } else {
+                                    //Parse color array (hue specific)
                                     if (category === "light" && location === "color.value") {
                                         try {
                                             value = JSON.parse(value);
@@ -370,8 +372,6 @@ var Database = function () {
                                     }
                                 }
                             }
-
-                            _logops2.default.debug("FOUND OR NOT ?", deviceName, objectType, objectId, resourceId, value);
 
                             var found = false;
                             device.lastValues[category].forEach(function (entry) {
@@ -431,7 +431,7 @@ var Database = function () {
                     if (typeof objName === "undefined" || objName === null) {
                         query = model.find();
                     } else {
-                        query = model.findOne({name: objName});
+                        query = model.findOne({ name: objName });
                     }
                     if (type === "room") {
                         //Check if we need to populate

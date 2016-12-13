@@ -37,6 +37,10 @@ var _HTTPInterface = require("./HTTPInterface");
 
 var _HTTPInterface2 = _interopRequireDefault(_HTTPInterface);
 
+var _lwm2mMapping = require("./lwm2m-mapping");
+
+var _lwm2mMapping2 = _interopRequireDefault(_lwm2mMapping);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var lwm2m = {};
@@ -156,12 +160,28 @@ function registrationHandler(endpoint, lifetime, version, binding, payload, call
         _logops2.default.error("Error while updating device-data", error);
     }).then(function () {
         //TODO: Make list of objects/resources to observe configurable
-        observeDeviceData(endpoint, 3303, 0, 5700); //Temperature
-        observeDeviceData(endpoint, 3303, 0, 5701); //Unit
 
-        observeDeviceData(endpoint, 3304, 0, 5700); //Humidity
-        observeDeviceData(endpoint, 3304, 0, 5701); //Unit
+        //TEMPERATURE
+        var tempObj = _lwm2mMapping2.default.getAttrId("temperature").objectTypeId;
+        _logops2.default.debug("Got object for observe job:", tempObj);
+        observeDeviceData(endpoint, tempObj, 0, _lwm2mMapping2.default.getAttrId("temperature", "value").resourceTypeId);
+        observeDeviceData(endpoint, tempObj, 0, _lwm2mMapping2.default.getAttrId("temperature", "unit").resourceTypeId);
 
+        //Old
+        //observeDeviceData(endpoint, 3303, 0, 5700); //Temperature
+        //observeDeviceData(endpoint, 3303, 0, 5701); //Unit
+
+        //HUMIDITY
+        var humObj = _lwm2mMapping2.default.getAttrId("humidity").objectTypeId;
+        _logops2.default.debug("Got object for observe job:", humObj);
+        observeDeviceData(endpoint, humObj, 0, _lwm2mMapping2.default.getAttrId("humidity", "value").resourceTypeId);
+        observeDeviceData(endpoint, humObj, 0, _lwm2mMapping2.default.getAttrId("humidity", "unit").resourceTypeId);
+
+        //Old
+        //observeDeviceData(endpoint, 3304, 0, 5700); //Humidity
+        //observeDeviceData(endpoint, 3304, 0, 5701); //Unit
+
+        //LIGHT
         //Get list of light-ids
         var lightIdsMatch = new RegExp("<\/3311[\/]([0-9]+)>", "g");
         var lightIds = [];
@@ -172,13 +192,27 @@ function registrationHandler(endpoint, lifetime, version, binding, payload, call
                 lightIds.push(result[1]);
             }
         } while (result != null);
+        var lightObj = _lwm2mMapping2.default.getAttrId("light").objectTypeId;
+        _logops2.default.debug("Got object for observe job:", lightObj);
         lightIds.forEach(function (id) {
-            observeDeviceData(endpoint, 3311, id, 5801); //Light name
-            observeDeviceData(endpoint, 3311, id, 5850); //Light on/off state
-            observeDeviceData(endpoint, 3311, id, 5851); //Light dimmer
-            observeDeviceData(endpoint, 3311, id, 5706); //Light colour
-            observeDeviceData(endpoint, 3311, id, 5701); //Light colour unit
+            observeDeviceData(endpoint, lightObj, id, _lwm2mMapping2.default.getAttrId("light", "name").resourceTypeId);
+            observeDeviceData(endpoint, lightObj, id, _lwm2mMapping2.default.getAttrId("light", "isOn").resourceTypeId);
+            observeDeviceData(endpoint, lightObj, id, _lwm2mMapping2.default.getAttrId("light", "dimmer").resourceTypeId);
+            observeDeviceData(endpoint, lightObj, id, _lwm2mMapping2.default.getAttrId("light", "color.value").resourceTypeId);
+            observeDeviceData(endpoint, lightObj, id, _lwm2mMapping2.default.getAttrId("light", "color.unit").resourceTypeId);
+
+            //observeDeviceData(endpoint, 3311, id, 5801); //Light name
+            //observeDeviceData(endpoint, 3311, id, 5850); //Light on/off state
+            //observeDeviceData(endpoint, 3311, id, 5851); //Light dimmer
+            //observeDeviceData(endpoint, 3311, id, 5706); //Light color
+            //observeDeviceData(endpoint, 3311, id, 5701); //Light color unit
         });
+
+        //LOCK or misc actuators
+        var actObj = _lwm2mMapping2.default.getAttrId("actuator").objectTypeId;
+        observeDeviceData(endpoint, actObj, 0, _lwm2mMapping2.default.getAttrId("actuator", "isOn").resourceTypeId);
+        observeDeviceData(endpoint, actObj, 0, _lwm2mMapping2.default.getAttrId("actuator", "name").resourceTypeId);
+        observeDeviceData(endpoint, actObj, 0, _lwm2mMapping2.default.getAttrId("actuator", "applicationType").resourceTypeId);
 
         callback();
     });
@@ -209,6 +243,8 @@ function observeHandler(value, objectType, objectId, resourceId, deviceId) {
 }
 
 function observeDeviceData(deviceName, objectType, objectId, resourceId) {
+    _logops2.default.debug("observeDeviceData(): start");
+    _logops2.default.debug("test");
     lwm2m.server.getRegistry().getByName(deviceName, function (error, device) {
         if (error) {
             _logops2.default.error(error);

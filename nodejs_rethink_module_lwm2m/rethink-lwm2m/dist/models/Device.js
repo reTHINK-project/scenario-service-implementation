@@ -63,6 +63,13 @@ device.schema = new Schema({
             },
             timestamp: { type: Date, default: Date.now }
         }],
+        actuator: [{
+            id: { type: Number, unique: true },
+            name: String,
+            isOn: Boolean,
+            applicationType: String,
+            timestamp: { type: Date, default: Date.now }
+        }],
         misc: [{
             uri: String,
             value: String,

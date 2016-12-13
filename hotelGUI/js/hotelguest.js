@@ -16,67 +16,192 @@
  *
  */
 
-var debugMode = true;
+var debugMode = false;
 
 var app = angular.module('hotelGuestGUI', []);
 app.controller('hotelGuestController', ($scope) => {
     $scope.cc = window.colorConversion;
 
+    var thumbnailUrl;
+    if (debugMode) {
+        thumbnailUrl = "img/hotel-thumbnail.jpg";
+    }
+    else {
+        thumbnailUrl = "/cam"; //url of webcam feed for hue bulb
+    }
     var hotel = {
-        thumbnailUrl: "img/hotel-thumbnail.jpg",
+        thumbnailUrl: thumbnailUrl,
         name: "MyHotel",
-        description: "The best Hotel in the world!",
+        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam finibus neque ut dolor pharetra tempus. Ut eget turpis faucibus, tincidunt ante id, auctor elit.",
         rooms: []
     };
     $scope.hotel = hotel;
-    window.hotel = hotel;
 
+    $scope.adminMode = true;
     $scope.fail = [];
 
     var roomClient;
 
-    $scope.calculateBackgroundColor = (cie) => {
-        var rgb = cieToRGB_s(cie);
+    $scope.calculateBackgroundColor = (hex) => {
+        var rgb = hexToRgb(hex);
         return "rgba(" + rgb[0] + "," + rgb[1] + "," + rgb[2] + ", .5)";
     };
 
-    $scope.updateColorPicker = (cie) => {
-        console.debug("Updating color picker", cie);
-        var ret = rgbToHex_s(cieToRGB_s(cie));
-        $scope.lightColor = ret;
-        console.debug("Converted", ret);
+    //Iterate over all lights of room and convert color values to hex
+    $scope.convertColorValues = (room) => {
+        for (var device in room.values) {
+
+            var lights = room.values[device].value.lastValues.light;
+
+            for (var a in lights) {
+                if (lights[a].color.unit === "CIE_JSON") {
+                    lights[a].color.value = rgbToHex_s(cieToRGB_s(lights[a].color.value));
+                    lights[a].color.unit = "RGB_HEX";
+                    console.log("converted single color value:", lights[a].color.value);
+                }
+            }
+        }
     };
 
     var satMap = {};
-    $scope.sendAction = (deviceName, objectId, resourceType, value) => {
-        if (!roomClient) {
-            var errorMsg = "sendAction(): roomClient hyperty not loaded! Can't perform action."
-            console.error(errorMsg);
-            $scope.fail.push(errorMsg);
-        }
-        else {
-            var key = [deviceName, objectId, resourceType];
-            var sat = satMap[key];
-            if (sat) {
-                clearTimeout(sat);
+    $scope.sendAction = (deviceName, objectType, objectId, resourceType, value) => {
+        return new Promise((resolve, reject) => {
+            if (!roomClient) {
+                var errorMsg = "sendAction(): roomClient hyperty not loaded! Can't perform action."
+                console.error(errorMsg);
+                $scope.fail.push(errorMsg);
+                reject(errorMsg);
             }
-
-            sat = setTimeout(() => {
-                if (resourceType === "color.value") {
+            else {
+                var key = [deviceName, objectId, resourceType];
+                var sat = satMap[key];
+                if (sat) {
+                    clearTimeout(sat);
+                }
+                if (objectType === "light" && resourceType === "color.value") { //Conversion needed
                     value = rgbToCIE_s(hexToRgb(value));
                 }
-                roomClient.sendAction(deviceName, "light", objectId, resourceType, value).then((result) => {
-                    console.debug("sendAction(): Action sent", result);
-                })
-            }, 100);
+                sat = setTimeout(() => {
+                    roomClient.sendAction(deviceName, objectType, objectId, resourceType, value).then((result) => {
+                        console.debug("sendAction(): Action sent", result);
+                        resolve(result);
+                    })
+                }, 100);
+                satMap[key] = sat;
+            }
+        })
+    };
 
-            satMap[key] = sat;
+    $scope.getDoorLock = (room) => {
+        console.debug("getDoorLock(" + room + ")");
+        for (var device in room.values) {
 
+            var actuators = room.values[device].value.lastValues.actuator;
+
+            for (var a in actuators) {
+                if (actuators[a].applicationType === "doorLock" && actuators[a].name === "Door") {
+                    console.debug("getDoorLock(): Found door lock", actuators[a]);
+                    return actuators[a];
+                }
+            }
         }
     };
 
-    $scope.toggleDoorLock = (roomName) => {
-        console.debug("toggleDoorLock(" + roomName + ")");
+
+    $scope.toggleDoorLock = (doorLock, room) => {
+        console.debug("toggleDoorLock:", doorLock, room);
+
+        var rooms = $scope.hotel.rooms;
+        if (room)
+            rooms = [room];
+
+        for (var r in rooms) {
+            r = rooms[r];
+
+            for (var device in r.values) {
+
+                var actuators = r.values[device].value.lastValues.actuator;
+
+                for (var a in actuators) {
+                    if (doorLock === undefined || actuators[a] === doorLock) {
+                        console.debug("toggleDoorLock(): Found device", r.values[device]);
+                        $scope.sendAction(r.values[device].name, "actuator", doorLock.id, "isOn", doorLock.isOn).then((result) => {
+                            console.debug("sendAction(): Action sent", result);
+                        })
+
+                    }
+                }
+            }
+        }
+
+
+    };
+
+    $scope.toggleGlobalState = (type, state) => {
+
+        if (type !== "doorLock" && type !== "light") {
+            console.error("Invalid type");
+        }
+        else {
+            var tasks = [];
+            hotel.rooms.forEach((room) => {
+                room.values.forEach((device) => {
+                    if (type === "light") {
+                        device.value.lastValues.light.forEach((light) => {
+                            tasks.push(roomClient.sendAction(device.name, type, light.id, "isOn", state)); //Send from roomClient directly to skip timeout
+                        })
+                    }
+                    else if (type === "doorLock") {
+                        device.value.lastValues.actuator.forEach((actuator) => {
+                            if (actuator.applicationType === type) {
+                                tasks.push(roomClient.sendAction(device.name, "actuator", actuator.id, "isOn", state)); //Send from roomClient directly to skip timeout
+                            }
+                        })
+                    }
+                })
+            });
+            Promise.all(tasks)
+                .then((result) => {
+                    console.debug("Set " + type + " state for all lights to", state);
+                    console.debug("Result:", result);
+                })
+        }
+
+    };
+
+    this.roomInit = (room) => {
+        room.mainLock = $scope.getDoorLock(room); //Init main locks
+        $scope.convertColorValues(room); //Convert room light colors
+    };
+
+    this.roomHandlerNew = (room) => {
+        console.debug("Room received", room);
+        hotel.rooms.push(room);
+        hotel.rooms.forEach((r) => {
+            this.roomInit(r);
+        });
+        $scope.$applyAsync();
+    };
+
+    this.roomHandlerChanged = (room) => {
+        console.debug("Room updated", room);
+        for (var i = 0; i < hotel.rooms.length; i++) {
+            if (hotel.rooms[i].name === room.name) {
+                hotel.rooms[i] = room;
+                this.roomInit(room);
+                console.debug("Converted color values for room", room);
+                break;
+            }
+        }
+        $scope.$applyAsync();
+    };
+
+    this.errorHandler = (error) => {
+        console.error("Error in roomClient", error);
+        if (typeof error !== "undefined") {
+            $scope.fail.push(error.message);
+        }
+        $scope.$applyAsync();
     };
 
     var token = getURLParameter("token");
@@ -90,7 +215,7 @@ app.controller('hotelGuestController', ($scope) => {
 
     if (debugMode) {
         //Define dummy room
-        hotel.rooms.push(
+        this.roomHandlerNew(
             {
                 "id": "5825a61908d25170004c597d",
                 "name": "room1",
@@ -111,13 +236,48 @@ app.controller('hotelGuestController', ($scope) => {
                                 "dimmer": 97,
                                 "timestamp": "2016-12-02T12:04:51.783Z",
                                 "color": {"unit": "CIE_JSON", "value": [0.409, 0.518]}
-                            }],
+                            },
+                                {
+                                    "name": "Bedroom",
+                                    "id": 1,
+                                    "_id": "5825a62608d25170004c5982",
+                                    "isOn": true,
+                                    "dimmer": 60,
+                                    "timestamp": "2016-12-02T12:04:51.783Z",
+                                    "color": {"unit": "CIE_JSON", "value": [0.3333, 0.3333]}
+                                },
+                                {
+                                    "name": "Bathroom",
+                                    "id": 1,
+                                    "_id": "5825a62608d25170004c5982",
+                                    "isOn": false,
+                                    "dimmer": 100,
+                                    "timestamp": "2016-12-02T12:04:51.783Z",
+                                    "color": {"unit": "CIE_JSON", "value": [0.3333, 0.3333]}
+                                }],
                             "humidity": [],
+                            "actuator": [
+                                {
+                                    "applicationType": "doorLock",
+                                    "isOn": true,
+                                    "timestamp": "2016-12-06T12:40:32.315Z",
+                                    "_id": "5846b1c03ed04866771e7601",
+                                    "name": "Door",
+                                    "id": 0
+                                }
+                            ],
                             "temperature": [{
                                 "unit": "Cel",
                                 "id": 0,
                                 "_id": "5825a62608d25170004c5981",
                                 "value": 22.1,
+                                "timestamp": "2016-12-02T12:10:29.863Z"
+                            }, {
+
+                                "unit": "Cel",
+                                "id": 1,
+                                "_id": "5825a62608d25170004c5981",
+                                "value": 20.4,
                                 "timestamp": "2016-12-02T12:10:29.863Z"
                             }]
                         },
@@ -141,38 +301,13 @@ app.controller('hotelGuestController', ($scope) => {
                 roomClient = hyperty.instance;
                 window.roomClient = roomClient;
 
-                roomClient.addEventListener('newRoom', (room) => {
-                    console.debug("Room received", room);
-                    hotel.rooms.push(room);
-                    $scope.$apply();
-                    console.debug(JSON.stringify(hotel.rooms, null, 2));
-                });
-
-                roomClient.addEventListener('changedRoom', (room) => {
-                    console.debug("Room updated", room);
-                    for (var i = 0; i < hotel.rooms.length; i++) {
-                        if (hotel.rooms[i].name === room.name) {
-                            hotel.rooms[i] = room;
-                            break;
-                        }
-                    }
-                    $scope.$apply();
-                });
-
-                roomClient.addEventListener('error', (error) => {
-                    console.error("Error in roomClient", error);
-                    if (typeof error !== "undefined") {
-                        $scope.fail.push(error.message);
-                    }
-                    $scope.$apply();
-                });
+                roomClient.addEventListener('newRoom', this.roomHandlerNew);
+                roomClient.addEventListener('changedRoom', this.roomHandlerChanged);
+                roomClient.addEventListener('error', this.errorHandler);
 
                 roomClient.start(token);
             })
-        }).catch((error) => {
-            console.error(error);
-            $scope.fail.push(error);
-        });
+        }).catch(this.errorHandler);
     }
 });
 

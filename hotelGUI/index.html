@@ -67,14 +67,12 @@
 
         <hr/>
         <div ng-hide="fail.size <= 0">
-            <div ng-repeat="error in fail">
-                <div style="text-align: center" class="alert alert-danger">
+                <div ng-repeat="error in fail track by $index" style="text-align: center; margin: 2px" class="alert alert-danger">
                     <strong>Error: </strong> {{error}}
                 </div>
-            </div>
         </div>
 
-        <div ng-hide="fail.size > 0" class="flex-container">
+        <div ng-hide="fail.size > 0" class="flex-container flex-col">
             <div ng-hide="hotel.rooms.length > 0">
                 <div class="centered">
                     <svg class="spinner" width="65px" height="65px" viewBox="0 0 66 66"
@@ -82,6 +80,47 @@
                         <circle class="path" fill="none" stroke-width="6" stroke-linecap="round" cx="33" cy="33"
                                 r="30"></circle>
                     </svg>
+                </div>
+            </div>
+
+            <div id="admincontrol" class="panel-group" ng-if="adminMode" ng-show="hotel.rooms.length > 0">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a style="vertical-align: super; font-size: x-large" data-toggle="collapse"
+                               ng-href="#admincontrol-collapse">Admin Control</a>
+                        </h4>
+                    </div>
+                    <div id="admincontrol-collapse" class="panel-collapse collapse in">
+                        <div class="panel-body">
+                            <div class="box singleVar">
+                                <label>Global Door Control</label>
+                                <div style="text-align: right" class="door_lock">
+                                    <button type="button" class="btn btn-default btn-raised"
+                                            ng-click="toggleGlobalState('doorLock', false)">
+                                        <img src="img/ic_lock_open_black_24px.svg">
+                                    </button>
+                                    <button type="button" class="btn btn-default btn-raised"
+                                            ng-click="toggleGlobalState('doorLock', true)">
+                                        <img src="img/ic_lock_black_24px.svg">
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="box singleVar">
+                                <label>Global Light Control</label>
+                                <div style="text-align: right" class="door_lock">
+                                    <button type="button" class="btn btn-default btn-raised"
+                                            ng-click="toggleGlobalState('light', true)">
+                                        <img src="img/ic_lightbulb_outline_black_24px.svg">
+                                    </button>
+                                    <button type="button" class="btn btn-default btn-raised"
+                                            ng-click="toggleGlobalState('light', false)">
+                                        <img src="img/ic_highlight_off_black_24px.svg">
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -93,11 +132,12 @@
                             <a style="vertical-align: super; font-size: x-large" data-toggle="collapse"
                                ng-href="#{{room.name}}-collapse">{{room.name}}</a>
                         </h4>
-                        <div style="text-align: right" class="door_lock">
-                            <img src="img/ic_lock_black_24px.svg" style="vertical-align: super"
-                                 ng-click="toggleDoorLock(room.name)">
+                        <div style="text-align: right" class="door_lock"
+                             ng-show="room.mainLock">
+                            <img src="img/ic_lock_black_24px.svg" style="vertical-align: super">
                             <label class="switch">
-                                <input type="checkbox" ng-model="doorLock" ng-click="toggleDoorLock(room.name)">
+                                <input type="checkbox" ng-model="room.mainLock.isOn"
+                                       ng-change="toggleDoorLock(room.mainLock, room)">
                                 <div class="slider round"></div>
                             </label>
                         </div>
@@ -156,7 +196,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="box vert fullwidth">
+                                    <div class="box vert fullwidth" ng-hide="device.value.lastValues.light.length < 1">
                                         <h4>Lights</h4>
 
                                         <div id="{{light.id}}" class="box fullwidth"
@@ -169,7 +209,7 @@
                                                 <table width="100%" style="text-align: center">
                                                     <tr>
                                                         <td>
-                                                            <h5>State</h5>
+                                                            <h5>Switch</h5>
                                                         </td>
                                                         <td>
                                                             <h5>Color</h5>
@@ -183,11 +223,13 @@
                                                     <tr>
                                                         <td>
                                                             <div class="flex-item">
-                                                                <button type="button"
-                                                                        class="btn btn-default btn-raised flex-item"
-                                                                        ng-click="sendAction(device.name, light.id, 'isOn', !light.isOn)">
-                                                                    {{light.isOn ? 'OFF' : 'ON'}}
-                                                                </button>
+                                                                <label class="switch">
+                                                                    <input type="checkbox" ng-model="lightState"
+                                                                           ng-init="lightState=light.isOn"
+                                                                           ng-checked="lightState"
+                                                                           ng-change="sendAction(device.name, 'light', light.id, 'isOn', !light.isOn)">
+                                                                    <div class="slider round"></div>
+                                                                </label>
                                                             </div>
                                                         </td>
                                                         <td>
@@ -196,10 +238,9 @@
                                                                     <div class="flex-item">
                                                                         <input
                                                                                 type="color"
-                                                                                ng-value="updateColorPicker(light.color.value)"
-                                                                                ng-model="lightColor"
+                                                                                ng-model="light.color.value"
                                                                                 ng-disabled="!light.isOn"
-                                                                                ng-change="sendAction(device.name, light.id, 'color.value', lightColor)"
+                                                                                ng-change="sendAction(device.name, 'light', light.id, 'color.value', light.color.value)"
                                                                         />
                                                                     </div>
                                                                 </div>
@@ -213,7 +254,7 @@
                                                                         name="dimmer" min="1" max="100"
                                                                         ng-disabled="!light.isOn"
                                                                         ng-model="light.dimmer"
-                                                                        ng-change="sendAction(device.name, light.id, 'dimmer', light.dimmer)"
+                                                                        ng-change="sendAction(device.name, 'light', light.id, 'dimmer', light.dimmer)"
                                                                 />
                                                             </div>
                                                         </td>

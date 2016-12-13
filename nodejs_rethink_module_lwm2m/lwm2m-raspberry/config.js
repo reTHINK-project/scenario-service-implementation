@@ -32,6 +32,9 @@ config.sensors = {
         enabled: false,
         hostname: "", //hostname of bridge
         username: "" //username acquired from registration via philipe-hue api
+    },
+    doorLock: {  //Virtual door lock
+        enabled: true
     }
 };
 config.client = {

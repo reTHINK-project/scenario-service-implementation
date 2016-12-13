@@ -23,6 +23,8 @@ import cmd from "command-node";
 import config from "./../config";
 import TempSensor from "./TempSensor";
 import Hue from "./Hue";
+import DoorLock from "./DoorLock";
+import mapping from "./lwm2m-mapping";
 
 logger.format = logger.formatters.dev;
 logger.setLevel('INFO'); //Initial log-level, overwritten by config later
@@ -32,6 +34,7 @@ var client = lwm2mlib.client;
 var globalDeviceInfo = null;
 var tempSensor = null;
 var hue = null;
+var doorLock = null;
 
 logger.debug("Initialising from config");
 init()
@@ -90,6 +93,12 @@ function init() {
             else {
                 logger.debug("Device 'hue' is disabled");
             }
+            if (config.sensors.hasOwnProperty("doorLock") && config.sensors.doorLock.enabled === true) {
+                devices.push(initDoorLock());
+            }
+            else {
+                logger.debug("Device 'doorLock' is disabled");
+            }
             Promise.all(devices) //Wait for devices before registering to server
                 .catch((errors) => {
                     logger.error("Error while initialising devices!", errors);
@@ -129,6 +138,21 @@ function initTempSensor() {
     });
 }
 
+function initDoorLock() {
+    return new Promise((resolve) => {
+        doorLock = new DoorLock(lwm2mlib.client);
+        doorLock.start()
+            .catch((error) => {
+                logger.error("DoorLock: Error while initialising virtual door-lock!", error);
+                resolve();
+            })
+            .then(() => {
+                logger.info("DoorLock: Virtual door-lock initialised!");
+                resolve();
+            })
+    });
+}
+
 
 function execute(objectType, objectId, resourceId, value, callback) {
     logger.debug("Received 'execute'\n" + objectType + "/" + objectId + " " + resourceId + " " + value);
@@ -143,8 +167,8 @@ function read(objectType, objectId, resourceId, value, callback) {
 function write(objectType, objectId, resourceId, value, callback) {
     logger.debug("Received 'write'\n" + objectType + "/" + objectId + " " + resourceId + " " + value);
 
-    if (config.sensors.hue.enabled === true && hue !== null) {
-        if (objectType == "3311") {
+    if (objectType == mapping.getAttrId("light").objectTypeId) {
+        if (hue) {
             hue.handleWrite(objectType, objectId, resourceId, value)
                 .catch((error) => {
                     logger.error("Hue: Error while handling lwm2m-write", error);
@@ -154,12 +178,29 @@ function write(objectType, objectId, resourceId, value, callback) {
                     callback(null); //No error
                 });
         }
+        else {
+            callback(new Error("Hue light not enabled"));
+        }
+
+    }
+    else if (objectType == mapping.getAttrId("actuator").objectTypeId) {
+        if (!doorLock) {
+            callback(new Error("DoorLock not enabled"));
+        }
+        else {
+            doorLock.handleWrite(objectType, objectId, resourceId, value)
+                .catch((error) => {
+                    logger.error("doorLock: Error while handling lwm2m-write", error);
+                    callback(error);
+                })
+                .then(() => {
+                    callback(null);
+                })
+        }
     }
     else {
-        callback(null);
+        callback(new Error("No appropriate device handler found for lwm2m-write"));
     }
-
-
 }
 
 function setHandlers(deviceInfo) {
@@ -244,7 +285,7 @@ function cmd_stop() {
         });
 }
 
-function stopDevices() {
+function stopDevices() { //TODO: Promise (wait for stops)
     if (tempSensor) {
         logger.info("Stopping temperature-sensor");
         tempSensor.stop();
@@ -252,6 +293,10 @@ function stopDevices() {
     if (hue) {
         logger.info("Stopping hue");
         hue.stop();
+    }
+    if (doorLock) {
+        logger.info("Stopping doorLock");
+        doorLock.stop();
     }
 }
 

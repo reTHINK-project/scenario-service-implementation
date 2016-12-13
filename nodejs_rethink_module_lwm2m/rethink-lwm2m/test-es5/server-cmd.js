@@ -113,4 +113,5 @@ var commands = {
     }
 };
 _commandNode2.default.initialize(commands, 'reTHINK-lwm2m> ');
+start();
 //# sourceMappingURL=server-cmd.js.map

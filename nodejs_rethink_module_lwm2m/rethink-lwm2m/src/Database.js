@@ -290,7 +290,7 @@ class Database {
                             device.registration.payload = payload;
                     }
                     else {
-                        device.registration.payload = null;
+                        device.registration.payload = undefined;
                     }
 
                     device.save((error) => {
@@ -350,12 +350,14 @@ class Database {
                             category = attr.objectType;
                             location = attr.resourceType;
 
+                            //Parse floats if needed
                             if (((category === "temperature" || category === "humidity" ) && location === "value")
                                 || category === "light" && location === "dimmer"
                             ) {
                                 value = parseFloat(value);
                             }
                             else {
+                                //Parse color array (hue specific)
                                 if (category === "light" && location === "color.value") {
                                     try {
                                         value = JSON.parse(value);
@@ -367,7 +369,6 @@ class Database {
                             }
                         }
 
-                        logger.debug("FOUND OR NOT ?", deviceName, objectType, objectId, resourceId, value);
 
                         var found = false;
                         device.lastValues[category].forEach((entry) => {

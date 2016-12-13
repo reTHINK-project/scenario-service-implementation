@@ -47,6 +47,22 @@ var map = [{
         "readOnly": true
     }]
 }, {
+    "objectTypeId": 3306,
+    "objectType": "actuator",
+    "resources": [{
+        "resourceTypeId": 5801,
+        "resourceType": "name",
+        "readOnly": false
+    }, {
+        "resourceTypeId": 5850,
+        "resourceType": "isOn",
+        "readOnly": false
+    }, {
+        "resourceTypeId": 5750,
+        "resourceType": "applicationType",
+        "readOnly": true
+    }]
+}, {
     "objectTypeId": 3311,
     "objectType": "light",
     "resources": [{

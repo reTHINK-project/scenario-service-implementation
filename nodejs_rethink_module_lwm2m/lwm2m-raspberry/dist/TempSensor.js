@@ -49,7 +49,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var TempSensor = function () {
     function TempSensor(client) {
-        var refreshInterval = arguments.length <= 1 || arguments[1] === undefined ? 5000 : arguments[1];
+        var refreshInterval = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 5000;
 
         _classCallCheck(this, TempSensor);
 
