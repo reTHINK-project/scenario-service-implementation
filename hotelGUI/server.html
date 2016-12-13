@@ -27,12 +27,13 @@
 <script>
     window.rethink.default.install({
         domain: 'fokus.fraunhofer.de',
-        development: false,
-        accessMap: {"usertoken": ["room1"], "admintoken": ["room1", "room2"]}
+        development: false
     }).then((runtime) => {
         runtime.requireHyperty("hyperty-catalogue://catalogue.fokus.fraunhofer.de/.well-known/hyperty/RoomServer").then((hyperty) => {
-            console.log("Hyperty loaded", hyperty);
-            window.roomServer = hyperty;
+            console.log("Hyperty loaded", hyperty.instance);
+            window.roomServer = hyperty.instance;
+            hyperty.instance.accessMap = {"usertoken": [["237"], false], "admintoken": [["237", "238"], true]};
+            console.log("Tried to update accessMap");
         })
     });
 </script>
