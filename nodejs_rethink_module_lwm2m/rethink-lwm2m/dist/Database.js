@@ -302,7 +302,7 @@ var Database = function () {
                         if (register === true) {
                             if (typeof payload !== 'undefined' && payload !== null) device.registration.payload = payload;
                         } else {
-                            device.registration.payload = null;
+                            device.registration.payload = undefined;
                         }
 
                         device.save(function (error) {

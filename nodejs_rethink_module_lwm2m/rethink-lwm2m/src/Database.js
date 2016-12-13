@@ -290,7 +290,7 @@ class Database {
                             device.registration.payload = payload;
                     }
                     else {
-                        device.registration.payload = null;
+                        device.registration.payload = undefined;
                     }
 
                     device.save((error) => {
