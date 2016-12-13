@@ -67,11 +67,9 @@
 
         <hr/>
         <div ng-hide="fail.size <= 0">
-            <div ng-repeat="error in fail">
-                <div style="text-align: center" class="alert alert-danger">
+                <div ng-repeat="error in fail track by $index" style="text-align: center; margin: 2px" class="alert alert-danger">
                     <strong>Error: </strong> {{error}}
                 </div>
-            </div>
         </div>
 
         <div ng-hide="fail.size > 0" class="flex-container flex-col">
@@ -125,7 +123,6 @@
                     </div>
                 </div>
             </div>
-            <!-- FIXME: Mockup -->
 
             <div id="{{room.name}}" ng-repeat="room in hotel.rooms" class="panel-group">
                 <div class="panel panel-default">
@@ -241,10 +238,9 @@
                                                                     <div class="flex-item">
                                                                         <input
                                                                                 type="color"
-                                                                                ng-value="updateColorPicker(light.color.value)"
-                                                                                ng-model="lightColor"
+                                                                                ng-model="light.color.value"
                                                                                 ng-disabled="!light.isOn"
-                                                                                ng-change="sendAction(device.name, 'light', light.id, 'color.value', lightColor)"
+                                                                                ng-change="sendAction(device.name, 'light', light.id, 'color.value', light.color.value)"
                                                                         />
                                                                     </div>
                                                                 </div>
