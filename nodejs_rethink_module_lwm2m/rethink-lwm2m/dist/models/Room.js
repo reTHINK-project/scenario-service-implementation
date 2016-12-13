@@ -33,6 +33,11 @@ var room = {};
 room.schema = new Schema({
     name: String,
     isBooked: Boolean,
+    wifi: {
+        ssid: String,
+        user: String,
+        password: String
+    },
     devices: [{ type: Schema.Types.ObjectId, ref: 'Device' }],
     members: [String]
 });

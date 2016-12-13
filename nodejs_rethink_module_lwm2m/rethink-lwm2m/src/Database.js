@@ -160,6 +160,7 @@ class Database {
                         var room = Room.model();
                         room.name = cfg_room.name;
                         room.isBooked = cfg_room.isBooked;
+                        room.wifi = cfg_room.wifi;
                         room.members = cfg_room.members;
                         room.save((error) => {
                             if (error) {

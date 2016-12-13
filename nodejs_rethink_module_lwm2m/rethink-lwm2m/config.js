@@ -26,24 +26,34 @@ config.hotel = {
     groups: [],
     rooms: [
         {
-            name: 'room1',
+            name: '237',
+            wifi: {
+                ssid: "237wifi",
+                user: "237user",
+                password: "237password"
+            },
             isBooked: false,
             members: []
         },
         {
-            name: 'room3',
+            name: '238',
+            wifi: {
+                ssid: "238wifi",
+                user: "238user",
+                password: "238password"
+            },
             isBooked: true,
             members: []
         }
     ],
     devices: [
         {
-            room: 'room2',
+            room: '237',
             name: 'myHeating'
         },
         {
-            room: 'room1',
-            name: 'myLight'
+            room: '238',
+            name: 'myRaspberry'
         }
     ]
 };
