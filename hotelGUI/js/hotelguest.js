@@ -37,7 +37,7 @@ app.controller('hotelGuestController', ($scope) => {
     };
     $scope.hotel = hotel;
 
-    $scope.adminMode = true;
+    $scope.adminMode = false;
     $scope.fail = [];
 
     var roomClient;
@@ -204,6 +204,14 @@ app.controller('hotelGuestController', ($scope) => {
         $scope.$applyAsync();
     };
 
+
+    this.userStateChangeHandler = (isAdmin) => {
+        console.debug("userStateChange", isAdmin);
+        $scope.adminMode = isAdmin;
+        $scope.$applyAsync();
+    };
+
+
     var token = getURLParameter("token");
     console.debug("URL value for 'token':", token);
     if (token === null) {
@@ -304,6 +312,7 @@ app.controller('hotelGuestController', ($scope) => {
                 roomClient.addEventListener('newRoom', this.roomHandlerNew);
                 roomClient.addEventListener('changedRoom', this.roomHandlerChanged);
                 roomClient.addEventListener('error', this.errorHandler);
+                roomClient.addEventListener('userStateChange', this.userStateChangeHandler);
 
                 roomClient.start(token);
             })

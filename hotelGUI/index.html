@@ -67,9 +67,10 @@
 
         <hr/>
         <div ng-hide="fail.size <= 0">
-                <div ng-repeat="error in fail track by $index" style="text-align: center; margin: 2px" class="alert alert-danger">
-                    <strong>Error: </strong> {{error}}
-                </div>
+            <div ng-repeat="error in fail track by $index" style="text-align: center; margin: 2px"
+                 class="alert alert-danger">
+                <strong>Error: </strong> {{error}}
+            </div>
         </div>
 
         <div ng-hide="fail.size > 0" class="flex-container flex-col">
@@ -83,7 +84,7 @@
                 </div>
             </div>
 
-            <div id="admincontrol" class="panel-group" ng-if="adminMode" ng-show="hotel.rooms.length > 0">
+            <div id="admincontrol" class="panel-group" ng-if="adminMode===true" ng-show="hotel.rooms.length > 0">
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h4 class="panel-title">
