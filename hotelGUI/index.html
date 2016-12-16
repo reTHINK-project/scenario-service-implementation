@@ -166,13 +166,13 @@
                                         </form>
                                     </div>
                                 </div>
-                                <div id="device" ng-repeat="device in room.values" class="fullwidth">
-                                    <div ng-if="device.value.lastValues.temperature.length > 0"
+                                <div id="device" ng-repeat="device in room.devices" class="fullwidth">
+                                    <div ng-if="device.lastValues.temperature.length > 0"
                                          class="box flex-col fullwidth">
                                         <h4 align="center">Temperature</h4>
 
                                         <div id="{{temperature.id}}"
-                                             ng-repeat="temperature in device.value.lastValues.temperature"
+                                             ng-repeat="temperature in device.lastValues.temperature"
                                              class="box singleVar fullwidth hover">
                                             <label class="flex-item">
                                                 Temp #{{temperature.id}}
@@ -183,24 +183,24 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div ng-if="device.value.lastValues.humidity.length > 0" class="box flex-col">
+                                    <div ng-if="device.lastValues.humidity.length > 0" class="box flex-col">
                                         <h4 align="center">Humidity</h4>
                                         <div id="{{humidity.id}}"
-                                             ng-repeat="humidity in device.value.lastValues.humidity"
-                                             class="box singleVar hover">
-                                            <div class="flex-item">
-                                                {{humidity.id}}
-                                            </div>
+                                             ng-repeat="humidity in device.lastValues.humidity"
+                                             class="box singleVar fullwidth hover">
+                                            <label class="flex-item">
+                                                Hum #{{humidity.id}}
+                                            </label>
                                             <div class="flex-item">
                                                 {{humidity.value}} {{humidity.unit}}
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="box flex-col fullwidth" ng-hide="device.value.lastValues.light.length < 1">
+                                    <div class="box flex-col fullwidth" ng-hide="device.lastValues.light.length < 1">
                                         <h4>Lights</h4>
 
                                         <div id="{{light.id}}" class="box fullwidth"
-                                             ng-repeat="light in device.value.lastValues.light"
+                                             ng-repeat="light in device.lastValues.light"
                                              ng-style="light.isOn ? {'background-color': calculateBackgroundColor(light.color.value)} : {'background-color': '#5f5f5f', 'color': 'white'}"
                                              style="justify-content: space-between">
                                             <label class="flex-item">{{light.name}}</label>

@@ -16,7 +16,7 @@
  *
  */
 
-var debugMode = false;
+var debugMode = true;
 
 var app = angular.module('hotelGuestGUI', []);
 app.controller('hotelGuestController', ($scope) => {
@@ -49,9 +49,9 @@ app.controller('hotelGuestController', ($scope) => {
 
     //Iterate over all lights of room and convert color values to hex
     $scope.convertColorValues = (room) => {
-        for (var device in room.values) {
+        for (var device in room.devices) {
 
-            var lights = room.values[device].value.lastValues.light;
+            var lights = room.devices[device].lastValues.light;
 
             for (var a in lights) {
                 if (lights[a].color.unit === "CIE_JSON") {
@@ -94,9 +94,9 @@ app.controller('hotelGuestController', ($scope) => {
 
     $scope.getDoorLock = (room) => {
         console.debug("getDoorLock(" + room + ")");
-        for (var device in room.values) {
+        for (var device in room.devices) {
 
-            var actuators = room.values[device].value.lastValues.actuator;
+            var actuators = room.devices[device].lastValues.actuator;
 
             for (var a in actuators) {
                 if (actuators[a].applicationType === "doorLock" && actuators[a].name === "Door") {
@@ -118,14 +118,14 @@ app.controller('hotelGuestController', ($scope) => {
         for (var r in rooms) {
             r = rooms[r];
 
-            for (var device in r.values) {
+            for (var device in r.devices) {
 
-                var actuators = r.values[device].value.lastValues.actuator;
+                var actuators = r.devices[device].lastValues.actuator;
 
                 for (var a in actuators) {
                     if (doorLock === undefined || actuators[a] === doorLock) {
-                        console.debug("toggleDoorLock(): Found device", r.values[device]);
-                        $scope.sendAction(r.values[device].name, "actuator", doorLock.id, "isOn", doorLock.isOn).then((result) => {
+                        console.debug("toggleDoorLock(): Found device", r.devices[device]);
+                        $scope.sendAction(r.devices[device].name, "actuator", doorLock.id, "isOn", doorLock.isOn).then((result) => {
                             console.debug("sendAction(): Action sent", result);
                         })
 
@@ -145,14 +145,14 @@ app.controller('hotelGuestController', ($scope) => {
         else {
             var tasks = [];
             hotel.rooms.forEach((room) => {
-                room.values.forEach((device) => {
+                room.devices.forEach((device) => {
                     if (type === "light") {
-                        device.value.lastValues.light.forEach((light) => {
+                        device.lastValues.light.forEach((light) => {
                             tasks.push(roomClient.sendAction(device.name, type, light.id, "isOn", state)); //Send from roomClient directly to skip timeout
                         })
                     }
                     else if (type === "doorLock") {
-                        device.value.lastValues.actuator.forEach((actuator) => {
+                        device.lastValues.actuator.forEach((actuator) => {
                             if (actuator.applicationType === type) {
                                 tasks.push(roomClient.sendAction(device.name, "actuator", actuator.id, "isOn", state)); //Send from roomClient directly to skip timeout
                             }
@@ -222,20 +222,29 @@ app.controller('hotelGuestController', ($scope) => {
     }
 
     if (debugMode) {
-        //Define dummy room
         this.roomHandlerNew(
             {
-                "id": "5825a61908d25170004c597d",
-                "name": "room1",
-                "values": [{
-                    "name": "myRaspberry",
-                    "value": {
-                        "_id": "5825a61908d25170004c5980",
+                "_id": "5850288ae8bffa3b11573439",
+                "isBooked": false,
+                "name": "237",
+                "__v": 1,
+                "members": [],
+                "devices": [
+                    {
+                        "_id": "5850288be8bffa3b1157343b",
                         "name": "myRaspberry",
-                        "__v": 99,
-                        "room": "5825a61908d25170004c597d",
+                        "__v": 0,
+                        "room": "5850288ae8bffa3b11573439",
                         "lastValues": {
                             "misc": [],
+                            "actuator": [{
+                                "applicationType": "doorLock",
+                                "isOn": true,
+                                "timestamp": "2016-12-06T12:40:32.315Z",
+                                "_id": "5846b1c03ed04866771e7601",
+                                "name": "Door",
+                                "id": 0
+                            }],
                             "light": [{
                                 "name": "Desklamp",
                                 "id": 1,
@@ -263,17 +272,13 @@ app.controller('hotelGuestController', ($scope) => {
                                     "timestamp": "2016-12-02T12:04:51.783Z",
                                     "color": {"unit": "CIE_JSON", "value": [0.3333, 0.3333]}
                                 }],
-                            "humidity": [],
-                            "actuator": [
-                                {
-                                    "applicationType": "doorLock",
-                                    "isOn": true,
-                                    "timestamp": "2016-12-06T12:40:32.315Z",
-                                    "_id": "5846b1c03ed04866771e7601",
-                                    "name": "Door",
-                                    "id": 0
-                                }
-                            ],
+                            "humidity": [{
+                                "unit": "%",
+                                "id": 0,
+                                "_id": "5825a62608d25170004c5981",
+                                "value": 57.6,
+                                "timestamp": "2016-12-02T12:10:29.863Z"
+                            }],
                             "temperature": [{
                                 "unit": "Cel",
                                 "id": 0,
@@ -290,18 +295,19 @@ app.controller('hotelGuestController', ($scope) => {
                             }]
                         },
                         "registration": {
-                            "payload": "</3311/1>,</3303/0>",
-                            "timestamp": "2016-12-02T12:04:48.839Z",
+                            "timestamp": "2016-12-13T16:57:47.096Z",
                             "registered": true
                         }
                     }
-                }],
-                "scheme": "context",
-                "type": "chat",
-                "reporter": "hyperty://fokus.fraunhofer.de/5c9039f9-53be-40e9-815a-740879a5d837",
-                "schema": "hyperty-catalogue://catalogue.fokus.fraunhofer.de/.well-known/dataschema/Context"
+                ],
+                "wifi": {
+                    "ssid": "237wifi",
+                    "user": "237user",
+                    "password": "237password"
+                },
+                "$$hashKey": "object:7"
             }
-        )
+        );
     }
     else {
         window.rethink.default.install({domain: 'fokus.fraunhofer.de', development: false}).then((runtime) => {
