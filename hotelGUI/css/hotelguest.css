@@ -64,10 +64,6 @@
     width: 100%;
 }
 
-.vert {
-    flex-direction: column;
-}
-
 .box-shadow {
     box-shadow: 0 0 1px black;
     padding: 1em;

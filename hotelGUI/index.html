@@ -146,30 +146,29 @@
                     <div id="{{room.name}}-collapse"
                          class='{{$index == 0 ? "panel-collapse collapse in" : "panel-collapse collapse"}}'>
                         <div class="panel-body">
-                            <div class="flex-container" style="flex-direction: column">
-                                <!-- TODO: Replace mockup with logic -->
-                                <div class="box vert">
+                            <div class="flex-container flex-col">
+                                <div class="box flex-col" ng-if="room.hasOwnProperty('wifi')">
                                     <h4 align="center">WiFi</h4>
                                     <div class="box hover">
                                         <form class="flex-container wifi_info">
                                             <label>
                                                 SSID
-                                                <input type="text" value="MyHotelWifi" readonly>
+                                                <input type="text" ng-model="room.wifi.ssid" readonly>
                                             </label>
                                             <label>
                                                 User
-                                                <input type="text" value="Bob" readonly>
+                                                <input type="text" ng-model="room.wifi.user" readonly>
                                             </label>
                                             <label>
                                                 Password
-                                                <input type="text" value="talElZis2" readonly>
+                                                <input type="text" ng-model="room.wifi.password" readonly>
                                             </label>
                                         </form>
                                     </div>
                                 </div>
                                 <div id="device" ng-repeat="device in room.values" class="fullwidth">
                                     <div ng-if="device.value.lastValues.temperature.length > 0"
-                                         class="box vert fullwidth">
+                                         class="box flex-col fullwidth">
                                         <h4 align="center">Temperature</h4>
 
                                         <div id="{{temperature.id}}"
@@ -184,7 +183,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div ng-if="device.value.lastValues.humidity.length > 0" class="box vert">
+                                    <div ng-if="device.value.lastValues.humidity.length > 0" class="box flex-col">
                                         <h4 align="center">Humidity</h4>
                                         <div id="{{humidity.id}}"
                                              ng-repeat="humidity in device.value.lastValues.humidity"
@@ -197,7 +196,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="box vert fullwidth" ng-hide="device.value.lastValues.light.length < 1">
+                                    <div class="box flex-col fullwidth" ng-hide="device.value.lastValues.light.length < 1">
                                         <h4>Lights</h4>
 
                                         <div id="{{light.id}}" class="box fullwidth"
