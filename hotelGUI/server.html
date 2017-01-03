@@ -32,7 +32,7 @@
         runtime.requireHyperty("hyperty-catalogue://catalogue.fokus.fraunhofer.de/.well-known/hyperty/RoomServer").then((hyperty) => {
             console.log("Hyperty loaded", hyperty.instance);
             window.roomServer = hyperty.instance;
-            hyperty.instance.accessMap = {"usertoken": [["237"], false], "admintoken": [["237", "238"], true]};
+            hyperty.instance.accessMap = {"usertoken": [["238"], false], "admintoken": [["237", "238"], true]};
             console.log("Tried to update accessMap");
         })
     });
