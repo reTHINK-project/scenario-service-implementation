@@ -16,7 +16,7 @@
  *
  */
 
-var debugMode = true;
+var debugMode = false;
 
 var app = angular.module('hotelGuestGUI', []);
 app.controller('hotelGuestController', ($scope) => {
@@ -65,6 +65,7 @@ app.controller('hotelGuestController', ($scope) => {
 
     var satMap = {};
     $scope.sendAction = (deviceName, objectType, objectId, resourceType, value) => {
+        console.debug("sendAction", deviceName, objectType, resourceType, value);
         return new Promise((resolve, reject) => {
             if (!roomClient) {
                 var errorMsg = "sendAction(): roomClient hyperty not loaded! Can't perform action."
