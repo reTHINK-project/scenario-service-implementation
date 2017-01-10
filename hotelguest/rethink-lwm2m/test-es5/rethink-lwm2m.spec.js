@@ -16,9 +16,7 @@ var _config = require("../config.js");
 
 var _config2 = _interopRequireDefault(_config);
 
-function _interopRequireDefault(obj) {
-    return obj && obj.__esModule ? obj : {default: obj};
-}
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var expect = _chai2.default.expect;
 _chai2.default.use(_chaiAsPromised2.default);
@@ -26,7 +24,7 @@ _chai2.default.use(_chaiAsPromised2.default);
 describe('Test module', function () {
 
     describe('Server start and stop', function () {
-        undefined.timeout(0); //TODO
+        //this.timeout(0); //TODO
 
         it('should set lwm2m-server configuration', function () {
             _index2.default.setConfig(_config2.default);
@@ -37,12 +35,14 @@ describe('Test module', function () {
             _index2.default.start().catch(function (error) {
                 expect(error).to.not.exist;
             }).then(function () {
-                _index2.default.stop().catch(function (error) {
-                    expect(error).to.not.exist;
-                }).then(function () {
-                    expect(_index2.default.server.isRunning()).to.be.false;
-                    done();
-                });
+                /*lwm2m.stop()
+                    .catch((error) => {
+                        expect(error).to.not.exist;
+                    })
+                    .then(() => {
+                        expect(lwm2m.server.isRunning()).to.be.false;
+                        done();
+                    });*/
             });
         });
 

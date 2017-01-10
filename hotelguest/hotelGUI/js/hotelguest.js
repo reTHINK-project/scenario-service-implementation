@@ -27,7 +27,7 @@ app.controller('hotelGuestController', ($scope) => {
         thumbnailUrl = "img/hotel-thumbnail.jpg";
     }
     else {
-        thumbnailUrl = "/cam"; //url of webcam feed for hue bulb
+        thumbnailUrl = "https://hotel-guest-rethink.fokus.fraunhofer.de/cam"; //url of webcam feed for hue bulb
     }
     var hotel = {
         thumbnailUrl: thumbnailUrl,
