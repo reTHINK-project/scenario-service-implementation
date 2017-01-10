@@ -1,0 +1,29 @@
+version: '2'
+services:
+  lwm2m-server:
+    build: ./rethink-lwm2m/
+    ports:
+     - "8000:8000" # expose for hyperty
+     - "5683:5683" # expose for lwm2m-clients
+  mongodb:
+    image: "mongo"
+  catalogue:
+    image: "rethink/catalogue-broker"
+  catalogue-database:
+    image: "rethink/catalogue-database-rethinkdefault"
+  msg-node:
+    image: "rethink/msg-node-vertx"
+  dom-registry:
+    image: "rethink/domain-registry"
+ # nginx-proxy: # proxies other components without exposed ports
+ #   build: ./nginx-proxy/
+ #   # expose 443, 80
+ # hotelgui-web:
+ #   image: nginx
+     # no expose
+ #   (...)
+ # runtime-web:
+ #   image: nginx
+     # no expose
+ #   (...)
+
