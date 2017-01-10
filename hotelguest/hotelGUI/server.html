@@ -1,0 +1,42 @@
+<!--
+ Copyright [2015-2017] Fraunhofer Gesellschaft e.V., Institute for
+ Open Communication Systems (FOKUS)
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+ http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <title>RoomServer</title>
+    <script src="https://runtime.fokus.fraunhofer.de/.well-known/runtime/rethink.js"></script>
+</head>
+<body>
+
+<script>
+    window.rethink.default.install({
+        domain: 'fokus.fraunhofer.de',
+        development: false
+    }).then((runtime) => {
+        runtime.requireHyperty("hyperty-catalogue://catalogue.fokus.fraunhofer.de/.well-known/hyperty/RoomServer").then((hyperty) => {
+            console.log("Hyperty loaded", hyperty.instance);
+            window.roomServer = hyperty.instance;
+            hyperty.instance.accessMap = {"usertoken": [["238"], false], "admintoken": [["237", "238"], true]};
+            console.log("Tried to update accessMap");
+        })
+    });
+</script>
+
+</body>
+</html>

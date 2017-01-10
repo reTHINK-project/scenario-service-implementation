@@ -1,0 +1,27 @@
+{
+  "name": "lwm2m-raspberry",
+  "version": "0.1.0",
+  "description": "lwm2m-client for the RaspberryPi",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "start": "node dist/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Paul Zuehlcke",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "async": "^2.1.4",
+    "command-node": "^0.1.1",
+    "ds18b20": "git+https://github.com/Trikolon/ds18b20.git",
+    "logops": "^1.0.7",
+    "lwm2m-node-lib": "^1.0.0",
+    "philips-hue": "^1.2.0"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.18.0",
+    "babel-preset-es2015": "^6.18.0"
+  }
+}

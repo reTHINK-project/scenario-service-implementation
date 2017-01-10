@@ -1,0 +1,170 @@
+/*
+ * Copyright [2015-2017] Fraunhofer Gesellschaft e.V., Institute for
+ * Open Communication Systems (FOKUS)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+.panel-group {
+    margin-bottom: 3px;
+    max-width: 1000px;
+    width: 100%;
+
+    -webkit-animation: fadein 1s; /* Safari, Chrome and Opera > 12.1 */
+    -moz-animation: fadein 1s; /* Firefox < 16 */
+    -ms-animation: fadein 1s; /* Internet Explorer */
+    -o-animation: fadein 1s; /* Opera < 12.1 */
+    animation: fadein 1s;
+}
+
+.panel-title {
+    text-align: center;
+}
+
+.flex-container, .wifi_info label, .box {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+}
+
+.nowrap {
+    flex-wrap: nowrap;
+}
+
+.flex-col {
+    flex-direction: column;
+}
+
+.flex-item, .wifi_info label {
+    order: 0;
+    flex: 0 1 auto;
+    align-self: auto;
+    margin: 10px;
+}
+
+.flex-item {
+    margin: 10px;
+}
+
+.fullwidth {
+    width: 100%;
+}
+
+.box-shadow {
+    box-shadow: 0 0 1px black;
+    padding: 1em;
+}
+
+.box {
+    padding: 1em;
+
+}
+
+.nopadding {
+    padding: 0;
+}
+
+.hover:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.singleVar {
+    padding-top: 1em;
+    padding-bottom: 1em;
+    justify-content: space-between;
+}
+
+.singleVar:hover {
+    background-color: #f3f3f3;
+}
+
+#hotelThumbnail {
+    display: block;
+    min-width: 10em;
+    min-height: 10em;
+    height: 20vw;
+    width: 20vw;
+    object-fit: cover;
+    max-height: 15em;
+}
+
+#hotelDescription {
+    max-width: 50%;
+}
+
+#admincontrol {
+
+}
+
+hr {
+    margin: 5px;
+}
+
+h4 {
+    font-weight: bold;
+}
+
+.centered {
+    padding-top: 2em;
+    padding-bottom: 2em;
+    text-align: center;
+}
+
+.door_lock label {
+    margin: 0;
+}
+
+.wifi_info label {
+    flex-grow: 1;
+    justify-content: space-between;
+}
+
+.wifi_info input {
+    margin-left: 0.5em;
+}
+
+
+/* Animations */
+
+@keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+/* Firefox < 16 */
+@-moz-keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+/* Safari, Chrome and Opera > 12.1 */
+@-webkit-keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+/* Internet Explorer */
+@-ms-keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+/* Opera < 12.1 */
+@-o-keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}

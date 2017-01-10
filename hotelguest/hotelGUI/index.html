@@ -1,0 +1,275 @@
+<!--
+ Copyright [2015-2017] Fraunhofer Gesellschaft e.V., Institute for
+ Open Communication Systems (FOKUS)
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+ http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Room Control</title>
+
+    <!-- Material Design fonts -->
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Roboto:300,400,500,700">
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/icon?family=Material+Icons">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/bootstrap-material-design.min.css">
+    <link rel="stylesheet" href="css/ripples.min.css">
+
+    <!-- Bootstrap JS -->
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/material.min.js"></script>
+    <script src="js/ripples.min.js"></script>
+
+    <!-- AngularJS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.js"></script>
+
+
+    <!-- Application -->
+    <link rel="stylesheet" href="css/hotelguest.css">
+    <link rel="stylesheet" href="css/spinner.css">
+    <link rel="stylesheet" href="css/slider.css">
+
+    <script src="https://runtime.fokus.fraunhofer.de/.well-known/runtime/rethink.js"></script>
+    <script src="js/colorConversion.js"></script>
+    <script src="js/hotelguest.js"></script>
+
+</head>
+<body>
+<div id="roomControl" ng-app="hotelGuestGUI" ng-controller="hotelGuestController">
+    <div ng-model="hotel">
+        <div class="flex-container">
+            <div class="">
+                <img id="hotelThumbnail" src={{hotel.thumbnailUrl}} class="flex-item img-thumbnail"
+                     alt="MyHotel"/>
+            </div>
+            <div id="hotelDescription" class="flex-item">
+                <h3>{{hotel.name}}</h3>
+                <p>{{hotel.description}}</p>
+            </div>
+        </div>
+
+        <hr/>
+        <div ng-hide="fail.size <= 0">
+            <div ng-repeat="error in fail track by $index" style="text-align: center; margin: 2px"
+                 class="alert alert-danger">
+                <strong>Error: </strong> {{error}}
+            </div>
+        </div>
+
+        <div ng-hide="fail.size > 0" class="flex-container flex-col">
+            <div ng-hide="hotel.rooms.length > 0">
+                <div class="centered">
+                    <svg class="spinner" width="65px" height="65px" viewBox="0 0 66 66"
+                         xmlns="http://www.w3.org/2000/svg">
+                        <circle class="path" fill="none" stroke-width="6" stroke-linecap="round" cx="33" cy="33"
+                                r="30"></circle>
+                    </svg>
+                </div>
+            </div>
+
+            <div id="admincontrol" class="panel-group" ng-if="adminMode===true" ng-show="hotel.rooms.length > 0">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a style="vertical-align: super; font-size: x-large" data-toggle="collapse"
+                               ng-href="#admincontrol-collapse">Admin Control</a>
+                        </h4>
+                    </div>
+                    <div id="admincontrol-collapse" class="panel-collapse collapse in">
+                        <div class="panel-body">
+                            <div class="box singleVar">
+                                <label>Global Door Control</label>
+                                <div style="text-align: right" class="door_lock">
+                                    <button type="button" class="btn btn-default btn-raised"
+                                            ng-click="toggleGlobalState('doorLock', false)">
+                                        <img src="img/ic_lock_open_black_24px.svg">
+                                    </button>
+                                    <button type="button" class="btn btn-default btn-raised"
+                                            ng-click="toggleGlobalState('doorLock', true)">
+                                        <img src="img/ic_lock_black_24px.svg">
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="box singleVar">
+                                <label>Global Light Control</label>
+                                <div style="text-align: right" class="door_lock">
+                                    <button type="button" class="btn btn-default btn-raised"
+                                            ng-click="toggleGlobalState('light', true)">
+                                        <img src="img/ic_lightbulb_outline_black_24px.svg">
+                                    </button>
+                                    <button type="button" class="btn btn-default btn-raised"
+                                            ng-click="toggleGlobalState('light', false)">
+                                        <img src="img/ic_highlight_off_black_24px.svg">
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="{{room.name}}" ng-repeat="room in hotel.rooms" class="panel-group">
+                <div class="panel panel-default">
+                    <div class="panel-heading flex-container singleVar">
+
+                        <h4 class="panel-title">
+                            <a style="vertical-align: super; font-size: x-large" data-toggle="collapse"
+                               ng-href="#{{room.name}}-collapse">{{room.name}}</a>
+                        </h4>
+                        <div style="text-align: right" class="door_lock"
+                             ng-show="room.mainLock">
+                            <img src="img/ic_lock_black_24px.svg" style="vertical-align: super">
+                            <label class="switch">
+                                <input type="checkbox" ng-model="room.mainLock.isOn"
+                                       ng-change="toggleDoorLock(room.mainLock, room)">
+                                <div class="slider round"></div>
+                            </label>
+                        </div>
+                    </div>
+                    <div id="{{room.name}}-collapse"
+                         class='{{$index == 0 ? "panel-collapse collapse in" : "panel-collapse collapse"}}'>
+                        <div class="panel-body">
+                            <div class="flex-container flex-col">
+                                <div class="box flex-col" ng-if="room.hasOwnProperty('wifi')">
+                                    <h4 align="center">WiFi</h4>
+                                    <div class="box hover">
+                                        <form class="flex-container wifi_info">
+                                            <label>
+                                                SSID
+                                                <input type="text" ng-model="room.wifi.ssid" readonly>
+                                            </label>
+                                            <label>
+                                                User
+                                                <input type="text" ng-model="room.wifi.user" readonly>
+                                            </label>
+                                            <label>
+                                                Password
+                                                <input type="text" ng-model="room.wifi.password" readonly>
+                                            </label>
+                                        </form>
+                                    </div>
+                                </div>
+                                <div id="device" ng-repeat="device in room.devices" class="fullwidth">
+                                    <div ng-if="device.lastValues.temperature.length > 0"
+                                         class="box flex-col fullwidth">
+                                        <h4 align="center">Temperature</h4>
+
+                                        <div id="{{temperature.id}}"
+                                             ng-repeat="temperature in device.lastValues.temperature"
+                                             class="box singleVar fullwidth hover">
+                                            <label class="flex-item">
+                                                Temp #{{temperature.id}}
+                                            </label>
+                                            <div class="flex-item">
+                                                {{temperature.value}} {{temperature.unit == "Cel" ? "℃" :
+                                                temperature.unit}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div ng-if="device.lastValues.humidity.length > 0" class="box flex-col">
+                                        <h4 align="center">Humidity</h4>
+                                        <div id="{{humidity.id}}"
+                                             ng-repeat="humidity in device.lastValues.humidity"
+                                             class="box singleVar fullwidth hover">
+                                            <label class="flex-item">
+                                                Hum #{{humidity.id}}
+                                            </label>
+                                            <div class="flex-item">
+                                                {{humidity.value}} {{humidity.unit}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="box flex-col fullwidth" ng-hide="device.lastValues.light.length < 1">
+                                        <h4>Lights</h4>
+
+                                        <div id="{{light.id}}" class="box fullwidth"
+                                             ng-repeat="light in device.lastValues.light"
+                                             ng-style="light.isOn ? {'background-color': calculateBackgroundColor(light.color.value)} : {'background-color': '#5f5f5f', 'color': 'white'}"
+                                             style="justify-content: space-between">
+                                            <label class="flex-item">{{light.name}}</label>
+
+                                            <div class="box nopadding" style="flex-grow: 1">
+                                                <table width="100%" style="text-align: center">
+                                                    <tr>
+                                                        <td>
+                                                            <h5>Switch</h5>
+                                                        </td>
+                                                        <td>
+                                                            <h5>Color</h5>
+
+                                                        </td>
+                                                        <td>
+                                                            <h6>Dimmer</h6>
+
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <div class="flex-item">
+                                                                <label class="switch">
+                                                                    <input type="checkbox" ng-model="light.isOn"
+                                                                           ng-checked="light.isOn"
+                                                                           ng-change="sendAction(device.name, 'light', light.id, 'isOn', light.isOn)">
+                                                                    <div class="slider round"></div>
+                                                                </label>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="flex-item">
+                                                                <div class="flex-container">
+                                                                    <div class="flex-item">
+                                                                        <input
+                                                                                type="color"
+                                                                                ng-model="light.color.value"
+                                                                                ng-disabled="!light.isOn"
+                                                                                ng-change="sendAction(device.name, 'light', light.id, 'color.value', light.color.value)"
+                                                                        />
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="flex-item">
+                                                                {{light.dimmer}} %
+                                                                <input
+                                                                        type="range"
+                                                                        name="dimmer" min="1" max="100"
+                                                                        ng-disabled="!light.isOn"
+                                                                        ng-model="light.dimmer"
+                                                                        ng-change="sendAction(device.name, 'light', light.id, 'dimmer', light.dimmer)"
+                                                                />
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

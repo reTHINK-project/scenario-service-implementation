@@ -22,15 +22,13 @@ the room to allow for "remote demonstrations" of the usage scenario.
 
 The application provides means to open all rooms for which the used access-token grants access privileges.
 
-The following screenshots show the GUI of the application from the view of a "hotel guest" as well as from the view of the "hotel administrator":
+The following screenshot shows the GUI of the application:
 
-**User View:**
+User View:
 
-![screenshot hotelguest User View](hotelguest.png)
+![screenshot hotelguest](hotelguest.png)
 
+Admin View:
 
-
-**Admin View:**
-
-![screenshot hotelguest Administrator View](adminview.png)
+![screenshot hotelguest](adminview.png)
 

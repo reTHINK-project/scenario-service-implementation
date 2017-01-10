@@ -1,0 +1,42 @@
+{
+  "name": "rethink-lwm2m",
+  "version": "0.1.0",
+  "description": "lwm2m-server for reTHINK, extended to store and manage device-data",
+  "main": "index.js",
+  "scripts": {
+    "start": "node test-es5/server-cmd.js",
+    "test": "mocha --compilers js:babel-register"
+  },
+  "author": "Paul Zühlcke",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/reTHINK-project/scenario-service-implementation.git"
+  },
+  "engines": {
+    "node": ">=4.4.1",
+    "npm": ">=3.8.5"
+  },
+  "dependencies": {
+    "async": "^2.1.4",
+    "kerberos": "0.0.21",
+    "logops": "^1.0.7",
+    "lwm2m-node-lib": "git://github.com/telefonicaid/lwm2m-node-lib.git#develop",
+    "mongodb": "^2.2.12",
+    "mongoose": "^4.7.1"
+  },
+  "devDependencies": {
+    "babel": "~6.5.2",
+    "babel-cli": "^6.18.0",
+    "babel-core": "~6.14.0",
+    "babel-polyfill": "~6.13.0",
+    "babel-preset-es2015": "^6.18.0",
+    "babel-register": "~6.14.0",
+    "babel-runtime": "~6.11.6",
+    "babelify": "~7.3.0",
+    "chai": "^3.5.0",
+    "chai-as-promised": "^5.2.0",
+    "command-node": "^0.1.1",
+    "mocha": "^3.2.0"
+  }
+}
