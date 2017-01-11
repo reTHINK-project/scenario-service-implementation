@@ -1,0 +1,20 @@
+{
+  "name": "hotelexample",
+  "version": "0.0.1",
+  "description": "Hotel Server",
+  "main": "helloworld.js",
+  "dependencies": {
+    "body-parser": "^1.14.2",
+    "cookie-parser": "^1.4.1",
+    "express": "^4.13.3",
+    "multer": "^1.1.0",
+    "reload": "^0.7.0",
+	"simple-autoreload-server": "^0.1.7"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \\"
+  },
+  "author": "ishan210788@gmail.com",
+  "license": "ISC"
+}

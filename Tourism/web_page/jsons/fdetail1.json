@@ -1,0 +1,26 @@
+[{ 
+"fname" : "Charlie", 
+"lname" : "Harper", 
+"age" : "19", 
+"GUID" : "se23ghd7899dfnf99i3n3mo039hii93j", 
+"mnum" : "9876543210"
+}, {
+"fname" : "Jake", 
+"lname" : "Harper", 
+"age" : "19", 
+"GUID" : "se23ghd7899dfnf99i3n3mo039hii93j", 
+"mnum" : "9876543210"
+}, {
+"fname" : "Alan", 
+"lname" : "Paul", 
+"age" : "19", 
+"GUID" : "se23ghd7899dfnf99i3n3mo039hii93j", 
+"mnum" : "9876543210"
+}, {
+"fname" : "Dianna", 
+"lname" : "Smith", 
+"age" : "19", 
+"GUID" : "se23ghd7899dfnf99i3n3mo039hii93j", 
+"mnum" : "9876543210"
+}
+]

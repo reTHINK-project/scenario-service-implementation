@@ -1,0 +1,30 @@
+[
+  {
+    "fname": "Alice",
+    "lname": "Wonderland",
+    "age": "23",
+    "GUID": "f1CuNFhbYbPIR_Ng0GbtncTjoPGPfULY_p9J2nLX7bw",
+    "mnum": "78976788766"
+  },
+  {
+    "fname": "John",
+    "lname": "Doe",
+    "age": "42",
+    "GUID": "HCnzDTY51uwsl1_NZdoJnYRAiBowDKXqNN7oOX6TLuc",
+    "mnum": "1988998789"
+  },
+  {
+    "fname": "Charlie",
+    "lname": "Miller",
+    "age": "39",
+    "GUID": "nm0_J8Xpn74sdBBfV6Au7jsI12whtvd9PuJplCe7Yg8",
+    "mnum": "78778868986"
+  },
+  {
+    "fname": "Dora",
+    "lname": "Bond",
+    "age": "45",
+    "GUID": "HmDLrX7RgrZc28RHwNGIffcckIEbbu1vCBKYoyVPOSQ",
+    "mnum": "9876543210"
+  }
+]

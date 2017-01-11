@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="utf-8">
+      <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+      <META HTTP-EQUIV="Expires" CONTENT="-1">
+      <meta name="author" content="ishan210788@gmail.com">
+      <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+      <title>reTHINK Project</title>
+      <link rel="stylesheet" type="text/css" href="css/style2.css">
+      <link rel="stylesheet" type="text/css" href="css/style.css">
+      <link href="http://hayageek.github.io/jQuery-Upload-File/4.0.10/uploadfile.css" rel="stylesheet">
+      <link rel="stylesheet" href="jquery-ui-1.11.4.custom/jquery-ui.min.css">
+   </head>
+   <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+   <!-- Latest compiled and minified JavaScript -->
+   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+   <!-- Include all compiled plugins (below), or include individual files as needed -->
+   <!-- Latest compiled and minified CSS -->
+   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+   <!-- Optional theme -->
+   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+   <!-- For Upload file -->
+   <script type="text/javascript" src="js/bootstrap-filestyle.min.js"> </script>
+   <!-- For Pop up window-->
+   <!-- For QR Code -->
+   <script type="text/javascript" src="js/jquery.qrcode.min.js"></script>
+   <script type="text/javascript">
+      console.log("##Begin Parsing...");
+      
+       function test(i){
+        var str = "#myModal"+i;
+        $(str).modal();
+        //console.log("Hellohehehehe"+i);
+        setTimeout(function() { $(str).modal('hide'); }, 5000);
+      }
+      function qrcodeGen(qrstr, myArr, i){
+        $(qrstr).qrcode({width:80, height:80, text:myArr[i].GUID});
+      }
+      function qrcodeGenModal(qrstrModal, myArr, i){
+        $(qrstrModal).html("");
+        $(qrstrModal).qrcode({width:150, height:150, text:myArr[i].GUID});
+      }
+      function drawList(myArr){
+         for (var i = 0; i < myArr.length; i++) {
+              var str = "#userDet"+i;
+              var qrstr = "#qrcode"+i;
+              $('#list_div').append(
+                '<div class="col-sm-3">'+
+                  '<div class="box-info text-center user-profile-2">'+
+                    '<div class="header-cover">'+
+                      '<img src="images/background.jpg" alt="User cover">'+
+                    '</div>'+
+                      '<div class="user-profile-inner">'+
+                        '<h4 class="white">'+myArr[i].fname+'\t'+myArr[i].lname +'</h4>'+
+                        '<img src="images/'+myArr[i].GUID+'.jpg" '+
+                        'class="img-circle profile-avatar" alt="User avatar">'+
+                          '<div id="qrcode'+i+'"></div>'+
+                              '<div class="user-button">'+
+                                '<div class="row">'+
+                                  '<div class="col-md-12">'+
+                                  '<button type="button" class="btn btn-warning btn-sm btn-block" id="userDet'+i+'" onClick=test('+i+')><i class="fa fa-user"></i> '+
+                                  'Details</button>'+
+                              '</div>'+
+                          '</div>'+
+                      '</div>'+
+                  '</div>'+
+              '</div>'+
+          '</div>')
+      qrcodeGen(qrstr, myArr, i);
+      var qrstrModal = "#qrmodal"+i;
+      //Creating Modal for each guest member
+      $("#modal-div").append("<div id='modal-list"+i+"'></div>");
+      var strmodal = "#modal-list"+i;
+        $(strmodal).append('<div class="modal fade" id="myModal'+i+'" role="dialog">'+
+          '<div class="modal-dialog">'+
+        '<div class="modal-content">'+
+              '<div class="modal-header">'+
+                '<button type="button" class="close" data-dismiss="modal">&times;</button>'+
+                '<h4 class="modal-title"><b> Details of '+myArr[i].fname+'</b></h4>'+
+              '</div>'+
+              '<div class="modal-body">'+
+              '<img align="right" src="images/'+myArr[i].GUID+'.jpg" '+
+                        'alt="User avatar" "height="40%" width="40%">'+
+                '<p id="modal-det"><h5><u><b> First Name </u></h5> '+myArr[i].fname+
+                '</p><p><h5><u> <b>Last Name </u></h5>'+myArr[i].lname+'</b></p><p><h5><u><b> Mobile Number </u></h5>'
+                +myArr[i].mnum+'</b></p> <p><h5><u><b> Age </u></h5>'+myArr[i].age+
+                '</b></p> <p><div id="qrmodal'+i+'"></div></p>'+
+              '</div>'+
+              '<div class="modal-footer">'+
+                '<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>'+
+              '</div>'+
+            '</div>'+
+            '</div>'+
+          '</div>')
+      
+      qrcodeGenModal(qrstrModal, myArr, i);
+         } 
+      }
+      
+      $(document).ready(function(){
+      
+      
+      setInterval(function(){
+      
+        var xmlhttp = new XMLHttpRequest();
+        var url = "http://localhost:8081/jsons/fdetails2.json";
+        var guest_list_obj=[];
+        var myArr = [];
+        xmlhttp.onreadystatechange = function() {
+          if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+      
+              myArr = JSON.parse(xmlhttp.responseText);
+              if(myArr.length!==0){
+              $('#list_div').html("");
+              drawList(myArr);
+             
+       }
+         else{
+          $('#list_div').append("<h1 align='center'>No Guests Available</h1>");
+         }
+       }
+      };
+      xmlhttp.open("GET", url, true);
+      xmlhttp.send(); 
+      },3000);
+      console.log("Hello");
+      
+      });
+   </script>
+   <body style="background-color:lightgrey;">
+      <!--CONTAINER-->
+      <div id="container">
+         <!--Modal-->          
+         <div id="modal-div">
+            <div id="modal-list"></div>
+         </div>
+         <!--HEADER-->
+         <!--div id="header">
+            <div id="logo"><img src="images/logo.jpg" alt="reTHINK logo" height="50" width="300"></div>
+            <div id="navbar">
+               <ul>
+                  <li>
+                     <a href="#">
+                        <h6>Link1</h6>
+                     </a>
+                  </li>
+                  <li>
+                     <a href="#">
+                        <h6>Link2</h6>
+                     </a>
+                  </li>
+                  <li>
+                     <a href="#">
+                        <h6>Link3</h6>
+                     </a>
+                  </li>
+               </ul>
+            </div>
+         </div-->
+         <!--CONTENT AREA-->
+         <div id="div1">
+            <div id="content_area" class="col-sm-12">
+               <h4 align='center'><b>Old Inn Smart Hotel - powered by reTHINK</b></h4>
+            </div>
+            <br>
+         </div>
+         <div class="row" id="div2">
+            <div class="container bootstrap snippet" id="list_div">
+            </div>
+         </div>
+         <!--FOOTER-->
+         <div id='footer'></div>
+      </div>
+   </body>
+</html>
