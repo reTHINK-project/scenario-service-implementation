@@ -1,5 +1,4 @@
 FROM node:latest
-#FROM ubuntu:latest
 
 # Application Setup
 
