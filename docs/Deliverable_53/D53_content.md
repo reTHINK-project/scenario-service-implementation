@@ -1,0 +1,39 @@
+# 1	Introduction	
+# 2	Usage scenarios	
+## 2.1	Smart Contextual Assistance (PT)	
+### 2.1.1	Scenario Introduction	
+### 2.1.2	Summary of hyperties and applications	
+## 2.2	Hotel Guest (FOKUS)	
+### 2.2.1	Scenario Introduction	
+### 2.2.2	Summary of hyperties and applications	
+## 2.3	My City (QUOBIS)	
+### 2.3.1	Scenario Introduction	
+### 2.3.2	Summary of hyperties and applications	
+## 2.4	Tourism in a Smart City(TUB)	
+### 2.4.1	Scenario Introduction	
+### 2.4.2	Summary of hyperties and applications	
+## 2.5	Enterprise Conversational (APIZEE)	
+### 2.5.1	Scenario Introduction	
+### 2.5.2	Summary of hyperties and applications	
+# 3	Hyperties description	
+## 3.1	Connector (UPDATE PT)
+## 3.2	Group chat	
+### 3.2.1	Group chat(option a) (UPDATE PT)	
+### 3.2.2	Group chat (option b) (UPDATE QUOBIS)	
+## 3.3	My Bracelet (UPDATE PT)	
+## 3.4	Location(UPDATE QUOBIS)	
+## 3.5	User-Status (UPDATE APIZEE)	
+## 3.6	RoomMonitor and Control - Server-Side Hyperty (UPDATE FOKUS)	
+## 3.7	RoomMonitor and Control - Client-Side Hyperty (UPDATE FOKUS)	
+## 3.8	New Hyperty	
+# 4	Scenario Apps description	
+## 4.1	Address Book (UPDATE TUB)	
+## 4.2	Smart Contextual (UPDATE PT)	
+## 4.3	Smart Business application(UPDATE APIZEE)	
+## 4.4	Participate	
+### 4.4.1	Hotel Guest application (UPDATE FOKUS)	
+### 4.4.2	Hotel Administrator Application (UPDATE FOKUS)	
+### 4.4.3	My City (UPDATE QUOBIS)	
+### 4.4.4	Tourism application (UPDATE TUB)	
+## 4.5	NEW APPLICATION	
+# 5	Conclusions	
