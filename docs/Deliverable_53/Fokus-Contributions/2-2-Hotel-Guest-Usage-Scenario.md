@@ -20,3 +20,6 @@ The former allows a guest of the hotel to control the installments in the room (
 The later allows the manager of the hotel to control the installments in all rooms (e.g. to open all room doors to the fire department in case of a fire or emergency.  Accress to all rooms is granted via a priveledged access token. As such, apart from having special access due to the used token, the application is almost identical to the hotel guest application.
 
 As such, both applications are denoted as "hotel application" in the following picture.
+![Hotel Scenario -- Applications and Hyperties](./Hotel-Applications-and-Hyperties.png)
+
+The hotel application builds upon two main hyperties: the hotel connectivity hyperty, and the room monitor and control hyperty.  The latter of the two provides the interface from the reTHINK-based hyperty world with the LWM2M-based management of the hotel room instalments. On the guest's device part, the former provides the interface of the instalment control to the application.
