@@ -11,4 +11,8 @@ demonstration set-up:
   
   As part of the developments in Phase II of reTHINK, support for controlling the network connectivity was added as such as the devices that runs the hotel guest application automatically connects to the password-protected WiFi network of the hotel for which the BSS ID password is provided via the application. Additionally, the disign of the GUI was slightliy modified in order to include a video live stream of the lamp in the hotel room to allow for demonstrating the application without the need to physically move the installments in the hotel room.  The following figures show screenshots of the final hotel administrator application and hotel guest application.
   
-  
+![Screenshot of *Hotel Administrator Application* GUI](hotelguest_adminview.png)
+
+
+![Screenshot of *Hotel Guest Application* GUI](hotelguest_userview.png)
+
